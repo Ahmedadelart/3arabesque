@@ -1,0 +1,5 @@
+/admin/*
+  X-Robots-Tag: noindex
+  Cache-Control: no-store
+/data.json
+  Cache-Control: no-cache
