@@ -378,6 +378,10 @@ a.hero-art{display:block}
   .masonry .tile .cap,.mosaic .tile .cap{display:none}
   .months{grid-template-columns:1fr}
 }
+.hrot{opacity:0;transition:opacity 1.4s ease}
+.hrot.on{opacity:1}
+.hrot-wrap{cursor:zoom-in}
+@media (prefers-reduced-motion:reduce){.hrot{transition:none}}
 </style>
 
 
@@ -485,7 +489,7 @@ const PW=n=>LANG==='en'?(n===1?'submission':'submissions'):(n===1?'مشاركة'
 const pill=t=>`<span class="pill">${esc(t)}</span>`;
 const SPK='<path d="M50 4 C55 38 62 45 96 50 C62 55 55 62 50 96 C45 62 38 55 4 50 C38 45 45 38 50 4Z"/>';
 
-function heroSVG(art,label){
+function heroSVG(art,label,list){
   const c=cur(), rtl=LANG==='ar', X=x=>rtl?x:1080-x; art=art||c.art; label=label??(L('الفنان: ','Artist: ')+nm(c.artBy));
   const P=pts=>pts.map(([x,y])=>`${X(x)},${y}`).join(' ');
   const clip=P([[0,98],[918,98],[918,250],[1015,338],[918,426],[918,577],[0,577]]);
@@ -494,9 +498,9 @@ function heroSVG(art,label){
   return `<svg viewBox="0 0 1080 676" role="img" aria-label="${esc(cTitle())}">
     <defs><clipPath id="artclip"><polygon points="${clip}"/></clipPath></defs>
     <polygon style="fill:var(--mint)" points="${mint}"/>
-    <image href="${esc(art)}" x="${rtl?0:65}" y="98" width="1015" height="479" preserveAspectRatio="xMidYMid slice" clip-path="url(#artclip)"/>
+    ${list?`<g clip-path="url(#artclip)">${list.map((w,i)=>`<image class="hrot${i?'':' on'}" data-label="${esc(w.label)}" data-w="${esc(w.id)}" href="${esc(w.src)}" x="${rtl?0:65}" y="98" width="1015" height="479" preserveAspectRatio="${w.wh&&w.wh[0]/w.wh[1]<1.7?'xMidYMin':'xMidYMid'} slice"/>`).join('')}</g>`:`<image href="${esc(art)}" x="${rtl?0:65}" y="98" width="1015" height="479" preserveAspectRatio="xMidYMid slice" clip-path="url(#artclip)"/>`}
     <polygon style="fill:#000" points="${bar}"/>
-    <text x="${X(370)}" y="62" text-anchor="middle" direction="${rtl?'rtl':'ltr'}" style="fill:#f3f6ef;font-family:var(--f-body);font-weight:500;font-size:30px">${esc(label)}</text>
+    <text x="${X(370)}" y="62" text-anchor="middle" direction="${rtl?'rtl':'ltr'}" style="fill:#f3f6ef;font-family:var(--f-body);font-weight:500;font-size:30px" ${list?'id="hrot-label"':''}>${esc(list?list[0].label:label)}</text>
   </svg>`;
 }
 
@@ -568,6 +572,32 @@ function liveHero(c){ return `  <section class="hero lattice"><div class="wrap h
     <div class="hero-art">${heroSVG()}</div>
   </div></section>
 `; }
+let HP=null;
+function heroPicks(){
+  if(HP) return HP;
+  const pool=state.works.filter(w=>(w.hl||w.m==='old')&&w.wh&&w.wh[0]/w.wh[1]>=1.4);
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  pool.sort((a,b)=>(b.by?1:0)-(a.by?1:0));
+  HP=pool.slice(0,8).sort(()=>Math.random()-.5);
+  return HP;
+}
+function hpLabel(w){return L('مختارات · ','Highlights · ')+(wB(w)?nm(wB(w)):(w.m&&w.m!=='old'?mT(w.m):L('المجموعة القديمة','The original group')));}
+let hrotT=null;
+function startHeroRot(){
+  clearInterval(hrotT);
+  const imgs=[...document.querySelectorAll('.hrot')], lab=document.getElementById('hrot-label');
+  if(!imgs.length) return;
+  imgs.forEach((im,i)=>{const w=HP[i]; if(w&&lab) im.dataset.label=hpLabel(w);});
+  if(lab) lab.textContent=imgs[0].dataset.label;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches||imgs.length<2) return;
+  let i=0;
+  hrotT=setInterval(()=>{
+    if(!document.body.contains(imgs[0])){clearInterval(hrotT);return;}
+    if(!lb.hidden) return;
+    imgs[i].classList.remove('on'); i=(i+1)%imgs.length; imgs[i].classList.add('on');
+    if(lab) lab.textContent=imgs[i].dataset.label;
+  },5000);
+}
 function soonHero(c){ return `<section class="hero lattice"><div class="wrap hero-grid">
     <div class="hero-text fade">
       <div class="hero-kicker">${pill(L('الشهر الجاي','Next month'))}</div>
@@ -578,7 +608,7 @@ function soonHero(c){ return `<section class="hero lattice"><div class="wrap her
         <a class="btn btn-ghost" href="#brief" data-scroll>${L('آخر تحدي','Last challenge')}</a>
       </div>
     </div>
-    <a class="hero-art" href="#c-${c.k}" aria-label="${esc(cTitle())}">${heroSVG(c.art,L('آخر تحدي: ','Last challenge: ')+mT(c.k))}</a>
+    <div class="hero-art hrot-wrap" role="button" tabindex="0" aria-label="${L('مختارات','Highlights')}">${heroSVG(null,null,heroPicks())}</div>
   </div></section>`; }
 function vHome(){
   const c=cur(), cw=worksOf(c.k);
@@ -803,6 +833,7 @@ function route(keepScroll){
   mark(r);
   if(!keepScroll) window.scrollTo(0,0);
   startReels();
+  startHeroRot();
   if(r==='artists'){renderDir(); document.getElementById('asearch').addEventListener('input',renderDir);}
 }
 function mark(r){document.querySelectorAll('nav.main a').forEach(a=>a.classList.toggle('on',a.dataset.r===r)); document.getElementById('nav').classList.remove('open');}
@@ -849,6 +880,8 @@ document.addEventListener('click',e=>{
     navigator.clipboard.writeText('arabesqueartwork@gmail.com').then(()=>{b.textContent=L('اتنسخ','Copied')},()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('mail'));const s=getSelection();s.removeAllRanges();s.addRange(r);});
     setTimeout(()=>b.textContent=L('نسخ','Copy'),1600); return; }
   if(e.target.closest('#burger')){const n=document.getElementById('nav');n.classList.toggle('open');e.target.closest('#burger').setAttribute('aria-expanded',n.classList.contains('open'));return;}
+  const hr=e.target.closest('.hrot-wrap');
+  if(hr){ const on=hr.querySelector('.hrot.on'); lbList=HP.slice(); lbI=Math.max(0,lbList.findIndex(w=>w.id===on?.dataset.w)); openLB(); return; }
   const t=e.target.closest('.tile');
   if(t){ lbList=ctxList(t.dataset.ctx).filter(Boolean); lbI=Math.max(0,lbList.findIndex(w=>w.id===t.dataset.w)); openLB(); return;}
   const f=e.target.closest('#filters button');
