@@ -369,6 +369,15 @@ footer .mail button{background:var(--s2);border:1px solid var(--line);border-rad
 .chk{display:flex;gap:8px;align-items:center;font-size:14px}
 .saving{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:90;color:#fff;font-weight:600}
 .authwarn{background:color-mix(in srgb,var(--warn) 14%,transparent);border:1px solid var(--warn);color:var(--fg);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:14px;line-height:1.7;word-break:break-word}
+.soonbox{border-top:1px solid var(--line);padding-top:18px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.soonbox .hint{margin:0}
+a.hero-art{display:block}
+@media (max-width:700px){
+  .masonry,.mosaic{columns:3!important;column-gap:6px!important}
+  .masonry .tile,.mosaic .tile{margin:0 0 6px!important;border-radius:8px}
+  .masonry .tile .cap,.mosaic .tile .cap{display:none}
+  .months{grid-template-columns:1fr}
+}
 </style>
 
 
@@ -460,6 +469,7 @@ const state={
   ]
 };
 const cur=()=>state.current;
+let SOON=!!DATA.soon;
 const cTitle=()=>cur().custom?.title||mT(cur().k);
 const cx=v=>Array.isArray(v)?L(v[0],v[1]):v;
 
@@ -471,6 +481,7 @@ function tile(w,cls='',ctx='all'){
   const extra=w.ref?`<small>${esc(w.by)} · ${esc(w.lic)}</small>`:(by?`<span dir="auto">${esc(by)}</span>`:'');
   return `<button class="tile ${cls}" data-w="${esc(w.id)}" data-ctx="${esc(ctx)}" aria-label="${esc(t)}"><img loading="lazy" src="${esc(w.src)}" width="${ww}" height="${hh}" alt="${esc(t)}"><div class="cap"><b>${esc(t)}</b>${extra}</div></button>`;
 }
+const PW=n=>LANG==='en'?(n===1?'submission':'submissions'):(n===1?'مشاركة':n===2?'مشاركتين':(n>=3&&n<=10)?'مشاركات':'مشاركة');
 const pill=t=>`<span class="pill">${esc(t)}</span>`;
 const SPK='<path d="M50 4 C55 38 62 45 96 50 C62 55 55 62 50 96 C45 62 38 55 4 50 C38 45 45 38 50 4Z"/>';
 
@@ -544,15 +555,7 @@ function srcSection(k,{pad=true}={}){
 }
 
 /* ---------- views ---------- */
-function vHome(){
-  const c=cur(), cw=worksOf(c.k);
-  const pick=state.works.filter(w=>w.m==='old').slice(0,18);
-  const mc=['m1','m2','m4','m3','m3','m4','m3','m3','m4','m4','m3','m3'];
-  const artists=new Set(state.works.filter(w=>w.by).map(w=>w.by));
-  const a=state.aow[0];
-  const wiki=L('https://ar.wikipedia.org/wiki/عمارة_إسلامية','https://en.wikipedia.org/wiki/Islamic_architecture');
-  return `
-  <section class="hero lattice"><div class="wrap hero-grid">
+function liveHero(c){ return `  <section class="hero lattice"><div class="wrap hero-grid">
     <div class="hero-text fade">
       <div class="hero-kicker">${pill(c.custom?.month||mM(c.k))}</div>
       <h1 class="sticker"><span class="t">${esc(cTitle())}<svg class="spark" style="top:-14px;inset-inline-start:-20px" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg><svg class="spark s2 inl" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg></span></h1>
@@ -564,16 +567,38 @@ function vHome(){
     </div>
     <div class="hero-art">${heroSVG()}</div>
   </div></section>
+`; }
+function soonHero(c){ return `<section class="hero lattice"><div class="wrap hero-grid">
+    <div class="hero-text fade">
+      <div class="hero-kicker">${pill(L('الشهر الجاي','Next month'))}</div>
+      <h1 class="sticker"><span class="t">${L('قريبًا تحدي جديد','A new challenge soon')}<svg class="spark" style="top:-14px;inset-inline-start:-20px" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg><svg class="spark s2 inl" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg></span></h1>
+      <p class="lede">${L('موضوع الشهر الجاي هيتعلن على الجروب قريب. لحد ما ينزل، اتفرج على آخر تحدي ومصادره.','Next month\'s topic will be announced in the group soon. Until then, look through the last challenge and its sources.')}</p>
+      <div class="hero-cta">
+        <a class="btn btn-mint" href="${GROUP}" target="_blank" rel="noopener">${L('تابع الجروب','Follow the group')}</a>
+        <a class="btn btn-ghost" href="#brief" data-scroll>${L('آخر تحدي','Last challenge')}</a>
+      </div>
+    </div>
+    <a class="hero-art" href="#c-${c.k}" aria-label="${esc(cTitle())}">${heroSVG(c.art,L('آخر تحدي: ','Last challenge: ')+mT(c.k))}</a>
+  </div></section>`; }
+function vHome(){
+  const c=cur(), cw=worksOf(c.k);
+  const pick=state.works.filter(w=>w.m==='old').slice(0,18);
+  const mc=['m1','m2','m4','m3','m3','m4','m3','m3','m4','m4','m3','m3'];
+  const artists=new Set(state.works.filter(w=>w.by).map(w=>w.by));
+  const a=state.aow[0];
+  const wiki=L('https://ar.wikipedia.org/wiki/عمارة_إسلامية','https://en.wikipedia.org/wiki/Islamic_architecture');
+  return `
+  ${SOON?soonHero(c):liveHero(c)}
   <div class="strip"><div class="wrap">
     <div class="stat"><b>${A(MONTHS.filter(m=>m.t).length)}</b><span>${L('تحديات','challenges')}</span></div>
-    <div class="stat"><b>${A(state.works.length)}+</b><span>${L('رسمة','artworks')}</span></div>
+    <div class="stat"><b>${A(state.works.length)}+</b><span>${L('مشاركة','submissions')}</span></div>
     <div class="stat"><b>${A(artists.size)}+</b><span>${L('فنان','artists')}</span></div>
     <div class="stat"><b>${A(17000)}+</b><span>${L('عضو','members')}</span></div>
   </div></div>
 
   <section class="sec" id="brief"><div class="wrap brief">
     <div>
-      <div class="sec-head"><h2>${L('عن التحدي','The challenge')}</h2></div>
+      <div class="sec-head"><h2>${SOON?L('آخر تحدي: ','Last challenge: ')+esc(cTitle()):L('عن التحدي','The challenge')}</h2></div>
       <p class="prose big">${esc(c.custom?cx(c.about):cx(c.about))}</p>
       <div class="styles" style="margin-top:22px">${(c.styles||[]).map((s,i)=>`<div class="style"><i>${A(i+1)}</i><div><h4>${esc(cx(s[0]))}</h4><p>${esc(cx(s[1]))}</p></div></div>`).join('')}</div>
     </div>
@@ -581,7 +606,7 @@ function vHome(){
       <h3>${L('المطلوب','The brief')}</h3>
       <p>${esc(c.custom?.ask||cx(c.ask))}</p>
       <p class="foot">${L('شخصية، مكان، أو مشهد كامل. واقعي أو خيالي. ارفع النسخة النهائية مرة واحدة.','A character, a place, or a full scene. Realistic or imagined. Post the final version once.')}</p>
-      <a class="btn" href="${GROUP}" target="_blank" rel="noopener">${L('شارك','Submit')}</a>
+      ${SOON?'':`<a class="btn" href="${GROUP}" target="_blank" rel="noopener">${L('شارك','Submit')}</a>`}
     </aside>
   </div></section>
 
@@ -590,7 +615,7 @@ function vHome(){
 
 
   <section class="sec"><div class="wrap">
-    <div class="sec-head"><h2>${L('المشاركات','Submissions')}</h2><a class="link" href="#c-${c.k}">${L('الكل','All')} (${A(cw.length)}) ${FW()}</a></div>
+    <div class="sec-head"><h2>${SOON?L('مشاركات آخر تحدي','Last challenge submissions'):L('المشاركات','Submissions')}</h2><a class="link" href="#c-${c.k}">${L('الكل','All')} (${A(cw.length)}) ${FW()}</a></div>
     <div class="masonry">${cw.slice(0,12).map(w=>tile(w,'','m-'+c.k)).join('')}</div>
   </div></section>
 
@@ -619,7 +644,7 @@ function vHome(){
 function mcard(m){
   const n=worksOf(m.k).length;
   if(!m.t) return `<div class="mcard empty"><div class="art">${L('قريبًا','Coming soon')}</div><div class="body">${pill(mM(m.k))}</div></div>`;
-  return `<a class="mcard" href="#c-${m.k}"><div class="art"><span class="bar">${esc(mT(m.k))}</span><img loading="lazy" src="img/c-${m.k}.jpg" alt="${esc(mT(m.k))}"></div><div class="body">${pill(mM(m.k))}${n?`<span class="count">${A(n)} ${L('رسمة','works')}</span>`:''}</div></a>`;
+  return `<a class="mcard" href="#c-${m.k}"><div class="art"><span class="bar">${esc(mT(m.k))}</span><img loading="lazy" src="img/c-${m.k}.jpg" alt="${esc(mT(m.k))}"></div><div class="body">${pill(mM(m.k))}${n?`<span class="count">${A(n)} ${PW(n)}</span>`:''}</div></a>`;
 }
 function vChallenges(){
   return `
@@ -657,7 +682,7 @@ function vChallenge(k){
   </div></section>
   ${srcSection(k)}
   <section class="sec"><div class="wrap">
-    <div class="sec-head"><h2>${ws.length?A(ws.length)+' '+L('رسمة','works'):L('قريبًا','Coming soon')}</h2></div>
+    <div class="sec-head"><h2>${ws.length?A(ws.length)+' '+PW(ws.length):L('قريبًا','Coming soon')}</h2></div>
     ${ws.length?`<div class="masonry">${ws.map(w=>tile(w,'','m-'+k)).join('')}</div>`:''}
     <div class="pager">
       ${nav&&prev?`<a class="btn btn-ghost" href="#c-${prev.k}">${BK()} ${esc(mT(prev.k))}</a>`:'<span></span>'}
@@ -910,6 +935,10 @@ function vAdmin(){
           <div class="field full"><label for="f-chips">${L('كلمات بحث للصور، بينهم فاصلة','Image search words, comma separated')}</label><input id="f-chips" dir="auto"></div>
         </div>
         <div class="row-end"><button class="btn btn-mint" type="submit">${L('احفظ وانشر','Save and publish')}</button></div>
+        <div class="soonbox">
+          <p class="hint" id="soon-state">${DATA.soon?L('الرئيسية دلوقتي: «قريبًا تحدي جديد»، وتحتها آخر تحدي ومصادره.','Home page now: “A new challenge soon”, with the last challenge and its sources below.'):L('الرئيسية دلوقتي: التحدي الحالي','Home page now: the current challenge')+' ('+esc(mT(cur().k))+')'}</p>
+          <button class="btn btn-ghost" type="button" id="f-soon">${DATA.soon?L('رجّع التحدي الحالي للرئيسية','Show the current challenge again'):L('خلّي الرئيسية «قريبًا تحدي جديد»','Set home to “A new challenge soon”')}</button>
+        </div>
       </form>
       <form class="panel" id="t2" hidden novalidate>
         <h2>${L('إضافة مشاركات','Add submissions')}</h2>
@@ -1020,6 +1049,7 @@ function bindAdmin(){
       chips:$('f-chips').value.split(/[,،]/).map(x=>x.trim()).filter(Boolean).map(x=>[x,x])
     };
     if($('f-cur').checked){
+      DATA.soon=false;
       const old=DATA.current&&DATA.current.k===k?DATA.current:{};
       const two=v=>[v,v];
       DATA.current={...old,k,art:art?`img/c-${k}.jpg?v=${uid()}`:(old.art||`img/c-${k}.jpg`),
@@ -1028,6 +1058,13 @@ function bindAdmin(){
     if(await saveData(`Challenge: ${t}`,files)){ m.t=[t,te]; }
   });
 
+  $('f-soon').addEventListener('click',async()=>{
+    const v=!DATA.soon; DATA.soon=v;
+    if(await saveData(v?'Home: coming soon':'Home: current challenge')){
+      $('soon-state').textContent=v?L('الرئيسية دلوقتي: «قريبًا تحدي جديد»، وتحتها آخر تحدي ومصادره.','Home page now: “A new challenge soon”, with the last challenge and its sources below.'):L('الرئيسية دلوقتي: التحدي الحالي','Home page now: the current challenge');
+      $('f-soon').textContent=v?L('رجّع التحدي الحالي للرئيسية','Show the current challenge again'):L('خلّي الرئيسية «قريبًا تحدي جديد»','Set home to “A new challenge soon”');
+    } else DATA.soon=!v;
+  });
   /* t2: add submissions */
   let gF=[];
   $('g-files').addEventListener('change',async e=>{gF=await prepAll(e.target.files);pv($('g-prev'),gF);});
