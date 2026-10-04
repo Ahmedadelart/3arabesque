@@ -5,5 +5,9 @@
   "assets": { "directory": "./public", "binding": "ASSETS" },
   // keep the variables you add in the dashboard when the site redeploys
   "keep_vars": true,
+  // Non-secret settings live here. GITHUB_TOKEN stays a Secret in the dashboard.
+  "vars": {
+    "GITHUB_REPO": "Ahmedadelart/3arabesque"
+  },
   "observability": { "enabled": true }
 }

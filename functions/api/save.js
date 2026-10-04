@@ -15,8 +15,9 @@ const b64url = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')
 async function checkAdmin(request, env) {
   const allowed = (env.ADMIN_EMAILS || '').toLowerCase().split(/[,\s]+/).map(s => s.trim()).filter(Boolean);
   const teamRaw = (env.ACCESS_TEAM || '').trim(), audWant = (env.ACCESS_AUD || '').trim();
-  if (!teamRaw || !audWant || !allowed.length)
-    return { reason: 'settings_missing', missing: ['ACCESS_TEAM', 'ACCESS_AUD', 'ADMIN_EMAILS'].filter(k => !(env[k] || '').trim()) };
+  // ADMIN_EMAILS is optional: the Cloudflare Access policy already limits who can sign in.
+  if (!teamRaw || !audWant)
+    return { reason: 'settings_missing', missing: ['ACCESS_TEAM', 'ACCESS_AUD'].filter(k => !(env[k] || '').trim()) };
   const token = request.headers.get('cf-access-jwt-assertion');
   if (!token) return { reason: 'no_access_token', host: new URL(request.url).host };
   let header, payload;
@@ -39,7 +40,7 @@ async function checkAdmin(request, env) {
   if (!ok) return { reason: 'bad_signature' };
   if (!tokenAud.includes(audWant)) return { reason: 'aud_mismatch', tokenAud: tokenAud[0], settingStartsWith: audWant.slice(0, 8) };
   if (payload.exp * 1000 < Date.now()) return { reason: 'expired' };
-  if (!allowed.includes(tokenEmail)) return { reason: 'email_not_in_ADMIN_EMAILS', email: tokenEmail };
+  if (allowed.length && !allowed.includes(tokenEmail)) return { reason: 'email_not_in_ADMIN_EMAILS', email: tokenEmail };
   return { email: tokenEmail };
 }
 const REASONS = {
