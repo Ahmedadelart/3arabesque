@@ -15,12 +15,12 @@ How saving works: the dashboard at `/admin` sends the edited `data.json` and any
 ## One-time setup (about 30 minutes)
 
 ### 1. GitHub
-1. Create a **private** repository named `arabesque`. Leave it empty: no README.
+1. Create a **private** repository named `3arabesque`. Leave it empty: no README.
 2. Push this folder to it. Claude can do this for you once the empty repo exists.
 
 ### 2. Cloudflare Pages
 1. Create a free account at dash.cloudflare.com.
-2. Go to **Workers & Pages → Create → Pages → Connect to Git** and pick the `arabesque` repo.
+2. Go to **Workers & Pages → Create → Pages → Connect to Git** and pick the `3arabesque` repo.
 3. Build settings:
    - Framework preset: **None**
    - Build command: *(leave empty)*
@@ -46,7 +46,7 @@ From now on, anyone who opens `3arabesque.art/admin` sees the Cloudflare sign-in
 
 ### 5. Let the dashboard save
 1. On GitHub, go to **Settings → Developer settings → Fine-grained tokens → Generate new token**.
-   - Repository access: **Only select repositories → arabesque**
+   - Repository access: **Only select repositories → 3arabesque**
    - Permissions: **Contents: Read and write**
    - Expiry: up to 1 year. Set a reminder to renew it.
 2. In the Cloudflare Pages project, go to **Settings → Variables and Secrets** (Production) and add:
@@ -54,7 +54,7 @@ From now on, anyone who opens `3arabesque.art/admin` sees the Cloudflare sign-in
 | Name | Value |
 |---|---|
 | `GITHUB_TOKEN` (type: Secret) | the token from step 1 |
-| `GITHUB_REPO` | `YourGitHubName/arabesque` |
+| `GITHUB_REPO` | `Ahmedadelart/3arabesque` |
 | `ADMIN_EMAILS` | the same emails as the Access policy, comma-separated |
 | `ACCESS_TEAM` | `yourteam.cloudflareaccess.com` |
 | `ACCESS_AUD` | the AUD tag from step 4.3 |
