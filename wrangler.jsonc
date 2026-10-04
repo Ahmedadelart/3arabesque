@@ -1,0 +1,9 @@
+{
+  "name": "3arabesque",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+  // keep the variables you add in the dashboard when the site redeploys
+  "keep_vars": true,
+  "observability": { "enabled": true }
+}
