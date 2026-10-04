@@ -8,7 +8,7 @@
   // Non-secret settings live here. GITHUB_TOKEN stays a Secret in the dashboard.
   "vars": {
     "GITHUB_REPO": "Ahmedadelart/3arabesque",
-    "ACCESS_TEAM": "morning-haze-9754.cloudflareaccess.com",
+    "ACCESS_TEAM": "3arabesque.cloudflareaccess.com",
     "ACCESS_AUD": "d5cf3bbc20bb6bdb5d756b7108534d27f2b094382bc467950441b3fc050d0283"
   },
   "observability": { "enabled": true }
