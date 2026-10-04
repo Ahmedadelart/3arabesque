@@ -10,33 +10,59 @@
 
 const b64url = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(s.length / 4) * 4, '=')), c => c.charCodeAt(0));
 
-// Verify the Cloudflare Access JWT so the email can't be faked (e.g. on the *.pages.dev address).
-async function accessEmail(request, env) {
+// Verify the Cloudflare Access JWT so the email can't be faked (e.g. on the *.workers.dev address).
+// Returns { email } when the visitor is an allowed admin, otherwise { reason, ... } explaining why not.
+async function checkAdmin(request, env) {
+  const allowed = (env.ADMIN_EMAILS || '').toLowerCase().split(/[,\s]+/).map(s => s.trim()).filter(Boolean);
+  const teamRaw = (env.ACCESS_TEAM || '').trim(), audWant = (env.ACCESS_AUD || '').trim();
+  if (!teamRaw || !audWant || !allowed.length)
+    return { reason: 'settings_missing', missing: ['ACCESS_TEAM', 'ACCESS_AUD', 'ADMIN_EMAILS'].filter(k => !(env[k] || '').trim()) };
   const token = request.headers.get('cf-access-jwt-assertion');
-  if (!token || !env.ACCESS_TEAM || !env.ACCESS_AUD) return null;
+  if (!token) return { reason: 'no_access_token', host: new URL(request.url).host };
+  let header, payload;
+  try {
+    const [h, p] = token.split('.');
+    header = JSON.parse(new TextDecoder().decode(b64url(h)));
+    payload = JSON.parse(new TextDecoder().decode(b64url(p)));
+  } catch { return { reason: 'bad_token' }; }
+  const tokenEmail = (payload.email || '').toLowerCase();
+  const tokenAud = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
+  const team = teamRaw.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+  let keys;
+  try { ({ keys } = await (await fetch(`https://${team}/cdn-cgi/access/certs`)).json()); }
+  catch { return { reason: 'team_not_found', team }; }
+  const jwk = (keys || []).find(k => k.kid === header.kid);
+  if (!jwk) return { reason: 'team_mismatch', team, tokenIssuer: payload.iss };
   const [h, p, sig] = token.split('.');
-  const header = JSON.parse(new TextDecoder().decode(b64url(h)));
-  const payload = JSON.parse(new TextDecoder().decode(b64url(p)));
-  const team = env.ACCESS_TEAM.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  const { keys } = await (await fetch(`https://${team}/cdn-cgi/access/certs`)).json();
-  const jwk = keys.find(k => k.kid === header.kid);
-  if (!jwk) return null;
   const key = await crypto.subtle.importKey('jwk', jwk, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['verify']);
   const ok = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', key, b64url(sig), new TextEncoder().encode(`${h}.${p}`));
-  const aud = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
-  if (!ok || !aud.includes(env.ACCESS_AUD) || payload.exp * 1000 < Date.now()) return null;
-  return (payload.email || '').toLowerCase();
+  if (!ok) return { reason: 'bad_signature' };
+  if (!tokenAud.includes(audWant)) return { reason: 'aud_mismatch', tokenAud: tokenAud[0], settingStartsWith: audWant.slice(0, 8) };
+  if (payload.exp * 1000 < Date.now()) return { reason: 'expired' };
+  if (!allowed.includes(tokenEmail)) return { reason: 'email_not_in_ADMIN_EMAILS', email: tokenEmail };
+  return { email: tokenEmail };
 }
+const REASONS = {
+  settings_missing: 'Some settings are missing in Cloudflare (Settings → Variables and Secrets).',
+  no_access_token: 'Cloudflare Access is not protecting this address. Open the dashboard at https://3arabesque.art/admin (not .workers.dev), and make sure the Access application has BOTH paths: admin and api.',
+  bad_token: 'The sign-in token is unreadable. Sign out and sign in again.',
+  team_not_found: 'ACCESS_TEAM looks wrong. It should be like yourteam.cloudflareaccess.com',
+  team_mismatch: 'ACCESS_TEAM does not match the team that signed you in.',
+  bad_signature: 'The sign-in token failed verification. Sign out and sign in again.',
+  aud_mismatch: 'ACCESS_AUD does not match the Access application. Copy the AUD tag again.',
+  expired: 'Your sign-in expired. Reload the page.',
+  email_not_in_ADMIN_EMAILS: 'Your email is not in the ADMIN_EMAILS setting.',
+};
 
 const json = (o, status = 200) =>
   new Response(JSON.stringify(o), { status, headers: { 'content-type': 'application/json; charset=utf-8' } });
 
 export async function onRequestPost({ request, env }) {
   // 1) Who is this? Cloudflare Access signs a token after sign-in; we check it.
-  let email = null;
-  try { email = await accessEmail(request, env); } catch { email = null; }
-  const allowed = (env.ADMIN_EMAILS || '').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
-  if (!email || !allowed.includes(email)) return json({ error: 'Not signed in as an admin' }, 403);
+  let who;
+  try { who = await checkAdmin(request, env); } catch (e) { who = { reason: 'error', detail: String(e) }; }
+  if (!who.email) return json({ error: REASONS[who.reason] || 'Not signed in as an admin', ...who }, 403);
+  const email = who.email;
   if (!env.GITHUB_TOKEN || !env.GITHUB_REPO) return json({ error: 'GITHUB_TOKEN / GITHUB_REPO not set' }, 500);
 
   let body;
@@ -97,4 +123,11 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
+// GET /api/save: tells the dashboard who is signed in, or exactly what is misconfigured.
+export async function onRequestGet({ request, env }) {
+  let who;
+  try { who = await checkAdmin(request, env); } catch (e) { who = { reason: 'error', detail: String(e) }; }
+  return json({ ...who, message: who.email ? 'ok' : (REASONS[who.reason] || who.reason),
+    githubReady: !!(env.GITHUB_TOKEN && env.GITHUB_REPO) });
+}
 export const onRequest = () => json({ error: 'Use POST' }, 405);

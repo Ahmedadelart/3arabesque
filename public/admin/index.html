@@ -368,6 +368,7 @@ footer .mail button{background:var(--s2);border:1px solid var(--line);border-rad
 .ecard.dirty{border-color:var(--mint)}
 .chk{display:flex;gap:8px;align-items:center;font-size:14px}
 .saving{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:90;color:#fff;font-weight:600}
+.authwarn{background:color-mix(in srgb,var(--warn) 14%,transparent);border:1px solid var(--warn);color:var(--fg);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:14px;line-height:1.7;word-break:break-word}
 </style>
 
 
@@ -886,7 +887,7 @@ function vAdmin(){
       <button data-tab="t2">${L('إضافة مشاركات','Add submissions')}</button>
       <button data-tab="t4">${L('تعديل الرسومات','Edit artworks')}</button>
       <button data-tab="t3">${L('فنان الأسبوع','Artist of the week')}</button>
-      <div class="who"><span id="whoami">${L('داخل كأدمن','Signed in')}</span><br><a class="link" href="/cdn-cgi/access/logout">${L('خروج','Sign out')}</a></div>
+      <div class="who"><span id="whoami">${L('بيتأكد…','Checking…')}</span><br><a class="link" href="/cdn-cgi/access/logout">${L('خروج','Sign out')}</a></div>
     </div>
     <datalist id="artist-list">${artists.map(a=>`<option value="${esc(a)}">`).join('')}</datalist>
     <div>
@@ -965,7 +966,7 @@ async function saveData(message,files=[],del=[]){
     const r=await fetch('api/save',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({message,data:DATA,files,del})});
     let j=null; try{ j=await r.json(); }catch(_){}
     if(j&&j.ok){ if(j.rev) DATA.rev=j.rev; toast(L('اتحفظ. هيظهر على الموقع خلال دقيقة أو اتنين.','Saved. It will be live in a minute or two.')); return true; }
-    if(j&&j.error){ toast(L('حصلت مشكلة: ','Error: ')+String(j.error).slice(0,160)); return false; }
+    if(j&&j.error){ toast(L('حصلت مشكلة: ','Error: ')+String(j.error).slice(0,160)); document.querySelectorAll('.authwarn').forEach(x=>x.remove()); const d=document.createElement('div'); d.className='authwarn'; d.dir='auto'; d.textContent=j.error+(j.tokenAud?' (token AUD: '+j.tokenAud+')':'')+(j.email?' ('+j.email+')':''); document.querySelector('.admin > div:last-child').prepend(d); return false; }
     toast(L('نسخة المعاينة: التعديل متحفظش. الحفظ بيشتغل على 3arabesque.art/admin','Preview copy: not saved. Saving works on 3arabesque.art/admin')); return false;
   }catch(e){ toast(L('حصلت مشكلة في الاتصال','Connection problem')); return false; }
   finally{ ov.remove(); }
@@ -973,7 +974,11 @@ async function saveData(message,files=[],del=[]){
 
 function bindAdmin(){
   const $=id=>document.getElementById(id);
-  fetch('/cdn-cgi/access/get-identity').then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.email) $('whoami').textContent=j.email; }).catch(()=>{});
+  fetch('api/save',{cache:'no-store'}).then(r=>r.json()).then(j=>{
+    if(j.email){ $('whoami').textContent=j.email; if(!j.githubReady) authWarn(L('الدخول تمام، بس GITHUB_TOKEN أو GITHUB_REPO ناقصين في إعدادات Cloudflare.','Signed in, but GITHUB_TOKEN or GITHUB_REPO is missing in the Cloudflare settings.')); }
+    else { $('whoami').textContent=L('مش داخل كأدمن','Not signed in as admin'); authWarn((j.message||j.reason||'')+(j.email===undefined&&j.tokenAud?' (token AUD: '+j.tokenAud+')':'')+(j.missing?' Missing: '+j.missing.join(', '):'')+(j.host?' (opened on: '+j.host+')':'')); }
+  }).catch(()=>{ $('whoami').textContent=L('نسخة معاينة','Preview copy'); });
+  function authWarn(msg){ const d=document.createElement('div'); d.className='authwarn'; d.dir='auto'; d.textContent=msg; document.querySelector('.admin > div:last-child').prepend(d); }
   document.querySelectorAll('.aside [data-tab]').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.aside [data-tab]').forEach(x=>x.classList.toggle('on',x===b));
     ['t1','t2','t3','t4'].forEach(id=>$(id).hidden=id!==b.dataset.tab);
