@@ -402,43 +402,54 @@ a.hero-art{display:block}
 .prose p{margin:0 0 .6em}
 .prose ul{margin:.3em 0 .8em;padding-inline-start:1.2em}
 .prose li{margin:.25em 0}
-/* pioneers: the site's own teal lattice, gold museum frames, black plaques like the banner bar */
-.btn-gold{background:linear-gradient(180deg,#f2d27a,#c8962a);color:#140f04;border-color:#000;box-shadow:0 5px 0 #000}
-.lattice.deep{background-color:#06352f}
-.pio-band{border-block:4px solid var(--ink)}
-.pio-hall-head{display:grid;gap:12px;justify-items:center;text-align:center;margin-bottom:clamp(28px,4vw,52px)}
-.pio-hall-head p{max-width:52ch;background:rgba(6,22,21,.55);padding:10px 16px;border-radius:12px}
-.pio-title{font-size:clamp(46px,7vw,96px);line-height:1}
-.pio-title .t,.pio-head h1 .t{position:relative;display:inline-block}
-.pio-head .wrap{display:grid;gap:10px;justify-items:start}
-.pio-name{font-size:clamp(40px,6vw,84px);line-height:1.05;margin:0}
-.pio-years{font-size:15px;font-weight:600;color:var(--ink);background:var(--mint);border:2px solid var(--ink);border-radius:999px;padding:3px 16px;box-shadow:0 3px 0 var(--ink)}
+/* pioneers: museum hall — the site's dark teal-ink, the logo's 8-point star pattern in gold, gold frames */
+.btn-gold{background:linear-gradient(180deg,#f0cf78,#c8962a);color:#0b1a17;border-color:#000;box-shadow:0 5px 0 #000}
+.pio-band,.pio-page,.pio-head{--gold:#e0bb5e;--ivory:#f4ead2;color:#eee7d3;position:relative;
+  background-color:#04110f;background-image:radial-gradient(ellipse at 50% -10%,rgba(224,187,94,.18),transparent 55%),radial-gradient(ellipse at 50% 120%,rgba(10,107,92,.35),transparent 60%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%23d8b25a' stroke-width='1.6' stroke-linejoin='round' opacity='.16'%3E%3Cpolygon points='24.0,24.0 -24.0,24.0 -24.0,-24.0 24.0,-24.0'/%3E%3Cpolygon points='0.0,33.9 -33.9,0.0 -0.0,-33.9 33.9,-0.0'/%3E%3Cpolygon points='120.0,24.0 72.0,24.0 72.0,-24.0 120.0,-24.0'/%3E%3Cpolygon points='96.0,33.9 62.1,0.0 96.0,-33.9 129.9,-0.0'/%3E%3Cpolygon points='24.0,120.0 -24.0,120.0 -24.0,72.0 24.0,72.0'/%3E%3Cpolygon points='0.0,129.9 -33.9,96.0 -0.0,62.1 33.9,96.0'/%3E%3Cpolygon points='120.0,120.0 72.0,120.0 72.0,72.0 120.0,72.0'/%3E%3Cpolygon points='96.0,129.9 62.1,96.0 96.0,62.1 129.9,96.0'/%3E%3Cpolygon points='72.0,72.0 24.0,72.0 24.0,24.0 72.0,24.0'/%3E%3Cpolygon points='48.0,81.9 14.1,48.0 48.0,14.1 81.9,48.0'/%3E%3C/g%3E%3C/svg%3E");background-size:auto,auto,96px 96px}
+.pio-band{border-block:3px solid var(--gold)}
+.pio-head{border-bottom:3px solid var(--gold);padding:clamp(48px,7vw,96px) 0 clamp(36px,5vw,64px);text-align:center}
+.pio-head .wrap{display:grid;gap:14px;justify-items:center}
+.pio-head p{color:#dccfa9;max-width:52ch}
+.pio-hall-head{display:grid;gap:10px;justify-items:center;text-align:center;margin-bottom:clamp(28px,4vw,48px)}
+.pio-hall-head p{color:#dccfa9}
+.pio-tag{font-weight:700;color:#0b1a17;background:linear-gradient(180deg,#f0cf78,#c8962a);padding:4px 16px;border-radius:999px;font-size:13px;letter-spacing:.04em;border:2px solid #000}
+.pio-title{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,7vw,92px);line-height:1;margin:0;color:var(--gold);text-shadow:0 4px 0 #000}
+.pio-name{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,84px);line-height:1.05;margin:0;color:var(--gold);text-shadow:0 4px 0 #000}
+.pio-sub{color:var(--gold)}
+.pio-years{font-size:15px;color:#f0e2b6;border:1px solid rgba(224,187,94,.6);border-radius:999px;padding:3px 16px;letter-spacing:.05em;background:rgba(0,0,0,.35)}
 .pio-text{display:grid;gap:14px;justify-items:start}
-.pio-text .prose{max-width:62ch;background:rgba(6,22,21,.6);border-radius:16px;padding:18px 20px}
-.pio-band .pio-text .prose{background:none;padding:0}
+.pio-text .prose{color:#ebe3cc;max-width:62ch}
 .pio-feature{display:grid;grid-template-columns:minmax(220px,400px) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center}
 .pio-one .pio-feature{align-items:start;margin-top:22px}
+.pio-one .crumbs,.pio-one .crumbs a{color:#dccfa9}
+.pio-page .link,.pio-band .link{color:var(--mint)}
 /* gold frame + ivory mat */
 .pio-frame{display:block;padding:14px!important;margin:0!important;border:0;cursor:zoom-in;border-radius:3px!important;
   background:linear-gradient(135deg,#f3d98f 0%,#b5832a 30%,#f6df9a 50%,#9b6c1c 75%,#e7c56f 100%)!important;
-  box-shadow:0 0 0 3px #000,0 10px 0 #000,0 24px 50px rgba(0,0,0,.45)}
-.pio-frame img{display:block;width:100%;height:auto;border:10px solid #f4ead2;background:#222}
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.35),0 22px 50px rgba(0,0,0,.55)}
+.pio-frame img{display:block;width:100%;height:auto;border:10px solid var(--ivory);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2);background:#222}
 a.pio-frame{cursor:pointer}
-.pio-frame.sm{padding:8px!important;box-shadow:0 0 0 3px #000,0 6px 0 #000}
+.pio-frame.sm{padding:8px!important}
 .pio-frame.sm img{border-width:6px;aspect-ratio:4/5;object-fit:cover}
-/* portraits with a black plaque under each */
-.pio-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:24px;margin-top:clamp(36px,5vw,64px);padding-top:clamp(28px,4vw,44px);border-top:2px dashed rgba(79,224,142,.35)}
+/* portraits with a small brass plaque under each */
+.pio-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:24px;margin-top:clamp(36px,5vw,64px);border-top:1px solid rgba(224,187,94,.3);padding-top:clamp(28px,4vw,44px)}
 .pio-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:clamp(28px,3.4vw,46px);align-items:start}
-.pcard{display:grid;gap:14px;justify-items:center;text-decoration:none;color:var(--fg);text-align:center;transition:transform .2s;align-content:start}
+.pcard{display:grid;gap:12px;justify-items:center;align-content:start;text-decoration:none;color:#eee7d3;text-align:center;transition:transform .2s}
 .pcard:hover{transform:translateY(-4px)}
 .pcard .pio-frame{width:100%}
-.plaque{display:grid;gap:2px;background:#000;color:#f3f6ef;padding:6px 16px 7px;border-radius:6px;min-width:70%;box-shadow:0 0 0 2px var(--mint)}
-.plaque b{font-family:var(--f-display);font-weight:400;font-size:21px;line-height:1.35}
-.plaque small{color:var(--mint);font-size:12.5px;font-weight:600}
-.pio-more{display:grid;place-items:center;align-content:center;gap:6px;border:2px dashed rgba(79,224,142,.55);border-radius:10px;color:var(--fg);text-decoration:none;min-height:180px;background:rgba(6,22,21,.4)}
-.pio-more b{font-family:var(--f-display);font-weight:400;font-size:46px;color:var(--mint)}
-.pio-page:not(.lattice){background:var(--bg)}
+.plaque{display:grid;gap:2px;background:linear-gradient(180deg,#14231f,#0a1513);border:1px solid rgba(224,187,94,.6);padding:5px 14px 6px;border-radius:4px;min-width:70%}
+.plaque b{font-family:var(--f-display);font-weight:400;font-size:21px;line-height:1.35;color:var(--gold)}
+.plaque small{color:#cdbb8c;font-size:12.5px}
+.pio-more{display:grid;place-items:center;align-content:center;gap:6px;border:1px dashed rgba(224,187,94,.55);border-radius:6px;color:var(--gold);text-decoration:none;min-height:180px}
+.pio-more b{font-family:var(--f-display);font-weight:400;font-size:44px}
+.pio-works .tile{background:#0d1d1a}
+.pio-page .pager .btn{color:#eee7d3;border-color:rgba(224,187,94,.5)}
+:root[data-mode="light"] .pio-band,:root[data-mode="light"] .pio-page,:root[data-mode="light"] .pio-head{--fg:#eee7d3;--mute:#cdbb8c}
 @media (max-width:760px){.pio-feature{grid-template-columns:1fr}.pio-feature .pio-frame{max-width:340px}.pio-wall{grid-template-columns:repeat(2,minmax(0,1fr))}.plaque b{font-size:18px}}
+.aow-more{background:var(--s1);border-bottom:1px solid var(--line)}
+.acards.grid.six{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media (max-width:1200px){.acards.grid.six{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){.acards.grid.six{grid-template-columns:repeat(2,minmax(0,1fr))}.ac-body b{font-size:19px}}
 /* artist of the week cards */
 .btnrow{display:flex;gap:10px;flex-wrap:wrap}
 .aow-prev{margin-top:clamp(34px,4vw,56px);display:grid;gap:14px}
@@ -843,11 +854,14 @@ function homeAow(a){
         <h2 class="aow-name sticker">${esc(nm(a.name))}</h2>
         ${a.about?`<p class="aow-card">${esc(clip(cx(a.about),220))}</p>`:''}
         <div class="btnrow">${linkBtns(a,'btn-mint')}<a class="btn ${a.link?'btn-ghost':'btn-mint'}" href="#aow/${esc(fkey(a))}">${L('أعماله','Their work')} (${A(a.works.length)})</a></div>
-        ${state.aow.length>1?`<a class="link aow-arch" href="#aow">${L('فنانين الأسابيع اللي فاتت','Earlier weeks')} (${A(state.aow.length-1)}) ${FW()}</a>`:''}
       </div>
       <div class="aow-reel">${a.works.slice(0,4).map(w=>tile(w,'','aow0')).join('')}</div>
     </div>
-  </div></section>`;
+  </div></section>
+  ${state.aow.length>1?`<section class="sec aow-more"><div class="wrap">
+    <div class="sec-head"><h2>${L('فنانين الأسابيع اللي فاتت','Earlier weeks')}</h2><a class="link" href="#aow">${L('الأرشيف','Archive')} (${A(state.aow.length)}) ${FW()}</a></div>
+    <div class="acards grid six">${state.aow.slice(1,7).map(acard).join('')}</div>
+  </div></section>`:''}`;
 }
 function aowSlider(list){
   if(!list.length) return '';
@@ -886,12 +900,12 @@ function acard(a){
 /* home: pioneers hall */
 function homePio(){
   const ps=state.pioneers.slice(0,6), p=ps[0];
-  return `<section class="sec pio-band lattice deep"><div class="wrap">
-    <div class="pio-hall-head">${pill(L('الرواد','Pioneers'))}<h2 class="pio-title sticker"><span class="t">${L('قاعة الرواد','Hall of pioneers')}<svg class="spark" style="top:-16px;inset-inline-start:-26px" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg><svg class="spark s2 inl" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg></span></h2><p>${L('فنانين عرب رسموا الطريق لكل اللي جه بعدهم.','Arab artists who paved the way for everyone after them.')}</p></div>
+  return `<section class="sec pio-band"><div class="wrap">
+    <div class="pio-hall-head"><span class="pio-tag">${L('الرواد','Pioneers')}</span><h2 class="pio-title">${L('قاعة الرواد','Hall of pioneers')}</h2><p>${L('فنانين عرب رسموا الطريق لكل اللي جه بعدهم.','Arab artists who paved the way for everyone after them.')}</p></div>
     <div class="pio-feature">
       <a class="pio-frame" href="#pio/${esc(fkey(p))}">${cover(p.works[0])}</a>
       <div class="pio-text">
-        <h3 class="pio-name sticker">${esc(nm(p.name))}</h3>
+        <h3 class="pio-name">${esc(nm(p.name))}</h3>
         ${p.years?`<span class="pio-years">${esc(p.years)}</span>`:''}
         <p class="prose">${esc(clip(cx(p.about),320))}</p>
         <a class="btn btn-gold" href="#pio/${esc(fkey(p))}">${L('اعرف أكتر','Read more')}</a>
@@ -931,7 +945,7 @@ function vAowOne(key){
 }
 function vPioneers(){
   return `
-  <section class="phead lattice pio-head"><div class="wrap">${pill(L('الرواد','Pioneers'))}<h1 class="sticker"><span class="t">${L('قاعة الرواد','Hall of pioneers')}<svg class="spark" style="top:-14px;inset-inline-start:-24px" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg><svg class="spark s2 inl" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg></span></h1><p>${L('تحية لفنانين عرب رسموا الطريق لكل اللي جه بعدهم.','A tribute to the Arab artists who paved the way for everyone after them.')}</p></div></section>
+  <section class="phead pio-head"><div class="wrap"><span class="pio-tag">${L('الرواد','Pioneers')}</span><h1 class="pio-title">${L('قاعة الرواد','Hall of pioneers')}</h1><p>${L('تحية لفنانين عرب رسموا الطريق لكل اللي جه بعدهم.','A tribute to the Arab artists who paved the way for everyone after them.')}</p></div></section>
   <section class="sec pio-page"><div class="wrap">
     <div class="pio-wall">${state.pioneers.map(pcard).join('')||`<p class="hint">${L('قريبًا','Coming soon')}</p>`}</div>
   </div></section>`;
@@ -940,13 +954,13 @@ function vPioOne(key){
   const i=state.pioneers.findIndex(a=>fkey(a)===key); if(i<0) return vPioneers();
   const p=state.pioneers[i], prev=state.pioneers[i+1], next=state.pioneers[i-1], rest=p.works.slice(1);
   return `
-  <section class="sec pio-page pio-one lattice deep"><div class="wrap">
+  <section class="sec pio-page pio-one"><div class="wrap">
     <div class="crumbs"><a href="#pioneers">${L('قاعة الرواد','Hall of pioneers')}</a> / ${esc(nm(p.name))}</div>
     <div class="pio-feature">
       <button class="pio-frame tile" data-w="${esc(p.works[0]?.id||'')}" data-ctx="pio${i}">${cover(p.works[0])}</button>
       <div class="pio-text">
-        ${pill(L('الرواد','Pioneers'))}
-        <h1 class="pio-name sticker">${esc(nm(p.name))}</h1>
+        <span class="pio-tag">${L('الرواد','Pioneers')}</span>
+        <h1 class="pio-name">${esc(nm(p.name))}</h1>
         ${p.years?`<span class="pio-years">${esc(p.years)}</span>`:''}
         <div class="prose">${paras(cx(p.about))}</div>
         ${p.post?`<a class="link" href="${esc(p.post)}" target="_blank" rel="noopener">${L('المنشور على فيسبوك','The post on Facebook')} ↗</a>`:''}
@@ -954,7 +968,7 @@ function vPioOne(key){
     </div>
   </div></section>
   ${rest.length?`<section class="sec pio-page" style="padding-top:0"><div class="wrap">
-    <div class="sec-head"><h2>${L('من أعماله','Selected works')}</h2></div>
+    <div class="sec-head"><h2 class="pio-sub">${L('من أعماله','Selected works')}</h2></div>
     <div class="masonry pio-works">${rest.map(w=>tile(w,'','pio'+i)).join('')}</div>
     <div class="pager">${prev?`<a class="btn btn-ghost" href="#pio/${esc(fkey(prev))}">${BK()} ${esc(nm(prev.name))}</a>`:'<span></span>'}${next?`<a class="btn btn-ghost" href="#pio/${esc(fkey(next))}">${esc(nm(next.name))} ${FW()}</a>`:'<span></span>'}</div>
   </div></section>`:''}`;
