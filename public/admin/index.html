@@ -404,25 +404,66 @@ a.hero-art{display:block}
 .prose p{margin:0 0 .6em}
 .prose ul{margin:.3em 0 .8em;padding-inline-start:1.2em}
 .prose li{margin:.25em 0}
-/* pioneers: gold on ink */
-.btn-gold{background:#d4a72c;color:#061615;box-shadow:0 5px 0 #061615}
-.pio-band{background:#0c0a05;border-block:3px solid #d4a72c;color:#f3efe2}
-:root[data-mode="light"] .pio-band{background:#1a1408}
-.pio-grid{display:grid;grid-template-columns:minmax(220px,380px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
-.pio-frame{padding:10px!important;background:#d4a72c!important;border-radius:6px!important;box-shadow:0 0 0 3px #0c0a05,0 0 0 6px #d4a72c,0 18px 40px rgba(0,0,0,.45);margin:0!important}
-.pio-frame img{border-radius:2px;filter:sepia(.08)}
+/* pioneers: a quiet museum hall, gold on ink */
+.btn-gold{background:linear-gradient(180deg,#e9c46a,#c8962a);color:#140f04;border-color:#140f04;box-shadow:0 5px 0 #140f04}
+.pio-band,.pio-page,.pio-head{--gold:#d8b25a;--gold2:#a77a1e;--ivory:#f4ead2;background:#0f0c06;color:#efe6cf;position:relative}
+.pio-band::before,.pio-head::before,.pio-page.pio-one::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(216,178,90,.16),transparent 60%);pointer-events:none}
+.pio-band{border-block:2px solid var(--gold)}
+.pio-head{border-bottom:2px solid var(--gold);padding:clamp(48px,7vw,96px) 0 clamp(36px,5vw,64px);text-align:center}
+.pio-head .wrap{display:grid;gap:14px;justify-items:center}
+.pio-head p{color:#d9cba6;max-width:52ch}
+.pio-hall-head{display:grid;gap:10px;justify-items:center;text-align:center;margin-bottom:clamp(28px,4vw,48px)}
+.pio-hall-head p{color:#d9cba6}
+.pio-tag{font-weight:700;color:#140f04;background:linear-gradient(180deg,#e9c46a,#c8962a);padding:4px 16px;border-radius:999px;font-size:13px;letter-spacing:.04em}
+.pio-title{font-family:var(--f-display);font-weight:400;font-size:clamp(44px,7vw,92px);line-height:1;margin:0;color:var(--gold);text-shadow:0 3px 0 #000}
+.pio-name{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,84px);line-height:1.05;margin:0;color:var(--gold);text-shadow:0 3px 0 #000}
+.pio-sub{color:var(--gold)}
+.pio-years{font-size:15px;color:#ead9a9;border:1px solid rgba(216,178,90,.55);border-radius:999px;padding:3px 16px;letter-spacing:.05em}
 .pio-text{display:grid;gap:14px;justify-items:start}
-.pio-tag{font-weight:700;color:#0c0a05;background:#d4a72c;padding:4px 14px;border-radius:999px;font-size:14px;letter-spacing:.02em}
-.pio-name{font-family:var(--f-display);font-weight:400;font-size:clamp(46px,7vw,96px);line-height:1;margin:0;color:#d4a72c;text-shadow:0 4px 0 #000}
-.pio-years{font-size:15px;color:#e8d9a8;border:1px solid rgba(212,167,44,.5);border-radius:999px;padding:3px 14px}
-.pio-band .prose{color:#e9e3cf;max-width:60ch}
-.pio-head{border-bottom:3px solid #d4a72c}
-.pio-list{display:grid;gap:clamp(56px,7vw,110px)}
-.pio-item{display:grid;gap:28px}
-.pio-item .pio-grid{align-items:start}
-.pio-item .pio-name{color:#d4a72c}
-:root[data-mode="light"] .pio-item .pio-name{color:#8a6a10;text-shadow:none}
-@media (max-width:760px){.pio-grid{grid-template-columns:1fr}.pio-frame{max-width:320px}}
+.pio-text .prose{color:#e8dfc6;max-width:62ch}
+.pio-feature{display:grid;grid-template-columns:minmax(220px,400px) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center}
+.pio-one .pio-feature{align-items:start;margin-top:22px}
+.pio-one .crumbs a,.pio-one .crumbs{color:#d9cba6}
+/* the frame: gold moulding, ivory mat */
+.pio-frame{display:block;padding:14px!important;margin:0!important;border:0;cursor:zoom-in;border-radius:3px!important;
+  background:linear-gradient(135deg,#f1d389 0%,#b5832a 30%,#f3d98f 50%,#9b6c1c 75%,#e3bf6b 100%)!important;
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.35),0 22px 50px rgba(0,0,0,.55)}
+.pio-frame img{display:block;width:100%;height:auto;border:10px solid var(--ivory);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2);background:#222}
+a.pio-frame{cursor:pointer}
+.pio-frame.sm{padding:8px!important}
+.pio-frame.sm img{border-width:6px;aspect-ratio:4/5;object-fit:cover}
+/* rows and wall of portraits with brass plaques */
+.pio-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px;margin-top:clamp(36px,5vw,64px);border-top:1px solid rgba(216,178,90,.25);padding-top:clamp(28px,4vw,44px)}
+.pio-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:clamp(26px,3.4vw,44px)}
+.pcard{display:grid;gap:10px;justify-items:center;text-decoration:none;color:#efe6cf;text-align:center;transition:transform .2s}
+.pcard:hover{transform:translateY(-4px)}
+.pcard b{font-family:var(--f-display);font-weight:400;font-size:22px;color:var(--gold);background:linear-gradient(180deg,#2a2210,#17120a);border:1px solid rgba(216,178,90,.5);padding:4px 14px;border-radius:4px;line-height:1.4}
+.pcard small{color:#cdbb8c;font-size:13px}
+.pio-more{display:grid;place-items:center;align-content:center;gap:6px;border:1px dashed rgba(216,178,90,.5);border-radius:6px;color:var(--gold);text-decoration:none;min-height:180px}
+.pio-more b{font-family:var(--f-display);font-weight:400;font-size:44px}
+.pio-works .tile{background:#1c170c}
+.pio-page .pager .btn{color:#efe6cf;border-color:rgba(216,178,90,.5)}
+@media (max-width:760px){.pio-feature{grid-template-columns:1fr}.pio-feature .pio-frame{max-width:340px}.pio-wall{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* artist of the week cards */
+.btnrow{display:flex;gap:10px;flex-wrap:wrap}
+.aow-prev{margin-top:clamp(34px,4vw,56px);display:grid;gap:14px}
+.aow-prev h3{font-size:26px}
+.acards.scroll{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,240px);gap:16px;overflow-x:auto;padding-bottom:10px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.acards.scroll .acard2{scroll-snap-align:start}
+.acards.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
+.acard2{display:grid;text-decoration:none;color:var(--fg);background:var(--s1);border:2px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:0 6px 0 var(--hard);transition:transform .15s}
+.acard2:hover{transform:translateY(-3px)}
+.acard2[hidden]{display:none}
+.ac-cover{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;aspect-ratio:4/3;gap:2px;background:var(--ink)}
+.ac-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.ac-cover .c0{grid-row:1/3}
+.ac-body{display:grid;gap:2px;padding:12px 14px}
+.ac-body b{font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.2}
+.ac-body span{font-size:12.5px;color:var(--mute)}
+.aow .acard2{background:rgba(6,22,21,.8);color:#f3f6ef}
+.aow .acard2 .ac-body span{color:#a9c2b9}
+.aow-prev .link{color:#f3f6ef}
+
 .iposts{display:grid;gap:14px}
 .ipost{display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px}
 .ipost.off{opacity:.5}.ipost.st-done{opacity:.4}
@@ -715,16 +756,8 @@ function vHome(){
     <div class="mosaic">${pick.map((w,i)=>tile(w,mc[i]||'','hl')).join('')}</div>
   </div></section>
 
-  <section class="sec aow lattice"><div class="wrap aow-grid">
-    <div style="display:grid;gap:16px;justify-items:start">
-      <span class="tag-now">${L('فنان الأسبوع','Artist of the week')}</span>
-      <h2 class="aow-name sticker">${esc(nm(a.name))}</h2>
-      ${a.about?`<p class="aow-card">${esc(clip(cx(a.about),260))}</p>`:''}
-      <div style="display:flex;gap:10px;flex-wrap:wrap">${a.link?`<a class="btn btn-mint" href="${esc(a.link)}" target="_blank" rel="noopener">${L('أعماله','Their portfolio')} ↗</a>`:''}<a class="btn ${a.link?'btn-ghost':'btn-mint'}" href="#aow">${L('كل فناني الأسبوع','All artists of the week')}</a></div>
-    </div>
-    <div class="aow-reel">${a.works.slice(0,4).map(w=>tile(w,'','aow0')).join('')}</div>
-  </div></section>
-  ${state.pioneers.length?pioBand(state.pioneers[0]):''}
+  ${a?homeAow(a):''}
+  ${state.pioneers.length?homePio():''}
 
   <section class="sec"><div class="wrap">
     <div class="sec-head"><h2>${L('التحديات السابقة','Past challenges')}</h2><a class="link" href="#challenges">${L('الأرشيف','Archive')} ${FW()}</a></div>
@@ -782,52 +815,114 @@ function vChallenge(k){
 }
 const clip=(t,n)=>{t=String(t||''); return t.length>n?t.slice(0,n).replace(/\s+\S*$/,'')+'…':t;};
 const paras=t=>String(t||'').split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>/^[•\-–·]/.test(x)?`<li>${esc(x.replace(/^[•\-–·]\s*/,''))}</li>`:`<p>${esc(x)}</p>`).join('').replace(/(<li>.*?<\/li>)+/g,m=>`<ul>${m}</ul>`);
-function pioBand(p){
-  const i=state.pioneers.indexOf(p), por=p.works[0];
-  return `<section class="sec pio-band"><div class="wrap pio-grid">
-    ${por?`<button class="pio-frame tile" data-w="${esc(por.id)}" data-ctx="pio${i}"><img loading="lazy" src="${esc(thumb(por))}" data-full="${esc(por.src)}" onerror="if(this.src!==this.dataset.full){this.src=this.dataset.full}" alt="${esc(nm(p.name))}"></button>`:''}
-    <div class="pio-text">
-      <span class="pio-tag">${L('الرواد','Pioneers')}</span>
-      <h2 class="pio-name">${esc(nm(p.name))}</h2>
-      ${p.years?`<span class="pio-years">${esc(p.years)}</span>`:''}
-      <p class="prose">${esc(clip(cx(p.about),300))}</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-gold" href="#pioneers">${L('اعرف أكتر','Read more')}</a>${state.pioneers.length>1?`<a class="btn btn-ghost" href="#pioneers">${L('كل الرواد','All pioneers')} (${A(state.pioneers.length)})</a>`:''}</div>
+const fkey=a=>{ const m=(a.post||'').match(/(\d{8,})/); return m?m[1]:(a.fb||a.name); };
+const fdate=a=>{ if(a.d){ try{ return new Date(a.d+'T12:00:00').toLocaleDateString(LANG==='ar'?'ar-EG':'en-GB',{day:'numeric',month:'long',year:'numeric'}); }catch(_){} } return cx(a.date)||''; };
+const SITE=[[/behance\.net/,'Behance'],[/instagram\.com/,'Instagram'],[/artstation\.com/,'ArtStation'],[/linkedin\.com/,'LinkedIn'],[/x\.com|twitter\.com/,'X'],[/youtube\.com/,'YouTube'],[/dribbble\.com/,'Dribbble'],[/tiktok\.com/,'TikTok']];
+const siteName=u=>{ const f=SITE.find(([r])=>r.test(u)); if(f) return f[1]; try{ return new URL(u).hostname.replace(/^www\./,''); }catch(_){ return L('الموقع','Website'); } };
+const linkBtns=(a,cls='btn-ghost')=>{ const ls=(a.links&&a.links.length?a.links:(a.link?[a.link]:[])); return ls.map((u,i)=>`<a class="btn ${i?'btn-ghost':cls}" href="${esc(u)}" target="_blank" rel="noopener" dir="ltr">${esc(siteName(u))} ↗</a>`).join(''); };
+const cover=(w,cls='')=>w?`<img class="${cls}" loading="lazy" src="${esc(thumb(w))}" data-full="${esc(w.src)}" onerror="if(this.src!==this.dataset.full){this.src=this.dataset.full}" alt="">`:'';
+
+/* home: artist of the week + earlier weeks */
+function homeAow(a){
+  const rest=state.aow.slice(1,13);
+  return `<section class="sec aow lattice"><div class="wrap">
+    <div class="aow-grid">
+      <div style="display:grid;gap:16px;justify-items:start">
+        <span class="tag-now">${L('فنان الأسبوع','Artist of the week')}${fdate(a)?' · '+esc(fdate(a)):''}</span>
+        <h2 class="aow-name sticker">${esc(nm(a.name))}</h2>
+        ${a.about?`<p class="aow-card">${esc(clip(cx(a.about),220))}</p>`:''}
+        <div class="btnrow">${linkBtns(a,'btn-mint')}<a class="btn ${a.link?'btn-ghost':'btn-mint'}" href="#aow/${esc(fkey(a))}">${L('كل أعماله','All their work')} (${A(a.works.length)})</a></div>
+      </div>
+      <div class="aow-reel">${a.works.slice(0,4).map(w=>tile(w,'','aow0')).join('')}</div>
     </div>
+    ${rest.length?`<div class="aow-prev">
+      <div class="sec-head" style="margin:0"><h3>${L('فنانين الأسابيع اللي فاتت','Earlier weeks')}</h3><a class="link" href="#aow">${L('الأرشيف كله','Full archive')} (${A(state.aow.length)}) ${FW()}</a></div>
+      <div class="acards scroll">${rest.map(acard).join('')}</div>
+    </div>`:''}
   </div></section>`;
 }
+function acard(a){
+  const w=a.works;
+  return `<a class="acard2" href="#aow/${esc(fkey(a))}">
+    <div class="ac-cover">${cover(w[0],'c0')}${cover(w[1],'c1')}${cover(w[2],'c2')}</div>
+    <div class="ac-body"><b dir="auto">${esc(nm(a.name))}</b><span>${esc(fdate(a))}${fdate(a)?' · ':''}${A(w.length)} ${L('رسمة','works')}</span></div>
+  </a>`;
+}
+/* home: pioneers hall */
+function homePio(){
+  const ps=state.pioneers.slice(0,6), p=ps[0];
+  return `<section class="sec pio-band"><div class="wrap">
+    <div class="pio-hall-head"><span class="pio-tag">${L('الرواد','Pioneers')}</span><h2 class="pio-title">${L('قاعة الرواد','Hall of pioneers')}</h2><p>${L('فنانين عرب رسموا الطريق لكل اللي جه بعدهم.','Arab artists who paved the way for everyone after them.')}</p></div>
+    <div class="pio-feature">
+      <a class="pio-frame" href="#pio/${esc(fkey(p))}">${cover(p.works[0])}</a>
+      <div class="pio-text">
+        <h3 class="pio-name">${esc(nm(p.name))}</h3>
+        ${p.years?`<span class="pio-years">${esc(p.years)}</span>`:''}
+        <p class="prose">${esc(clip(cx(p.about),320))}</p>
+        <a class="btn btn-gold" href="#pio/${esc(fkey(p))}">${L('اعرف أكتر','Read more')}</a>
+      </div>
+    </div>
+    ${state.pioneers.length>1?`<div class="pio-row">${state.pioneers.slice(1,7).map(pcard).join('')}<a class="pio-more" href="#pioneers"><b>${A(state.pioneers.length)}</b><span>${L('كل الرواد','All pioneers')} ${FW()}</span></a></div>`:''}
+  </div></section>`;
+}
+function pcard(p){
+  return `<a class="pcard" href="#pio/${esc(fkey(p))}"><span class="pio-frame sm">${cover(p.works[0])}</span><b dir="auto">${esc(nm(p.name))}</b>${p.years?`<small>${esc(p.years)}</small>`:''}</a>`;
+}
+/* archive pages */
 function vAow(){
   return `
-  <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('فنان الأسبوع','Artist of the week')}</h1><p>${L('كل أسبوع بنختار فنان ونعرض شغله على صفحة أرابيسك. ده الأرشيف كله.','Every week we pick an artist and feature their work on the Arabesque page. Here is the full archive.')}</p></div></section>
-  <section class="sec"><div class="wrap aow-list">
-    ${state.aow.map((a,i)=>`<article class="aow-item" id="aow-${i}">
-      <header>
-        ${a.date&&cx(a.date)?`<span class="when">${esc(cx(a.date))}</span>`:''}
-        <h2 class="aow-name sticker">${esc(nm(a.name))}</h2>
-        ${a.about?`<div class="prose aow-about">${paras(cx(a.about))}</div>`:''}
-        <div style="display:flex;gap:10px;flex-wrap:wrap">${a.link?`<a class="btn btn-mint" href="${esc(a.link)}" target="_blank" rel="noopener">${L('أعماله','Their portfolio')} ↗</a>`:''}${a.post?`<a class="btn btn-ghost" href="${esc(a.post)}" target="_blank" rel="noopener">${L('المنشور على فيسبوك','The post on Facebook')} ↗</a>`:''}</div>
-      </header>
-      <div class="masonry">${a.works.map(w=>tile(w,'','aow'+i)).join('')}</div>
-    </article>`).join('')||`<p class="hint">${L('قريبًا','Coming soon')}</p>`}
+  <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('فنان الأسبوع','Artist of the week')}</h1><p>${L(`كل أسبوع بنختار فنان ونعرض شغله على صفحة أرابيسك. ${A(state.aow.length)} فنان لحد دلوقتي.`,`Every week we feature an artist on the Arabesque page. ${state.aow.length} so far.`)}</p></div></section>
+  <section class="sec"><div class="wrap">
+    <label class="search" style="max-width:420px;margin-bottom:22px"><span aria-hidden="true">⌕</span><input id="aowsearch" type="search" placeholder="${L('ابحث باسم الفنان','Search by name')}" autocomplete="off"></label>
+    <div class="acards grid" id="aowgrid">${state.aow.map(acard).join('')||`<p class="hint">${L('قريبًا','Coming soon')}</p>`}</div>
+  </div></section>`;
+}
+function vAowOne(key){
+  const i=state.aow.findIndex(a=>fkey(a)===key); if(i<0) return vAow();
+  const a=state.aow[i], prev=state.aow[i+1], next=state.aow[i-1];
+  return `
+  <section class="phead lattice"><div class="wrap" style="display:grid;gap:14px;justify-items:start">
+    <div class="crumbs"><a href="#aow">${L('فنان الأسبوع','Artist of the week')}</a> / ${esc(nm(a.name))}</div>
+    <span class="tag-now">${esc(fdate(a))}</span>
+    <h1 class="sticker">${esc(nm(a.name))}</h1>
+    ${a.about?`<div class="aow-card prose">${paras(cx(a.about))}</div>`:''}
+    <div class="btnrow">${linkBtns(a,'btn-mint')}${a.post?`<a class="btn btn-ghost" href="${esc(a.post)}" target="_blank" rel="noopener">${L('المنشور على فيسبوك','The post on Facebook')} ↗</a>`:''}</div>
+  </div></section>
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><h2>${A(a.works.length)} ${L('رسمة','works')}</h2></div>
+    <div class="masonry">${a.works.map(w=>tile(w,'','aow'+i)).join('')}</div>
+    <div class="pager">${prev?`<a class="btn btn-ghost" href="#aow/${esc(fkey(prev))}">${BK()} ${esc(nm(prev.name))}</a>`:'<span></span>'}${next?`<a class="btn btn-ghost" href="#aow/${esc(fkey(next))}">${esc(nm(next.name))} ${FW()}</a>`:'<span></span>'}</div>
   </div></section>`;
 }
 function vPioneers(){
   return `
-  <section class="phead lattice pio-head"><div class="wrap"><h1 class="sticker">${L('الرواد','Pioneers')}</h1><p>${L('فنانين عرب رسموا الطريق لكل اللي جه بعدهم.','Arab artists who paved the way for everyone after them.')}</p></div></section>
-  <section class="sec"><div class="wrap pio-list">
-    ${state.pioneers.map((p,i)=>{ const por=p.works[0], rest=p.works.slice(1);
-      return `<article class="pio-item" id="pio-${i}">
-      <div class="pio-grid">
-        ${por?`<button class="pio-frame tile" data-w="${esc(por.id)}" data-ctx="pio${i}"><img loading="lazy" src="${esc(thumb(por))}" data-full="${esc(por.src)}" onerror="if(this.src!==this.dataset.full){this.src=this.dataset.full}" alt="${esc(nm(p.name))}"></button>`:''}
-        <div class="pio-text">
-          <h2 class="pio-name">${esc(nm(p.name))}</h2>
-          ${p.years?`<span class="pio-years">${esc(p.years)}</span>`:''}
-          <div class="prose">${paras(cx(p.about))}</div>
-          ${p.post?`<a class="link" href="${esc(p.post)}" target="_blank" rel="noopener">${L('المنشور على فيسبوك','The post on Facebook')} ↗</a>`:''}
-        </div>
-      </div>
-      ${rest.length?`<div class="masonry">${rest.map(w=>tile(w,'','pio'+i)).join('')}</div>`:''}
-    </article>`;}).join('')||`<p class="hint">${L('قريبًا','Coming soon')}</p>`}
+  <section class="phead pio-head"><div class="wrap"><span class="pio-tag">${L('الرواد','Pioneers')}</span><h1 class="pio-title">${L('قاعة الرواد','Hall of pioneers')}</h1><p>${L('تحية لفنانين عرب رسموا الطريق لكل اللي جه بعدهم.','A tribute to the Arab artists who paved the way for everyone after them.')}</p></div></section>
+  <section class="sec pio-page"><div class="wrap">
+    <div class="pio-wall">${state.pioneers.map(pcard).join('')||`<p class="hint">${L('قريبًا','Coming soon')}</p>`}</div>
   </div></section>`;
+}
+function vPioOne(key){
+  const i=state.pioneers.findIndex(a=>fkey(a)===key); if(i<0) return vPioneers();
+  const p=state.pioneers[i], prev=state.pioneers[i+1], next=state.pioneers[i-1], rest=p.works.slice(1);
+  return `
+  <section class="sec pio-page pio-one"><div class="wrap">
+    <div class="crumbs"><a href="#pioneers">${L('قاعة الرواد','Hall of pioneers')}</a> / ${esc(nm(p.name))}</div>
+    <div class="pio-feature">
+      <button class="pio-frame tile" data-w="${esc(p.works[0]?.id||'')}" data-ctx="pio${i}">${cover(p.works[0])}</button>
+      <div class="pio-text">
+        <span class="pio-tag">${L('الرواد','Pioneers')}</span>
+        <h1 class="pio-name">${esc(nm(p.name))}</h1>
+        ${p.years?`<span class="pio-years">${esc(p.years)}</span>`:''}
+        <div class="prose">${paras(cx(p.about))}</div>
+        ${p.post?`<a class="link" href="${esc(p.post)}" target="_blank" rel="noopener">${L('المنشور على فيسبوك','The post on Facebook')} ↗</a>`:''}
+      </div>
+    </div>
+  </div></section>
+  ${rest.length?`<section class="sec pio-page" style="padding-top:0"><div class="wrap">
+    <div class="sec-head"><h2 class="pio-sub">${L('من أعماله','Selected works')}</h2></div>
+    <div class="masonry pio-works">${rest.map(w=>tile(w,'','pio'+i)).join('')}</div>
+    <div class="pager">${prev?`<a class="btn btn-ghost" href="#pio/${esc(fkey(prev))}">${BK()} ${esc(nm(prev.name))}</a>`:'<span></span>'}${next?`<a class="btn btn-ghost" href="#pio/${esc(fkey(next))}">${esc(nm(next.name))} ${FW()}</a>`:'<span></span>'}</div>
+  </div></section>`:''}`;
 }
 function vArtists(){
   const n=new Set(state.works.filter(w=>w.by).map(w=>w.by)).size;
@@ -836,7 +931,8 @@ function vArtists(){
   <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('الفنانين','Artists')}</h1><p>${L('كل الفنانين اللي شاركوا في أرابيسك.','Everyone who has taken part in Arabesque.')}</p></div></section>
   <section class="sec"><div class="wrap alist">
     <div class="sec-head" style="margin:0"><h2>${L('فنان الأسبوع','Artist of the week')}</h2><a class="link" href="#aow">${L('الأرشيف كله','Full archive')} (${A(state.aow.length)}) ${FW()}</a></div>
-    ${state.aow.slice(0,3).map((a,i)=>`<article class="arow">
+    <div class="acards scroll">${state.aow.slice(0,10).map(acard).join('')}</div>
+    ${[].map((a,i)=>`<article class="arow">
       <div style="display:grid;gap:6px"><span class="when">${esc(cx(a.date))}</span><h3>${esc(nm(a.name))}</h3></div>
       <div class="thumbs">${a.works.length?a.works.slice(0,4).map(w=>tile(w,'','aow'+i)).join(''):`<div class="mono" style="background:${hues[i%3]}">${esc(nm(a.name).trim()[0])}</div><div class="ph"></div><div class="ph"></div><div class="ph"></div>`}</div>
     </article>`).join('')}
@@ -936,7 +1032,9 @@ function route(keepScroll){
   else if(h==='challenges') html=vChallenges();
   else if(h==='artists') html=vArtists();
   else if(h==='aow'){ html=vAow(); r='artists'; }
+  else if(h.startsWith('aow/')){ html=vAowOne(decodeURIComponent(h.slice(4))); r='artists'; }
   else if(h==='pioneers') html=vPioneers();
+  else if(h.startsWith('pio/')){ html=vPioOne(decodeURIComponent(h.slice(4))); r='pioneers'; }
   else if(h==='about') html=vAbout();
   else if(h==='brief'){ app.innerHTML=`<div>${vHome()}</div>`; mark('home'); document.getElementById('brief').scrollIntoView(); return;}
   else {html=vHome(); r='home';}
@@ -945,6 +1043,7 @@ function route(keepScroll){
   if(!keepScroll) window.scrollTo(0,0);
   startReels();
   startHeroRot();
+  const as=document.getElementById('aowsearch'); if(as) as.addEventListener('input',()=>{ const q=as.value.trim().toLowerCase(); document.querySelectorAll('#aowgrid .acard2').forEach(c=>c.hidden=q&&!c.textContent.toLowerCase().includes(q)); });
   if(r==='artists'&&document.getElementById('asearch')){renderDir(); document.getElementById('asearch').addEventListener('input',renderDir);}
 }
 function mark(r){document.querySelectorAll('nav.main a').forEach(a=>a.classList.toggle('on',a.dataset.r===r)); document.getElementById('nav').classList.remove('open');}
@@ -1295,6 +1394,7 @@ function bindAdmin(){
   const AR_D='٠١٢٣٤٥٦٧٨٩', toLat=t=>String(t||'').replace(/[٠-٩]/g,c=>AR_D.indexOf(c));
   const MON={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11,'يناير':0,'فبراير':1,'مارس':2,'أبريل':3,'ابريل':3,'إبريل':3,'مايو':4,'يونيو':5,'يوليو':6,'أغسطس':7,'اغسطس':7,'سبتمبر':8,'أكتوبر':9,'اكتوبر':9,'نوفمبر':10,'ديسمبر':11};
   function fbDate(text,at){
+    if(/^\d{4}-\d{2}-\d{2}/.test(text||'')) return new Date(text+'T12:00:00');
     const now=at?new Date(at):new Date(); let t=toLat(text).toLowerCase().replace(/ at .*$| الساعة.*$|[،,]/g,' ').replace(/\s+/g,' ').trim();
     if(!t) return null;
     if(/just now|الآن|now/.test(t)) return now;
@@ -1318,10 +1418,11 @@ function bindAdmin(){
   let IM=[]; // import candidates
   let IP=[]; // post candidates (artist of the week / pioneers)
   function parsePost(t){
+    t=String(t||'').replace(/\*/g,'');
     const lines=String(t||'').split('\n').map(x=>x.trim()).filter(Boolean).filter(x=>!/^#|^(See less|عرض أقل)$/.test(x));
     const pio=/الرو[ّ]?اد/.test(t);
     let name='', ne='', hi=-1;
-    lines.forEach((x,i)=>{ const m=x.match(/^(?:الفنان|الفنانة|الفنّان)\s*[:：]?\s+(.+)$/); if(m&&!name){ name=m[1].trim(); hi=i; } });
+    lines.forEach((x,i)=>{ const m=x.match(/^(?:الفنان|الفنانة|الفنانه|الفنّان)\s*[:：]?\s+(.+)$/); if(m&&!name){ name=m[1].trim(); hi=i; } });
     if(!name){ const h=lines.findIndex(x=>/فنان الأسبوع|الرو[ّ]?اد/.test(x)); const c=lines[h+1]||lines[0]||''; if(c&&c.length<40){ name=c; hi=h+1; } }
     const lat=lines.find(x=>/^[A-Za-z][A-Za-z .'-]{2,40}$/.test(x)); if(lat) ne=lat;
     const yrs=(t.match(/(1[89]\d\d|20\d\d)[\s\S]{1,40}?(1[89]\d\d|20\d\d)/)||[]); const years=yrs[1]?`${yrs[1]} – ${yrs[2]}`:'';
@@ -1331,9 +1432,9 @@ function bindAdmin(){
   function addPost(p){
     if(!p||!p.photos||!p.photos.length) return;
     const key=p.post||p.photos[0].fbid; if(IP.some(x=>x.key===key)) return;
-    const done=[...(DATA.aow||[]),...(DATA.pioneers||[])].some(a=>(p.post&&a.post===p.post)||(a.fb&&a.fb===p.photos[0].fbid));
+    const done=[...(DATA.aow||[]),...(DATA.pioneers||[])].some(a=>!a.partial&&((p.post&&a.post===p.post)||(a.fb&&a.fb===p.photos[0].fbid)));
     const d=fbDate(p.date,p.started);
-    IP.push({...parsePost(p.text),key,post:p.post||'',link:p.link||'',text:p.text||'',photos:p.photos,d,dateText:d?d.toLocaleDateString(LANG==='ar'?'ar-EG':'en-GB',{day:'numeric',month:'long',year:'numeric'}):'',sel:!done,done});
+    IP.push({...parsePost(p.text),key,post:p.post||'',link:p.link||'',links:p.links||(p.link?[p.link]:[]),text:p.text||'',photos:p.photos,d,dateText:d?d.toLocaleDateString(LANG==='ar'?'ar-EG':'en-GB',{day:'numeric',month:'long',year:'numeric'}):'',sel:!done,done});
   }
   function renderPosts(){
     $('ipost-wrap').hidden=!IP.length; if(!IP.length) return;
@@ -1408,25 +1509,28 @@ function bindAdmin(){
     for(const [n,x] of pick.entries()){
       if(!x.name.trim()){ toast(L('في منشور من غير اسم','A post has no name')); return; }
       $('i-status').textContent=L(`بيجهز «${x.name}» (${A(n+1)} من ${A(pick.length)})…`,`Preparing “${x.name}” (${n+1} of ${pick.length})…`);
-      const snap=JSON.stringify(DATA), ids=[];
-      // split very large posts so each save stays light
-      const chunks=[]; for(let i=0;i<x.photos.length;i+=20) chunks.push(x.photos.slice(i,i+20));
-      let ok=true;
-      for(const [ci,ch] of chunks.entries()){
-        const files=[];
-        for(const ph of ch){ try{ const blob=await fetch(proxied(ph.img)).then(r=>{ if(!r.ok) throw new Error(r.status); return r.blob(); }); const f=await prepImage(blob); if(!f) continue; const id='h'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.feat=DATA.feat||[]; DATA.feat.push({id,wh:f.wh,t:''}); ids.push(id);}catch(_){} }
-        if(ci===chunks.length-1){
-          if(!ids.length){ ok=false; break; }
-          const entry={name:x.name.trim(),date:[x.dateText,x.dateText],d:x.d?x.d.toISOString():undefined,about:x.about?[x.about,x.about]:null,works:ids,link:x.link||undefined,post:x.post||undefined,fb:x.photos[0].fbid};
-          if(x.ne){ DATA.names=DATA.names||{}; DATA.names[entry.name]=x.ne; }
-          const arr=x.kind==='pio'?(DATA.pioneers=DATA.pioneers||[]):(DATA.aow=DATA.aow||[]);
-          if(x.kind==='pio') entry.years=x.years||undefined;
-          arr.push(entry); arr.sort((a,b)=>(b.d||b.at||'').localeCompare(a.d||a.at||''));
-        }
-        if(!files.length&&ci<chunks.length-1) continue;
-        if(!await saveData(`${x.kind==='pio'?'Pioneer':'Artist of the week'}: ${x.name}${chunks.length>1?` (${ci+1}/${chunks.length})`:''}`,files)){ ok=false; break; }
+      const arr=x.kind==='pio'?(DATA.pioneers=DATA.pioneers||[]):(DATA.aow=DATA.aow||[]);
+      // resume a post that was cut off half way (only the missing photos are added)
+      let entry=arr.find(a=>(x.post&&a.post===x.post)||(a.fb&&a.fb===x.photos[0].fbid));
+      if(!entry){
+        entry={name:x.name.trim(),date:[x.dateText,x.dateText],d:x.d?x.d.toISOString().slice(0,10):undefined,about:x.about?[x.about,x.about]:null,works:[],fbs:[],link:x.link||undefined,links:x.links&&x.links.length?x.links:undefined,post:x.post||undefined,fb:x.photos[0].fbid,partial:true};
+        if(x.kind==='pio') entry.years=x.years||undefined;
+        arr.push(entry); arr.sort((a,b)=>(b.d||b.at||'').localeCompare(a.d||a.at||''));
       }
-      if(!ok){ Object.keys(DATA).forEach(k=>delete DATA[k]); Object.assign(DATA,JSON.parse(snap)); toast(L('ما اتحفظش: ','Not saved: ')+x.name); break; }
+      if(x.ne){ DATA.names=DATA.names||{}; DATA.names[entry.name]=x.ne; }
+      entry.fbs=entry.fbs||[];
+      const todo=x.photos.filter(ph=>!entry.fbs.includes(ph.fbid));
+      const B=10, parts=Math.max(1,Math.ceil(todo.length/B));
+      let ok=true;
+      for(let ci=0;ci<parts;ci++){
+        const ch=todo.slice(ci*B,ci*B+B), files=[], snap=JSON.stringify(DATA);
+        $('i-status').textContent=L(`«${x.name}»: جزء ${A(ci+1)} من ${A(parts)} (منشور ${A(n+1)} من ${A(pick.length)})`,`“${x.name}”: part ${ci+1} of ${parts} (post ${n+1} of ${pick.length})`);
+        for(const ph of ch){ try{ const blob=await fetch(proxied(ph.img)).then(r=>{ if(!r.ok) throw new Error(r.status); return r.blob(); }); const f=await prepImage(blob); if(!f) continue; const id='h'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.feat=DATA.feat||[]; DATA.feat.push({id,wh:f.wh,t:''}); entry.works.push(id); entry.fbs.push(ph.fbid);}catch(_){} }
+        if(ci===parts-1) delete entry.partial;
+        if(!files.length&&ci<parts-1) continue;
+        if(!await saveData(`${x.kind==='pio'?'Pioneer':'Artist of the week'}: ${x.name}${parts>1?` (${ci+1}/${parts})`:''}`,files)){ Object.keys(DATA).forEach(k=>delete DATA[k]); Object.assign(DATA,JSON.parse(snap)); ok=false; break; }
+      }
+      if(!ok){ toast(L('وقف عند: ','Stopped at: ')+x.name+L('. اعمل ريفرش للصفحة وارفع الملف تاني، هيكمّل من مكانه.','. Reload the page and upload the file again; it continues where it stopped.')); break; }
       x.done=true; x.sel=false; renderPosts(); renderFList();
     }
     $('i-status').textContent=L('خلص. هيظهر على الموقع خلال دقيقة أو اتنين.','Done. It will be live in a minute or two.');
