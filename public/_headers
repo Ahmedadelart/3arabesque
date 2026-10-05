@@ -3,3 +3,23 @@
   Cache-Control: no-store
 /data.json
   Cache-Control: no-cache
+/img/t/*
+  Cache-Control: public, max-age=2592000, immutable
+/img/e*
+  Cache-Control: public, max-age=2592000, immutable
+/img/u*
+  Cache-Control: public, max-age=2592000, immutable
+/img/h*
+  Cache-Control: public, max-age=2592000, immutable
+/img/f*
+  Cache-Control: public, max-age=2592000, immutable
+/img/a*
+  Cache-Control: public, max-age=2592000, immutable
+/img/g*
+  Cache-Control: public, max-age=2592000, immutable
+/img/ref*
+  Cache-Control: public, max-age=2592000, immutable
+/img/c-*
+  Cache-Control: public, max-age=3600
+/img/b-*
+  Cache-Control: public, max-age=3600

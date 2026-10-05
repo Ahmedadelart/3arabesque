@@ -625,7 +625,7 @@ function heroSVG(art,label,list){
   return `<svg viewBox="0 0 1080 676" role="img" aria-label="${esc(cTitle())}">
     <defs><clipPath id="artclip"><polygon points="${clip}"/></clipPath></defs>
     <polygon style="fill:var(--mint)" points="${mint}"/>
-    ${list?`<g clip-path="url(#artclip)">${list.map((w,i)=>`<image class="hrot${i?'':' on'}" data-label="${esc(w.label)}" data-w="${esc(w.id)}" href="${esc(w.src)}" x="${rtl?0:65}" y="98" width="1015" height="479" preserveAspectRatio="${w.wh&&w.wh[0]/w.wh[1]<1.7?'xMidYMin':'xMidYMid'} slice"/>`).join('')}</g>`:`<image href="${esc(art)}" x="${rtl?0:65}" y="98" width="1015" height="479" preserveAspectRatio="xMidYMid slice" clip-path="url(#artclip)"/>`}
+    ${list?`<g clip-path="url(#artclip)">${list.map((w,i)=>`<image class="hrot${i?'':' on'}" data-label="${esc(w.label)}" data-w="${esc(w.id)}" ${i?`data-href="${esc(w.src)}"`:`href="${esc(w.src)}"`} x="${rtl?0:65}" y="98" width="1015" height="479" preserveAspectRatio="${w.wh&&w.wh[0]/w.wh[1]<1.7?'xMidYMin':'xMidYMid'} slice"/>`).join('')}</g>`:`<image href="${esc(art)}" x="${rtl?0:65}" y="98" width="1015" height="479" preserveAspectRatio="xMidYMid slice" clip-path="url(#artclip)"/>`}
     <polygon style="fill:#000" points="${bar}"/>
     <text x="${X(370)}" y="62" text-anchor="middle" direction="${rtl?'rtl':'ltr'}" style="fill:#f3f6ef;font-family:var(--f-body);font-weight:500;font-size:30px" ${list?'id="hrot-label"':''}>${esc(list?list[0].label:label)}</text>
   </svg>`;
@@ -717,11 +717,13 @@ function startHeroRot(){
   imgs.forEach((im,i)=>{const w=HP[i]; if(w&&lab) im.dataset.label=hpLabel(w);});
   if(lab) lab.textContent=imgs[0].dataset.label;
   if(matchMedia('(prefers-reduced-motion: reduce)').matches||imgs.length<2) return;
+  const load=k=>{ const im=imgs[k]; if(im&&im.dataset.href&&!im.getAttribute('href')) im.setAttribute('href',im.dataset.href); };
+  load(1);
   let i=0;
   hrotT=setInterval(()=>{
     if(!document.body.contains(imgs[0])){clearInterval(hrotT);return;}
     if(!lb.hidden) return;
-    imgs[i].classList.remove('on'); i=(i+1)%imgs.length; imgs[i].classList.add('on');
+    imgs[i].classList.remove('on'); i=(i+1)%imgs.length; load(i); imgs[i].classList.add('on'); load((i+1)%imgs.length);
     if(lab) lab.textContent=imgs[i].dataset.label;
   },5000);
 }
