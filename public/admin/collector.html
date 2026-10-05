@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>أداة جمع الرسومات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Readex+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#061615;--s1:#0b2321;--fg:#f3f6ef;--mint:#4adc87;--mute:#9fb5ad;--line:rgba(79,224,142,.25);--warn:#f6e61f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.8 "Readex Pro",system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:32px 16px 64px}
+h1{font-family:Lalezar,sans-serif;font-weight:400;font-size:clamp(38px,6vw,60px);line-height:1.1;margin:0 0 8px;color:var(--mint)}
+h2{font-size:20px;margin:28px 0 10px}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:14px 0}
+ol{padding-inline-start:22px;margin:0} li{margin:6px 0}
+.bm{display:inline-block;background:var(--mint);color:#061615;font-weight:700;text-decoration:none;padding:12px 22px;border-radius:12px;border:3px solid #000;box-shadow:0 5px 0 #000;cursor:grab;font-size:18px}
+.warn{border-color:var(--warn)}
+.mute{color:var(--mute);font-size:14px}
+textarea{width:100%;height:110px;background:#000;color:#9f9;border:1px solid var(--line);border-radius:10px;padding:10px;font:12px/1.4 monospace;direction:ltr}
+button{background:var(--fg);color:#061615;border:0;border-radius:10px;padding:8px 16px;font:inherit;font-weight:600;cursor:pointer}
+a{color:var(--mint)}
+kbd{background:#000;border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-size:13px}
+</style>
+</head>
+<body><div class="wrap">
+<p><a href="../admin/">← لوحة التحكم</a></p>
+<h1>أداة جمع الرسومات من الجروب</h1>
+<p class="mute">بتشتغل على جهازك وفي حسابك على فيسبوك. بتسجل لكل صورة: الصورة بحجمها الكامل، مين نزلها، لينك صفحته، لينك المنشور، والتاريخ. ومش بتبعت أي حاجة لأي مكان، آخرها ملف بتنزّله وترفعه في لوحة التحكم.</p>
+
+<h2>١. حط الزرار في المفضلة (مرة واحدة بس)</h2>
+<div class="card">
+<p>اسحب الزرار ده بالماوس وحطه في <b>شريط المفضلة</b> فوق في المتصفح. لو الشريط مش ظاهر، دوس <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd>.</p>
+<p><a class="bm" href="javascript:(()%20=&gt;%20{%0A%20%20if%20(window.__arabesqueCollector)%20{%20window.__arabesqueCollector.show();%20return;%20}%0A%20%20const%20KEY%20=%20&#x27;arabesque-collector-v1&#x27;;%0A%20%20let%20items%20=%20[];%0A%20%20try%20{%20items%20=%20JSON.parse(localStorage.getItem(KEY)%20||%20&#x27;[]&#x27;);%20}%20catch%20(_)%20{%20items%20=%20[];%20}%0A%20%20const%20seen%20=%20new%20Set(items.map(i%20=&gt;%20i.fbid));%0A%20%20let%20auto%20=%20false,%20autoT%20=%20null,%20lastFbid%20=%20null,%20stale%20=%200;%0A%0A%20%20const%20clean%20=%20(u,%20keep%20=%20[])%20=&gt;%20{%0A%20%20%20%20try%20{%0A%20%20%20%20%20%20const%20x%20=%20new%20URL(u,%20location.origin);%0A%20%20%20%20%20%20const%20q%20=%20new%20URLSearchParams();%0A%20%20%20%20%20%20keep.forEach(k%20=&gt;%20x.searchParams.get(k)%20&amp;&amp;%20q.set(k,%20x.searchParams.get(k)));%0A%20%20%20%20%20%20return%20x.origin%20+%20x.pathname%20+%20(q.toString()%20?%20&#x27;?&#x27;%20+%20q%20:%20&#x27;&#x27;);%0A%20%20%20%20}%20catch%20(_)%20{%20return%20&#x27;&#x27;;%20}%0A%20%20};%0A%20%20const%20fbidOf%20=%20u%20=&gt;%20{%20try%20{%20return%20new%20URL(u).searchParams.get(&#x27;fbid&#x27;);%20}%20catch%20(_)%20{%20return%20null;%20}%20};%0A%0A%20%20function%20grab()%20{%0A%20%20%20%20if%20(!/%5C/photo/.test(location.pathname))%20return%20null;%0A%20%20%20%20const%20fbid%20=%20fbidOf(location.href);%0A%20%20%20%20const%20img%20=%20[...document.querySelectorAll(&#x27;img[data-visualcompletion=%22media-vc-image%22]&#x27;)]%0A%20%20%20%20%20%20.filter(i%20=&gt;%20i.naturalWidth%20&gt;%20200%20&amp;&amp;%20i.getBoundingClientRect().width%20&gt;%2050)%0A%20%20%20%20%20%20.sort((a,%20b)%20=&gt;%20b.naturalWidth%20-%20a.naturalWidth)[0];%0A%20%20%20%20if%20(!fbid%20||%20!img)%20return%20null;%0A%20%20%20%20const%20links%20=%20[...document.querySelectorAll(&#x27;a[href]&#x27;)].filter(a%20=&gt;%20!a.closest(&#x27;[role=%22article%22]&#x27;));%0A%20%20%20%20const%20post%20=%20links.find(a%20=&gt;%20/%5C/(posts|permalink)%5C//.test(a.href)%20&amp;&amp;%20!/comment_id/.test(a.href));%0A%20%20%20%20const%20bad%20=%20/%5C/(groups|photo|photos|login|recover|hashtag|watch|stories|notifications|messages|marketplace|gaming|events|pages)%5Cb|comment_id|%5C/%5C?__tn__/;%0A%20%20%20%20const%20author%20=%20links.find(a%20=&gt;%20{%0A%20%20%20%20%20%20const%20t%20=%20(a.innerText%20||%20&#x27;&#x27;).trim();%0A%20%20%20%20%20%20return%20t%20&amp;&amp;%20t.length%20&lt;%2080%20&amp;&amp;%20/facebook%5C.com%5C//.test(a.href)%20&amp;&amp;%20!bad.test(a.href.replace(/%5C/groups%5C/[%5E/]+%5C/user%5C/%5Cd+/,%20&#x27;/u&#x27;))%0A%20%20%20%20%20%20%20%20&amp;&amp;%20a.href%20!==%20location.href%20&amp;&amp;%20!/%5E(Log%20in|Close|Facebook)/i.test(t);%0A%20%20%20%20})%20||%20links.find(a%20=&gt;%20/%5C/groups%5C/[%5E/]+%5C/user%5C/%5Cd+/.test(a.href)%20&amp;&amp;%20(a.innerText%20||%20&#x27;&#x27;).trim());%0A%20%20%20%20const%20dateText%20=%20post%20?%20(post.innerText%20||%20post.getAttribute(&#x27;aria-label&#x27;)%20||%20&#x27;&#x27;).split(&#x27;%5Cn&#x27;).pop().trim()%20:%20&#x27;&#x27;;%0A%20%20%20%20const%20alt%20=%20(img.alt%20||%20&#x27;&#x27;).replace(/%5E(May%20be|No%20photo%20description|%D8%B1%D8%A8%D9%85%D8%A7%20%D8%AA%D9%83%D9%88%D9%86|%D9%84%D8%A7%20%D9%8A%D8%AA%D9%88%D9%81%D8%B1%20%D9%88%D8%B5%D9%81).*$/i,%20&#x27;&#x27;).trim();%0A%20%20%20%20return%20{%0A%20%20%20%20%20%20fbid,%0A%20%20%20%20%20%20img:%20img.currentSrc%20||%20img.src,%0A%20%20%20%20%20%20w:%20img.naturalWidth,%20h:%20img.naturalHeight,%0A%20%20%20%20%20%20author:%20author%20?%20author.innerText.trim().split(&#x27;%5Cn&#x27;)[0]%20:%20&#x27;&#x27;,%0A%20%20%20%20%20%20authorUrl:%20author%20?%20clean(author.href,%20[&#x27;id&#x27;])%20:%20&#x27;&#x27;,%0A%20%20%20%20%20%20post:%20post%20?%20clean(post.href)%20:%20&#x27;&#x27;,%0A%20%20%20%20%20%20photo:%20clean(location.href,%20[&#x27;fbid&#x27;]),%0A%20%20%20%20%20%20set:%20new%20URL(location.href).searchParams.get(&#x27;set&#x27;)%20||%20&#x27;&#x27;,%0A%20%20%20%20%20%20date:%20dateText,%0A%20%20%20%20%20%20alt,%0A%20%20%20%20%20%20at:%20new%20Date().toISOString(),%0A%20%20%20%20};%0A%20%20}%0A%0A%20%20function%20tick()%20{%0A%20%20%20%20const%20r%20=%20grab();%0A%20%20%20%20if%20(!r)%20return;%0A%20%20%20%20if%20(r.fbid%20===%20lastFbid)%20{%20stale++;%20return;%20}%0A%20%20%20%20lastFbid%20=%20r.fbid;%20stale%20=%200;%0A%20%20%20%20if%20(seen.has(r.fbid))%20{%20render(r,%20true);%20return;%20}%0A%20%20%20%20seen.add(r.fbid);%20items.push(r);%0A%20%20%20%20try%20{%20localStorage.setItem(KEY,%20JSON.stringify(items));%20}%20catch%20(_)%20{}%0A%20%20%20%20render(r,%20false);%0A%20%20}%0A%0A%20%20function%20next()%20{%0A%20%20%20%20const%20b%20=%20document.querySelector(&#x27;[aria-label=%22Next%20photo%22],[aria-label=%22%D8%A7%D9%84%D8%B5%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%22],[aria-label=%22Next%22],[aria-label=%22%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%22]&#x27;);%0A%20%20%20%20if%20(b)%20b.click();%20else%20document.dispatchEvent(new%20KeyboardEvent(&#x27;keydown&#x27;,%20{%20key:%20&#x27;ArrowRight&#x27;,%20bubbles:%20true%20}));%0A%20%20}%0A%20%20function%20setAuto(on)%20{%0A%20%20%20%20auto%20=%20on;%20clearInterval(autoT);%0A%20%20%20%20if%20(on)%20{%0A%20%20%20%20%20%20stale%20=%200;%0A%20%20%20%20%20%20autoT%20=%20setInterval(()%20=&gt;%20{%0A%20%20%20%20%20%20%20%20if%20(stale%20&gt;%208)%20{%20setAuto(false);%20msg(&#x27;%D9%88%D9%82%D9%81%D8%AA:%20%D9%85%D9%81%D9%8A%D8%B4%20%D8%B5%D9%88%D8%B1%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%20(%D9%8A%D9%85%D9%83%D9%86%20%D9%88%D8%B5%D9%84%D8%AA%20%D9%84%D9%84%D8%A2%D8%AE%D8%B1).&#x27;);%20return;%20}%0A%20%20%20%20%20%20%20%20next();%0A%20%20%20%20%20%20},%202600%20+%20Math.random()%20*%201200);%0A%20%20%20%20}%0A%20%20%20%20btnAuto.textContent%20=%20on%20?%20&#x27;%E2%8F%B8%20%D8%A5%D9%8A%D9%82%D8%A7%D9%81&#x27;%20:%20&#x27;%E2%96%B6%20%D8%AA%D9%82%D9%84%D9%8A%D8%A8%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A&#x27;;%0A%20%20}%0A%0A%20%20%0A%20%20const%20box%20=%20document.createElement(&#x27;div&#x27;);%0A%20%20box.dir%20=%20&#x27;rtl&#x27;;%0A%20%20box.style.cssText%20=%20&#x27;position:fixed;z-index:2147483647;bottom:16px;left:16px;width:300px;background:%23061615;color:%23f3f6ef;border:2px%20solid%20%234adc87;border-radius:14px;padding:12px;font:13px/1.6%20system-ui,Segoe%20UI,Tahoma,sans-serif;box-shadow:0%2010px%2030px%20rgba(0,0,0,.4)&#x27;;%0A%20%20box.innerHTML%20=%20%60%0A%20%20%20%20&lt;div%20style=%22display:flex;justify-content:space-between;align-items:center;margin-bottom:6px%22&gt;%0A%20%20%20%20%20%20&lt;b%20style=%22font-size:15px;color:%234adc87%22&gt;%D8%A3%D8%B1%D8%A7%D8%A8%D9%8A%D8%B3%D9%83:%20%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%B1%D8%B3%D9%88%D9%85%D8%A7%D8%AA&lt;/b&gt;%0A%20%20%20%20%20%20&lt;button%20data-x%20style=%22background:none;border:0;color:%23aaa;font-size:16px;cursor:pointer%22&gt;%E2%9C%95&lt;/button&gt;%0A%20%20%20%20&lt;/div&gt;%0A%20%20%20%20&lt;div%20data-count%20style=%22font-size:22px;font-weight:700%22&gt;&lt;/div&gt;%0A%20%20%20%20&lt;div%20data-last%20style=%22display:flex;gap:8px;align-items:center;min-height:54px;margin:6px%200%22&gt;&lt;/div&gt;%0A%20%20%20%20&lt;div%20data-msg%20style=%22color:%23f6e61f;min-height:18px%22&gt;&lt;/div&gt;%0A%20%20%20%20&lt;div%20style=%22display:flex;gap:6px;flex-wrap:wrap;margin-top:6px%22&gt;%0A%20%20%20%20%20%20&lt;button%20data-auto%20style=%22flex:1;background:%234adc87;color:%23061615;border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer%22&gt;&lt;/button&gt;%0A%20%20%20%20%20%20&lt;button%20data-dl%20style=%22flex:1;background:%23f3f6ef;color:%23061615;border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer%22&gt;%E2%AC%87%20%D9%86%D8%B2%D9%91%D9%84%20%D8%A7%D9%84%D9%85%D9%84%D9%81&lt;/button&gt;%0A%20%20%20%20&lt;/div&gt;%0A%20%20%20%20&lt;button%20data-clear%20style=%22margin-top:6px;background:none;border:0;color:%23999;cursor:pointer;font-size:12px;text-decoration:underline%22&gt;%D8%A7%D9%85%D8%B3%D8%AD%20%D8%A7%D9%84%D9%84%D9%8A%20%D8%A7%D8%AA%D8%AC%D9%85%D8%B9%20%D9%88%D8%A7%D8%A8%D8%AF%D8%A3%20%D9%85%D9%86%20%D8%A7%D9%84%D8%A3%D9%88%D9%84&lt;/button&gt;%60;%0A%20%20document.body.appendChild(box);%0A%20%20const%20$%20=%20s%20=&gt;%20box.querySelector(s);%0A%20%20const%20btnAuto%20=%20$(&#x27;[data-auto]&#x27;);%0A%20%20const%20msg%20=%20t%20=&gt;%20{%20$(&#x27;[data-msg]&#x27;).textContent%20=%20t%20||%20&#x27;&#x27;;%20};%0A%20%20function%20render(r,%20dup)%20{%0A%20%20%20%20$(&#x27;[data-count]&#x27;).textContent%20=%20items.length%20+%20&#x27;%20%D8%B5%D9%88%D8%B1%D8%A9%20%D8%A7%D8%AA%D8%AC%D9%85%D8%B9%D8%AA&#x27;;%0A%20%20%20%20if%20(r)%20$(&#x27;[data-last]&#x27;).innerHTML%20=%20%60&lt;img%20src=%22${r.img}%22%20style=%22width:54px;height:54px;object-fit:cover;border-radius:6px%22&gt;&lt;div&gt;&lt;div&gt;${(r.author%20||%20&#x27;%D8%9F&#x27;).replace(/&lt;/g,%20&#x27;&amp;lt;&#x27;)}&lt;/div&gt;&lt;div%20style=%22color:%239fb%22&gt;${(r.date%20||%20&#x27;&#x27;).replace(/&lt;/g,%20&#x27;&amp;lt;&#x27;)}${dup%20?%20&#x27;%20%C2%B7%20%D9%85%D9%88%D8%AC%D9%88%D8%AF%D8%A9&#x27;%20:%20&#x27;&#x27;}&lt;/div&gt;&lt;/div&gt;%60;%0A%20%20}%0A%20%20render(null);%0A%20%20if%20(!/%5C/photo/.test(location.pathname))%20msg(&#x27;%D8%A7%D9%81%D8%AA%D8%AD%20%D8%A3%D9%88%D9%84%20%D8%B5%D9%88%D8%B1%D8%A9%20%D9%85%D9%86%20%D8%AA%D8%A8%D9%88%D9%8A%D8%A8%20Media%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%A8%D8%8C%20%D9%88%D8%A8%D8%B9%D8%AF%D9%8A%D9%86%20%D8%AF%D9%88%D8%B3%20%22%D8%AA%D9%82%D9%84%D9%8A%D8%A8%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%22%20%D8%A3%D9%88%20%D9%82%D9%84%D9%91%D8%A8%20%D8%A8%D8%A7%D9%84%D8%B3%D9%87%D9%85%20%E2%86%92&#x27;);%0A%20%20btnAuto.onclick%20=%20()%20=&gt;%20setAuto(!auto);%0A%20%20setAuto(false);%0A%20%20$(&#x27;[data-dl]&#x27;).onclick%20=%20()%20=&gt;%20{%0A%20%20%20%20const%20blob%20=%20new%20Blob([JSON.stringify({%20source:%20&#x27;facebook&#x27;,%20group:%20&#x27;3arabesque&#x27;,%20exported:%20new%20Date().toISOString(),%20items%20},%20null,%201)],%20{%20type:%20&#x27;application/json&#x27;%20});%0A%20%20%20%20const%20a%20=%20document.createElement(&#x27;a&#x27;);%0A%20%20%20%20a.href%20=%20URL.createObjectURL(blob);%0A%20%20%20%20a.download%20=%20%60arabesque-facebook-${new%20Date().toISOString().slice(0,%2010)}-${items.length}.json%60;%0A%20%20%20%20document.body.appendChild(a);%20a.click();%20a.remove();%0A%20%20%20%20msg(&#x27;%D8%A7%D8%AA%D9%86%D8%B2%D9%91%D9%84.%20%D8%A7%D8%B1%D9%81%D8%B9%D9%87%20%D9%81%D9%8A%20%D9%84%D9%88%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AD%D9%83%D9%85%20%E2%86%90%20%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D9%85%D9%86%20%D9%81%D9%8A%D8%B3%D8%A8%D9%88%D9%83.&#x27;);%0A%20%20};%0A%20%20$(&#x27;[data-clear]&#x27;).onclick%20=%20()%20=&gt;%20{%0A%20%20%20%20if%20(!confirm(&#x27;%D8%AA%D9%85%D8%B3%D8%AD%20&#x27;%20+%20items.length%20+%20&#x27;%20%D8%B5%D9%88%D8%B1%D8%A9%20%D9%85%D8%AA%D8%AC%D9%85%D8%B9%D8%A9%D8%9F&#x27;))%20return;%0A%20%20%20%20items%20=%20[];%20seen.clear();%20lastFbid%20=%20null;%0A%20%20%20%20try%20{%20localStorage.removeItem(KEY);%20}%20catch%20(_)%20{}%0A%20%20%20%20render(null);%0A%20%20};%0A%20%20$(&#x27;[data-x]&#x27;).onclick%20=%20()%20=&gt;%20{%20setAuto(false);%20box.style.display%20=%20&#x27;none&#x27;;%20};%0A%20%20const%20poll%20=%20setInterval(tick,%20700);%0A%20%20window.__arabesqueCollector%20=%20{%20show:%20()%20=&gt;%20{%20box.style.display%20=%20&#x27;&#x27;;%20},%20items:%20()%20=&gt;%20items,%20stop:%20()%20=&gt;%20{%20clearInterval(poll);%20setAuto(false);%20}%20};%0A})();" onclick="event.preventDefault();alert('اسحبه لشريط المفضلة، الزرار ده بيشتغل على فيسبوك بس.')">أرابيسك: اجمع</a></p>
+</div>
+
+<h2>٢. اجمع الصور</h2>
+<div class="card"><ol>
+<li>افتح فيسبوك وانت عامل تسجيل دخول، وروح للجروب: <a href="https://www.facebook.com/groups/3arabesque/media" target="_blank" rel="noopener">facebook.com/groups/3arabesque/media</a></li>
+<li>دوس على <b>أقدم صورة</b> عايز تبدأ منها، أو أول صورة، فتتفتح الصورة لوحدها كبيرة.</li>
+<li>دوس زرار <b>«أرابيسك: اجمع»</b> من المفضلة، هيظهرلك مربع صغير تحت.</li>
+<li>دوس <b>«تقليب تلقائي»</b> وسيبه يقلّب لوحده، كل صورة كل ٣ ثواني تقريبًا. أو قلّب انت بالسهم <kbd>→</kbd> وهو بيسجل.</li>
+<li>لما يخلص أو توقفه، دوس <b>«نزّل الملف»</b>.</li>
+</ol>
+<p class="mute">لو قفلت الصفحة في النص، اللي اتجمع ما بيضيعش. افتح أي صورة تانية ودوس الزرار، هيكمّل على اللي فات.</p>
+</div>
+
+<h2>٣. ارفع الملف</h2>
+<div class="card"><p>في <a href="../admin/">لوحة التحكم</a> ← <b>استيراد من فيسبوك</b>: ارفع الملف، وراجع الاسم والشهر لكل رسمة، ودوس «استورد».</p>
+<ul class="mute">
+<li>الشهر بيتحط لوحده حسب تاريخ المنشور بالتقويم الهجري، وممكن تغيره لأي رسمة أو لمجموعة مرة واحدة.</li>
+<li>الرسومات اللي موجودة على الموقع من قبل بتتعرف لوحدها، وبتتعلم «موجودة غالبًا». ودي بيتضافلها اسم الفنان ولينك المنشور بس، من غير ما تتكرر.</li>
+<li>لينكات الصور بتاعة فيسبوك بتنتهي بعد كام يوم، فاستورد الملف في نفس اليوم أو بعده بيوم.</li>
+</ul></div>
+
+<div class="card warn"><b>خلي بالك</b>
+<ul class="mute" style="margin:6px 0 0">
+<li>فيسبوك ممكن يوقفك مؤقتًا لو التقليب كان كتير ورا بعض. لو ظهرتلك رسالة زي «You're going too fast»، وقّف وكمّل بعد ساعة. والأحسن تجمع على دفعات، مثلًا ٢٠٠–٣٠٠ صورة كل مرة.</li>
+<li>خلي التبويب ده مفتوح وقدام عينك وهو بيقلّب.</li>
+</ul></div>
+
+<h2>لو زرار المفضلة ما اشتغلش</h2>
+<div class="card"><p class="mute">على صفحة الصورة في فيسبوك، دوس <kbd>F12</kbd> وروح لتبويب <b>Console</b>، والزق الكود ده ودوس <kbd>Enter</kbd>. لو Chrome طلب، اكتب <code>allow pasting</code> الأول.</p>
+<textarea id="code" readonly>(() =&gt; {
+  if (window.__arabesqueCollector) { window.__arabesqueCollector.show(); return; }
+  const KEY = &#x27;arabesque-collector-v1&#x27;;
+  let items = [];
+  try { items = JSON.parse(localStorage.getItem(KEY) || &#x27;[]&#x27;); } catch (_) { items = []; }
+  const seen = new Set(items.map(i =&gt; i.fbid));
+  let auto = false, autoT = null, lastFbid = null, stale = 0;
+
+  const clean = (u, keep = []) =&gt; {
+    try {
+      const x = new URL(u, location.origin);
+      const q = new URLSearchParams();
+      keep.forEach(k =&gt; x.searchParams.get(k) &amp;&amp; q.set(k, x.searchParams.get(k)));
+      return x.origin + x.pathname + (q.toString() ? &#x27;?&#x27; + q : &#x27;&#x27;);
+    } catch (_) { return &#x27;&#x27;; }
+  };
+  const fbidOf = u =&gt; { try { return new URL(u).searchParams.get(&#x27;fbid&#x27;); } catch (_) { return null; } };
+
+  function grab() {
+    if (!/\/photo/.test(location.pathname)) return null;
+    const fbid = fbidOf(location.href);
+    const img = [...document.querySelectorAll(&#x27;img[data-visualcompletion=&quot;media-vc-image&quot;]&#x27;)]
+      .filter(i =&gt; i.naturalWidth &gt; 200 &amp;&amp; i.getBoundingClientRect().width &gt; 50)
+      .sort((a, b) =&gt; b.naturalWidth - a.naturalWidth)[0];
+    if (!fbid || !img) return null;
+    const links = [...document.querySelectorAll(&#x27;a[href]&#x27;)].filter(a =&gt; !a.closest(&#x27;[role=&quot;article&quot;]&#x27;));
+    const post = links.find(a =&gt; /\/(posts|permalink)\//.test(a.href) &amp;&amp; !/comment_id/.test(a.href));
+    const bad = /\/(groups|photo|photos|login|recover|hashtag|watch|stories|notifications|messages|marketplace|gaming|events|pages)\b|comment_id|\/\?__tn__/;
+    const author = links.find(a =&gt; {
+      const t = (a.innerText || &#x27;&#x27;).trim();
+      return t &amp;&amp; t.length &lt; 80 &amp;&amp; /facebook\.com\//.test(a.href) &amp;&amp; !bad.test(a.href.replace(/\/groups\/[^/]+\/user\/\d+/, &#x27;/u&#x27;))
+        &amp;&amp; a.href !== location.href &amp;&amp; !/^(Log in|Close|Facebook)/i.test(t);
+    }) || links.find(a =&gt; /\/groups\/[^/]+\/user\/\d+/.test(a.href) &amp;&amp; (a.innerText || &#x27;&#x27;).trim());
+    const dateText = post ? (post.innerText || post.getAttribute(&#x27;aria-label&#x27;) || &#x27;&#x27;).split(&#x27;\n&#x27;).pop().trim() : &#x27;&#x27;;
+    const alt = (img.alt || &#x27;&#x27;).replace(/^(May be|No photo description|ربما تكون|لا يتوفر وصف).*$/i, &#x27;&#x27;).trim();
+    return {
+      fbid,
+      img: img.currentSrc || img.src,
+      w: img.naturalWidth, h: img.naturalHeight,
+      author: author ? author.innerText.trim().split(&#x27;\n&#x27;)[0] : &#x27;&#x27;,
+      authorUrl: author ? clean(author.href, [&#x27;id&#x27;]) : &#x27;&#x27;,
+      post: post ? clean(post.href) : &#x27;&#x27;,
+      photo: clean(location.href, [&#x27;fbid&#x27;]),
+      set: new URL(location.href).searchParams.get(&#x27;set&#x27;) || &#x27;&#x27;,
+      date: dateText,
+      alt,
+      at: new Date().toISOString(),
+    };
+  }
+
+  function tick() {
+    const r = grab();
+    if (!r) return;
+    if (r.fbid === lastFbid) { stale++; return; }
+    lastFbid = r.fbid; stale = 0;
+    if (seen.has(r.fbid)) { render(r, true); return; }
+    seen.add(r.fbid); items.push(r);
+    try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (_) {}
+    render(r, false);
+  }
+
+  function next() {
+    const b = document.querySelector(&#x27;[aria-label=&quot;Next photo&quot;],[aria-label=&quot;الصورة التالية&quot;],[aria-label=&quot;Next&quot;],[aria-label=&quot;التالي&quot;]&#x27;);
+    if (b) b.click(); else document.dispatchEvent(new KeyboardEvent(&#x27;keydown&#x27;, { key: &#x27;ArrowRight&#x27;, bubbles: true }));
+  }
+  function setAuto(on) {
+    auto = on; clearInterval(autoT);
+    if (on) {
+      stale = 0;
+      autoT = setInterval(() =&gt; {
+        if (stale &gt; 8) { setAuto(false); msg(&#x27;وقفت: مفيش صور جديدة (يمكن وصلت للآخر).&#x27;); return; }
+        next();
+      }, 2600 + Math.random() * 1200);
+    }
+    btnAuto.textContent = on ? &#x27;⏸ إيقاف&#x27; : &#x27;▶ تقليب تلقائي&#x27;;
+  }
+
+  
+  const box = document.createElement(&#x27;div&#x27;);
+  box.dir = &#x27;rtl&#x27;;
+  box.style.cssText = &#x27;position:fixed;z-index:2147483647;bottom:16px;left:16px;width:300px;background:#061615;color:#f3f6ef;border:2px solid #4adc87;border-radius:14px;padding:12px;font:13px/1.6 system-ui,Segoe UI,Tahoma,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.4)&#x27;;
+  box.innerHTML = `
+    &lt;div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px&quot;&gt;
+      &lt;b style=&quot;font-size:15px;color:#4adc87&quot;&gt;أرابيسك: جمع الرسومات&lt;/b&gt;
+      &lt;button data-x style=&quot;background:none;border:0;color:#aaa;font-size:16px;cursor:pointer&quot;&gt;✕&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div data-count style=&quot;font-size:22px;font-weight:700&quot;&gt;&lt;/div&gt;
+    &lt;div data-last style=&quot;display:flex;gap:8px;align-items:center;min-height:54px;margin:6px 0&quot;&gt;&lt;/div&gt;
+    &lt;div data-msg style=&quot;color:#f6e61f;min-height:18px&quot;&gt;&lt;/div&gt;
+    &lt;div style=&quot;display:flex;gap:6px;flex-wrap:wrap;margin-top:6px&quot;&gt;
+      &lt;button data-auto style=&quot;flex:1;background:#4adc87;color:#061615;border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer&quot;&gt;&lt;/button&gt;
+      &lt;button data-dl style=&quot;flex:1;background:#f3f6ef;color:#061615;border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer&quot;&gt;⬇ نزّل الملف&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;button data-clear style=&quot;margin-top:6px;background:none;border:0;color:#999;cursor:pointer;font-size:12px;text-decoration:underline&quot;&gt;امسح اللي اتجمع وابدأ من الأول&lt;/button&gt;`;
+  document.body.appendChild(box);
+  const $ = s =&gt; box.querySelector(s);
+  const btnAuto = $(&#x27;[data-auto]&#x27;);
+  const msg = t =&gt; { $(&#x27;[data-msg]&#x27;).textContent = t || &#x27;&#x27;; };
+  function render(r, dup) {
+    $(&#x27;[data-count]&#x27;).textContent = items.length + &#x27; صورة اتجمعت&#x27;;
+    if (r) $(&#x27;[data-last]&#x27;).innerHTML = `&lt;img src=&quot;${r.img}&quot; style=&quot;width:54px;height:54px;object-fit:cover;border-radius:6px&quot;&gt;&lt;div&gt;&lt;div&gt;${(r.author || &#x27;؟&#x27;).replace(/&lt;/g, &#x27;&amp;lt;&#x27;)}&lt;/div&gt;&lt;div style=&quot;color:#9fb&quot;&gt;${(r.date || &#x27;&#x27;).replace(/&lt;/g, &#x27;&amp;lt;&#x27;)}${dup ? &#x27; · موجودة&#x27; : &#x27;&#x27;}&lt;/div&gt;&lt;/div&gt;`;
+  }
+  render(null);
+  if (!/\/photo/.test(location.pathname)) msg(&#x27;افتح أول صورة من تبويب Media في الجروب، وبعدين دوس &quot;تقليب تلقائي&quot; أو قلّب بالسهم →&#x27;);
+  btnAuto.onclick = () =&gt; setAuto(!auto);
+  setAuto(false);
+  $(&#x27;[data-dl]&#x27;).onclick = () =&gt; {
+    const blob = new Blob([JSON.stringify({ source: &#x27;facebook&#x27;, group: &#x27;3arabesque&#x27;, exported: new Date().toISOString(), items }, null, 1)], { type: &#x27;application/json&#x27; });
+    const a = document.createElement(&#x27;a&#x27;);
+    a.href = URL.createObjectURL(blob);
+    a.download = `arabesque-facebook-${new Date().toISOString().slice(0, 10)}-${items.length}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    msg(&#x27;اتنزّل. ارفعه في لوحة التحكم ← استيراد من فيسبوك.&#x27;);
+  };
+  $(&#x27;[data-clear]&#x27;).onclick = () =&gt; {
+    if (!confirm(&#x27;تمسح &#x27; + items.length + &#x27; صورة متجمعة؟&#x27;)) return;
+    items = []; seen.clear(); lastFbid = null;
+    try { localStorage.removeItem(KEY); } catch (_) {}
+    render(null);
+  };
+  $(&#x27;[data-x]&#x27;).onclick = () =&gt; { setAuto(false); box.style.display = &#x27;none&#x27;; };
+  const poll = setInterval(tick, 700);
+  window.__arabesqueCollector = { show: () =&gt; { box.style.display = &#x27;&#x27;; }, items: () =&gt; items, stop: () =&gt; { clearInterval(poll); setAuto(false); } };
+})();</textarea>
+<p><button type="button" onclick="navigator.clipboard.writeText(document.getElementById('code').value).then(()=>this.textContent='اتنسخ ✓')">انسخ الكود</button></p></div>
+</div></body></html>

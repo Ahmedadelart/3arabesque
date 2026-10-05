@@ -380,6 +380,17 @@ a.hero-art{display:block}
 .hrot.on{opacity:1}
 .hrot-wrap{cursor:zoom-in}
 @media (prefers-reduced-motion:reduce){.hrot{transition:none}}
+.steps-mini{margin:0;padding-inline-start:20px;display:grid;gap:6px;color:var(--mute);font-size:14px}
+.itools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:end}
+@media (max-width:860px){.itools{grid-template-columns:1fr}}
+.icard.off{opacity:.45}
+.icard.st-match{border-color:var(--warn)}
+.icard.st-done{opacity:.4}
+.icard .isel{display:flex;gap:6px;align-items:center;font-size:12.5px;font-weight:600}
+.icard .isel input{width:auto}
+.imatch{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--mute);background:var(--s1);border-radius:8px;padding:6px}
+.imatch img{width:46px!important;height:46px!important;aspect-ratio:auto!important;flex:none}
+.imatch input{width:auto!important}
 </style>
 
 
@@ -901,7 +912,7 @@ function openLB(){
   const t=wT(w), by=wB(w);
   const meta=w.ref
     ?`<div class="who" dir="auto">${esc(w.by)}</div><span class="lic">${esc(w.lic)} · Wikimedia Commons</span><a class="link" href="${esc(w.page)}" target="_blank" rel="noopener">${L('المصدر','Source')} ↗</a>`
-    :`${by?`<div class="who" dir="auto">${esc(by)}</div>`:`<div class="miss">${L('الاسم قريبًا','Name coming soon')}</div>`}${w.m?`<a class="link" href="#c-${w.m}">${esc(mT(w.m))} ${FW()}</a>`:''}`;
+    :`${by?(w.pu?`<a class="who" dir="auto" href="${esc(w.pu)}" target="_blank" rel="noopener">${esc(by)} ↗</a>`:`<div class="who" dir="auto">${esc(by)}</div>`):`<div class="miss">${L('الاسم قريبًا','Name coming soon')}</div>`}${w.m&&w.m!=='old'||w.m==='old'?`<a class="link" href="#c-${w.m}">${esc(w.m==='old'?L('المجموعة القديمة','The original group'):mT(w.m))} ${FW()}</a>`:''}${w.u?`<a class="link" href="${esc(w.u)}" target="_blank" rel="noopener">${L('المنشور على فيسبوك','The post on Facebook')} ↗</a>`:''}`;
   lb.innerHTML=`<div class="lb" role="dialog" aria-modal="true" aria-label="${esc(t)}">
     <div class="lb-stage"><img src="${esc(w.src)}" alt="${esc(t)}">
       ${lbList.length>1?`<button class="lb-nav lb-prev" aria-label="${L('السابق','Previous')}">${BK()}</button><button class="lb-nav lb-next" aria-label="${L('التالي','Next')}">${FW()}</button>`:''}</div>
@@ -942,6 +953,7 @@ function vAdmin(){
       <button data-tab="t2">${L('إضافة مشاركات','Add submissions')}</button>
       <button data-tab="t4">${L('تعديل الرسومات','Edit artworks')}</button>
       <button data-tab="t3">${L('فنان الأسبوع','Artist of the week')}</button>
+      <button data-tab="t5">${L('استيراد من فيسبوك','Import from Facebook')}</button>
       <div class="who"><span id="whoami">${L('بيتأكد…','Checking…')}</span><br><a class="link" href="/cdn-cgi/access/logout">${L('خروج','Sign out')}</a></div>
     </div>
     <datalist id="artist-list">${artists.map(a=>`<option value="${esc(a)}">`).join('')}</datalist>
@@ -991,6 +1003,26 @@ function vAdmin(){
         <div class="egrid" id="egrid"></div>
         <div class="row-end"><span class="hint" id="e-count"></span><button class="btn btn-mint" type="submit">${L('احفظ التعديلات','Save changes')}</button></div>
       </form>
+      <form class="panel" id="t5" hidden novalidate>
+        <h2>${L('استيراد من فيسبوك','Import from Facebook')}</h2>
+        <ol class="steps-mini">
+          <li>${L('افتح','Open')} <a class="link" href="admin/collector.html" target="_blank">${L('صفحة أداة الجمع','the collector page')}</a> ${L('وحط الزرار في شريط المفضلة (مرة واحدة بس).','and put its button on your bookmarks bar (once).')}</li>
+          <li>${L('على فيسبوك افتح الجروب ← Media، وافتح أول صورة، ودوس الزرار. سيبه يقلّب لحد ما يخلص وبعدين نزّل الملف.','On Facebook open the group → Media, open the first photo and click the button. Let it flip through, then download the file.')}</li>
+          <li>${L('ارفع الملف هنا، راجع الأسامي والشهور، ودوس «استورد».','Upload the file here, check names and months, then press “Import”.')}</li>
+        </ol>
+        <div class="fgrid">
+          <div class="field full"><label>${L('ملف أداة الجمع (.json)','Collector file (.json)')}</label><label class="drop" for="i-file"><input type="file" id="i-file" accept=".json,application/json" multiple><b>${L('اختار الملف','Choose file')}</b><small id="i-file-name">${L('ممكن تختار كذا ملف مرة واحدة','You can choose several files at once')}</small></label></div>
+        </div>
+        <div class="itools" id="i-tools" hidden>
+          <div class="field"><label for="i-show">${L('اعرض','Show')}</label><select id="i-show">
+            <option value="all">${L('الكل','All')}</option><option value="new">${L('جديدة','New')}</option><option value="match">${L('موجودة غالبًا على الموقع','Probably already on the site')}</option><option value="done">${L('اتضافت قبل كده','Already imported')}</option><option value="nomonth">${L('من غير شهر','No month')}</option></select></div>
+          <div class="field"><label for="i-bulk">${L('حط الشهر ده للمختارين','Set this month for selected')}</label><div style="display:flex;gap:6px"><select id="i-bulk"></select><button type="button" class="btn btn-ghost" id="i-bulk-go">${L('طبّق','Apply')}</button></div></div>
+          <div class="field"><label>&nbsp;</label><div style="display:flex;gap:6px"><button type="button" class="btn btn-ghost" id="i-all">${L('اختار الظاهر','Select shown')}</button><button type="button" class="btn btn-ghost" id="i-none">${L('شيل الكل','Clear all')}</button></div></div>
+        </div>
+        <p class="hint" id="i-status"></p>
+        <div class="egrid" id="igrid"></div>
+        <div class="row-end"><span class="hint" id="i-count"></span><button class="btn btn-mint" type="submit" id="i-go" disabled>${L('استورد المختارين','Import selected')}</button></div>
+      </form>
       <form class="panel" id="t3" hidden novalidate>
         <h2>${L('فنان الأسبوع','Artist of the week')}</h2>
         <div class="fgrid">
@@ -1006,13 +1038,22 @@ function vAdmin(){
 }
 
 /* ---------- admin: image prep + save ---------- */
+function phashOf(src){ // dHash, same steps as the server-side script
+  const c=document.createElement('canvas'); c.width=72; c.height=64; const g=c.getContext('2d',{willReadFrequently:true});
+  g.imageSmoothingEnabled=true; g.imageSmoothingQuality='high'; g.drawImage(src,0,0,72,64);
+  const d=g.getImageData(0,0,72,64).data, G=[];
+  for(let r=0;r<8;r++){ G[r]=[]; for(let cc=0;cc<9;cc++){ let t=0; for(let j=0;j<8;j++) for(let i=0;i<8;i++){ const k=((r*8+j)*72+(cc*8+i))*4; t+=d[k]*.299+d[k+1]*.587+d[k+2]*.114; } G[r][cc]=t/64; } }
+  let bits=''; for(let r=0;r<8;r++) for(let cc=0;cc<8;cc++) bits+=G[r][cc]>G[r][cc+1]?'1':'0';
+  return BigInt('0b'+bits).toString(16).padStart(16,'0');
+}
+function phDist(a,b){ if(!a||!b) return 99; let x=BigInt('0x'+a)^BigInt('0x'+b), n=0; while(x){ n+=Number(x&1n); x>>=1n; } return n; }
 function prepImage(file,max=1800){
   return new Promise(res=>{
     const url=URL.createObjectURL(file), im=new Image();
     im.onload=()=>{
       let w=im.naturalWidth,h=im.naturalHeight; const s=Math.min(1,max/Math.max(w,h)); w=Math.round(w*s); h=Math.round(h*s);
       const cv=document.createElement('canvas'); cv.width=w; cv.height=h; const g=cv.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,w,h); g.drawImage(im,0,0,w,h);
-      const d=cv.toDataURL('image/jpeg',0.86); URL.revokeObjectURL(url); res({src:d,b64:d.split(',')[1],wh:[w,h],name:file.name});
+      const d=cv.toDataURL('image/jpeg',0.86); URL.revokeObjectURL(url); res({src:d,b64:d.split(',')[1],wh:[w,h],name:file.name||'',ph:phashOf(cv)});
     };
     im.onerror=()=>{URL.revokeObjectURL(url);res(null)}; im.src=url;
   });
@@ -1040,7 +1081,7 @@ function bindAdmin(){
   function authWarn(msg){ const d=document.createElement('div'); d.className='authwarn'; d.dir='auto'; d.textContent=msg; document.querySelector('.admin > div:last-child').prepend(d); }
   document.querySelectorAll('.aside [data-tab]').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.aside [data-tab]').forEach(x=>x.classList.toggle('on',x===b));
-    ['t1','t2','t3','t4'].forEach(id=>$(id).hidden=id!==b.dataset.tab);
+    ['t1','t2','t3','t4','t5'].forEach(id=>$(id).hidden=id!==b.dataset.tab);
     if(b.dataset.tab==='t4') renderEdit();
   }));
   const pv=(el,arr)=>{el.innerHTML=arr.map(x=>`<img src="${x.src}" alt="">`).join('')};
@@ -1102,7 +1143,7 @@ function bindAdmin(){
     e.preventDefault(); if(!gF.length){toast(L('اختار صورة واحدة على الأقل','Choose at least one image'));return;}
     const k=$('g-month').value, by=$('g-by').value.trim(), be=$('g-by-en').value.trim(), t=$('g-t').value.trim(), hl=$('g-hl').checked?1:0;
     const files=[];
-    gF.forEach(f=>{const id='u'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64}); DATA.works.unshift({id,m:k,wh:f.wh,t,te:t,by,hl});});
+    gF.forEach(f=>{const id='u'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64}); DATA.works.unshift({id,m:k,wh:f.wh,t,te:t,by,hl,ph:f.ph});});
     if(by&&be){DATA.names=DATA.names||{}; DATA.names[by]=be;}
     if(await saveData(`Add ${gF.length} work(s)${by?' by '+by:''}`,files)){ gF=[]; $('g-prev').innerHTML=''; e.target.reset(); }
   });
@@ -1135,6 +1176,118 @@ function bindAdmin(){
     edits.forEach((o,id)=>{const w=DATA.works.find(x=>x.id===id); if(!w) return; Object.assign(w,o); if(o.t!==undefined) w.te=o.t; if(o.by!==undefined) delete w.be;});
     const del=[...dels]; DATA.works=DATA.works.filter(w=>!dels.has(w.id));
     if(await saveData(`Edit ${edits.size} / delete ${del.length} work(s)`,[],del.map(id=>`img/${id}.jpg`))){ edits.clear(); dels.clear(); renderEdit(); }
+  });
+
+  /* t5: import from Facebook */
+  const AR_D='٠١٢٣٤٥٦٧٨٩', toLat=t=>String(t||'').replace(/[٠-٩]/g,c=>AR_D.indexOf(c));
+  const MON={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11,'يناير':0,'فبراير':1,'مارس':2,'أبريل':3,'ابريل':3,'إبريل':3,'مايو':4,'يونيو':5,'يوليو':6,'أغسطس':7,'اغسطس':7,'سبتمبر':8,'أكتوبر':9,'اكتوبر':9,'نوفمبر':10,'ديسمبر':11};
+  function fbDate(text,at){
+    const now=at?new Date(at):new Date(); let t=toLat(text).toLowerCase().replace(/ at .*$| الساعة.*$|[،,]/g,' ').replace(/\s+/g,' ').trim();
+    if(!t) return null;
+    if(/just now|الآن|now/.test(t)) return now;
+    if(/yesterday|أمس|امس/.test(t)) return new Date(now-864e5);
+    let m=t.match(/^(\d+)\s*(m|min|mins|minutes?|h|hr|hrs|hours?|d|days?|w|wk|weeks?|y|yr|years?|د|دقيقة|س|ساعة|ي|يوم|أيام|أسبوع|أسابيع|سنة|سنوات)\b/);
+    if(m){ const n=+m[1], u=m[2], k=/^(m|min|د|دقيقة)/.test(u)?6e4:/^(h|hr|س|ساعة)/.test(u)?36e5:/^(d|ي|يوم|أيام)/.test(u)?864e5:/^(w|wk|أسبوع|أسابيع)/.test(u)?6048e5:31536e6; return new Date(now-n*k); }
+    let day=null,mon=null,year=null;
+    t.split(' ').forEach(p=>{ const k=Object.keys(MON).find(x=>p.startsWith(x)); if(k!==undefined&&mon===null) mon=MON[k]; else if(/^\d{4}$/.test(p)) year=+p; else if(/^\d{1,2}$/.test(p)&&day===null) day=+p; });
+    if(mon===null||day===null) return null;
+    let d=new Date(year||now.getFullYear(),mon,day,12);
+    if(!year&&d>now) d=new Date(now.getFullYear()-1,mon,day,12);
+    return d;
+  }
+  function hijriKey(d){
+    if(!d) return '';
+    try{ const p=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{year:'numeric',month:'numeric'}).formatToParts(d);
+      const y=+(p.find(x=>x.type==='year')||{}).value.replace(/\D/g,''), mo=+(p.find(x=>x.type==='month')||{}).value;
+      return y===1447&&MONTHS[mo-1]?MONTHS[mo-1].k:''; }catch(_){ return ''; }
+  }
+  const hijriLabel=d=>{ try{ return new Intl.DateTimeFormat('ar-EG-u-ca-islamic-umalqura',{month:'long',year:'numeric'}).format(d);}catch(_){return '';} };
+  let IM=[]; // import candidates
+  const monthOpts=sel=>`<option value="">${L('— من غير شهر —','— no month —')}</option>`+[...MONTHS.filter(m=>m.t),MI.old].map(m=>`<option value="${m.k}" ${m.k===sel?'selected':''}>${esc(m.k==='old'?L('مختارات (القديمة)','Highlights (old)'):mM(m.k)+' · '+mT(m.k))}</option>`).join('');
+  $('i-bulk').innerHTML=monthOpts('');
+  const proxied=u=>'api/img?u='+encodeURIComponent(u);
+  function loadImg(u){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>rej(new Error('img')); im.src=proxied(u); }); }
+  $('i-file').addEventListener('change',async e=>{
+    const byId=new Map(IM.map(x=>[x.fbid,x]));
+    for(const f of e.target.files){ try{ const j=JSON.parse(await f.text()); (j.items||j||[]).forEach(r=>{ if(r&&r.fbid&&r.img&&!byId.has(r.fbid)) byId.set(r.fbid,r); }); }catch(_){ toast(L('ملف مش مفهوم: ','Unreadable file: ')+f.name); } }
+    const doneFb=new Set(DATA.works.map(w=>w.fb).filter(Boolean));
+    IM=[...byId.values()].map(r=>{ const d=fbDate(r.date,r.at); const k=r.m!==undefined?r.m:hijriKey(d);
+      return {...r,d,month:k,hl:d?hijriLabel(d):'',by:r.by!==undefined?r.by:(r.author||''),title:r.title||'',sel:!doneFb.has(r.fbid),state:doneFb.has(r.fbid)?'done':'new',match:null,ph:null}; })
+      .sort((a,b)=>(a.d||0)-(b.d||0));
+    $('i-file-name').textContent=[...e.target.files].map(f=>f.name).join('، ');
+    $('i-tools').hidden=false; $('i-go').disabled=false;
+    renderImport(); hashAll();
+  });
+  async function hashAll(){
+    const todo=IM.filter(x=>x.state!=='done'&&!x.ph); let done=0, fail=0;
+    const work=async()=>{ while(todo.length){ const x=todo.shift();
+      try{ const im=await loadImg(x.img); x.ph=phashOf(im);
+        let best=null; for(const w of DATA.works){ const dd=phDist(x.ph,w.ph); if(dd<(best?best.d:11)) best={w,d:dd}; }
+        if(best){ x.match=best.w; x.state='match'; }
+      }catch(_){ fail++; }
+      done++; $('i-status').textContent=L(`بيقارن بالرسومات اللي على الموقع: ${A(done)} من ${A(done+todo.length)}`,`Comparing with artworks on the site: ${done} of ${done+todo.length}`)+(fail?L(` (${A(fail)} صورة ما اتفتحتش)`,` (${fail} could not load)`):'');
+      if(done%12===0) renderImport(); } };
+    await Promise.all([work(),work(),work(),work()]);
+    $('i-status').textContent=L(`خلص. ${A(IM.filter(x=>x.state==='new').length)} جديدة، ${A(IM.filter(x=>x.state==='match').length)} موجودة غالبًا على الموقع (هنضيفلها الاسم واللينك بس)، ${A(IM.filter(x=>x.state==='done').length)} اتضافت قبل كده.`,`Done. ${IM.filter(x=>x.state==='new').length} new, ${IM.filter(x=>x.state==='match').length} probably already on the site (only the name and links get added), ${IM.filter(x=>x.state==='done').length} already imported.`)+(fail?L(` ${A(fail)} صورة ما اتفتحتش: لو الملف قديم، اجمع تاني.`,` ${fail} could not load: if the file is old, collect again.`):'');
+    renderImport();
+  }
+  function renderImport(){
+    const show=$('i-show').value;
+    const vis=IM.filter(x=>show==='all'||(show==='nomonth'?!x.month:x.state===show));
+    $('igrid').innerHTML=vis.slice(0,400).map(x=>{ const i=IM.indexOf(x);
+      return `<div class="ecard icard ${x.sel?'':'off'} st-${x.state}" data-i="${i}">
+        <label class="isel"><input type="checkbox" data-f="sel" ${x.sel?'checked':''} ${x.state==='done'?'disabled':''}> ${x.state==='done'?L('اتضافت قبل كده','Already imported'):x.state==='match'?L('موجودة غالبًا','Probably on site'):L('جديدة','New')}</label>
+        <img loading="lazy" src="${esc(x.img)}" referrerpolicy="no-referrer" alt="" onerror="this.src='${esc(proxied(x.img))}';this.onerror=null">
+        ${x.match?`<div class="imatch"><img src="img/${esc(x.match.id)}.jpg" alt=""><span>${L('زي دي اللي على الموقع؟','Same as this one on the site?')}<br><label><input type="checkbox" data-f="asnew" ${x.asnew?'checked':''}> ${L('لأ، دي رسمة تانية','No, a different artwork')}</label></span></div>`:''}
+        <input data-f="by" list="artist-list" placeholder="${L('اسم الفنان','Artist name')}" value="${esc(x.by)}">
+        <input data-f="title" placeholder="${L('اسم الرسمة (اختياري)','Title (optional)')}" value="${esc(x.title)}">
+        <select data-f="month">${monthOpts(x.month)}</select>
+        <div class="erow"><span dir="auto">${esc(x.date||'')}${x.hl?' · '+esc(x.hl):''}</span>${x.post?`<a class="link" href="${esc(x.post)}" target="_blank" rel="noopener">${L('المنشور','Post')} ↗</a>`:''}</div>
+      </div>`; }).join('')||`<p class="hint">${L('مفيش حاجة هنا','Nothing here')}</p>`;
+    const n=IM.filter(x=>x.sel&&x.state!=='done').length;
+    $('i-count').textContent=L(`مختار ${A(n)}`,`${n} selected`)+(vis.length>400?L(' · ظاهر أول ٤٠٠ بس، استخدم «اعرض»',' · showing first 400, use “Show”'):'');
+  }
+  $('i-show').addEventListener('change',renderImport);
+  $('igrid').addEventListener('input',e=>{ const c=e.target.closest('.icard'), f=e.target.dataset.f; if(!c||!f) return; const x=IM[+c.dataset.i];
+    if(f==='sel'||f==='asnew'){ x[f]=e.target.checked; if(f==='sel') c.classList.toggle('off',!x.sel); const n=IM.filter(y=>y.sel&&y.state!=='done').length; $('i-count').textContent=L(`مختار ${A(n)}`,`${n} selected`); }
+    else x[f]=e.target.value; });
+  $('i-all').addEventListener('click',()=>{ const show=$('i-show').value; IM.forEach(x=>{ if(x.state!=='done'&&(show==='all'||(show==='nomonth'?!x.month:x.state===show))) x.sel=true; }); renderImport(); });
+  $('i-none').addEventListener('click',()=>{ IM.forEach(x=>x.sel=false); renderImport(); });
+  $('i-bulk-go').addEventListener('click',()=>{ const k=$('i-bulk').value; IM.forEach(x=>{ if(x.sel) x.month=k; }); renderImport(); });
+  $('t5').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const pick=IM.filter(x=>x.sel&&x.state!=='done');
+    if(!pick.length){ toast(L('مفيش حاجة مختارة','Nothing selected')); return; }
+    const noM=pick.filter(x=>!x.month&&(x.state==='new'||x.asnew)).length;
+    if(noM&&!confirm(L(`${A(noM)} رسمة من غير شهر هتتحط في «أخرى». نكمل؟`,`${noM} artworks have no month and will go under “Other”. Continue?`))) return;
+    const enrich=pick.filter(x=>x.state==='match'&&!x.asnew), fresh=pick.filter(x=>x.state==='new'||(x.state==='match'&&x.asnew));
+    const restore=snap=>{ Object.keys(DATA).forEach(k=>delete DATA[k]); Object.assign(DATA,JSON.parse(snap)); };
+    // 1) names/links on artworks already on the site: one save
+    if(enrich.length){
+      const snap=JSON.stringify(DATA);
+      enrich.forEach(x=>{ const w=DATA.works.find(y=>y.id===x.match.id); if(!w) return; if(x.by&&!w.by){ w.by=x.by; delete w.be; } if(x.title&&!w.t){ w.t=x.title; w.te=x.title; } if(x.post) w.u=x.post; if(x.authorUrl) w.pu=x.authorUrl; w.fb=x.fbid; if(x.month&&!w.m) w.m=x.month; });
+      if(await saveData(`Facebook: credit ${enrich.length} existing work(s)`)) enrich.forEach(x=>x.state='done'); else { restore(snap); renderImport(); return; }
+    }
+    // 2) new artworks, in small batches so each save stays light
+    const B=15;
+    for(let i=0;i<fresh.length;i+=B){
+      const part=fresh.slice(i,i+B), files=[], snap=JSON.stringify(DATA);
+      $('i-status').textContent=L(`بيجهز الدفعة ${A(i/B+1)} من ${A(Math.ceil(fresh.length/B))}…`,`Preparing batch ${i/B+1} of ${Math.ceil(fresh.length/B)}…`);
+      for(const x of part){
+        try{ const blob=await fetch(proxied(x.img)).then(r=>{ if(!r.ok) throw new Error(r.status); return r.blob(); });
+          const f=await prepImage(blob); if(!f) throw new Error('decode');
+          const id='u'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64});
+          DATA.works.unshift({id,m:x.month||null,wh:f.wh,t:x.title,te:x.title,by:x.by,hl:0,ph:f.ph,fb:x.fbid,u:x.post,pu:x.authorUrl});
+          x._ok=true;
+        }catch(err){ x._ok=false; }
+      }
+      if(!files.length){ toast(L('ولا صورة اتفتحت في الدفعة دي. الملف ممكن يكون قديم: اجمع تاني.','No image in this batch could be loaded. The file may be old: collect again.')); restore(snap); break; }
+      if(await saveData(`Facebook: add ${files.length} work(s)`,files)){ part.forEach(x=>{ if(x._ok){ x.state='done'; x.sel=false; } }); }
+      else { restore(snap); break; }
+      renderImport();
+    }
+    $('i-status').textContent=L('خلص. التحديثات هتظهر على الموقع خلال دقيقة أو اتنين.','Done. Changes will be live in a minute or two.');
+    renderImport();
   });
 
   /* t3: artist of the week */

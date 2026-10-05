@@ -12,7 +12,7 @@ const b64url = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')
 
 // Verify the Cloudflare Access JWT so the email can't be faked (e.g. on the *.workers.dev address).
 // Returns { email } when the visitor is an allowed admin, otherwise { reason, ... } explaining why not.
-async function checkAdmin(request, env) {
+export async function checkAdmin(request, env) {
   const allowed = (env.ADMIN_EMAILS || '').toLowerCase().split(/[,\s]+/).map(s => s.trim()).filter(Boolean);
   const teamRaw = (env.ACCESS_TEAM || '').trim(), audWant = (env.ACCESS_AUD || '').trim();
   // ADMIN_EMAILS is optional: the Cloudflare Access policy already limits who can sign in.

@@ -79,3 +79,10 @@ If two admins save at the same moment, the second one is asked to reload first, 
 ## Limits (free plans)
 - Pages: 500 deploys a month (one per save) and 25MB per file. Bandwidth is unlimited.
 - GitHub: stay under about 1GB in total. That is roughly 5,000 artworks at the current size.
+
+## Importing artworks from the Facebook group
+1. Open `3arabesque.art/admin/collector.html` and drag the **«أرابيسك: اجمع»** button to the bookmarks bar.
+2. On Facebook (signed in), open the group's **Media** tab, open a photo, click the bookmark, then press **Auto** (or use →). Download the file at the end.
+3. In the dashboard, open **Import from Facebook**, upload the file, check names and months, and press **Import selected**.
+
+The month is suggested from the post date (Hijri calendar, 1447). Artworks already on the site are recognised by a picture fingerprint (`ph` in `data.json`); for those, only the artist name and links are added. `/api/img` fetches the Facebook images for the dashboard (admins only, `fbcdn.net` links only).
