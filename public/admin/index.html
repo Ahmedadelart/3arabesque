@@ -846,7 +846,7 @@ const clip=(t,n)=>{t=String(t||''); return t.length>n?t.slice(0,n).replace(/\s+\
 const paras=t=>String(t||'').split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>/^[•\-–·]/.test(x)?`<li>${esc(x.replace(/^[•\-–·]\s*/,''))}</li>`:`<p>${esc(x)}</p>`).join('').replace(/(<li>.*?<\/li>)+/g,m=>`<ul>${m}</ul>`);
 const fkey=a=>{ const m=(a.post||'').match(/(\d{8,})/); return m?m[1]:(a.fb||a.name); };
 const fdate=a=>{ if(a.d){ try{ return new Date(a.d+'T12:00:00').toLocaleDateString(LANG==='ar'?'ar-EG':'en-GB',{day:'numeric',month:'long',year:'numeric'}); }catch(_){} } return cx(a.date)||''; };
-const SITE=[[/behance\.net/,'Behance'],[/instagram\.com/,'Instagram'],[/artstation\.com/,'ArtStation'],[/linkedin\.com/,'LinkedIn'],[/x\.com|twitter\.com/,'X'],[/youtube\.com/,'YouTube'],[/dribbble\.com/,'Dribbble'],[/tiktok\.com/,'TikTok']];
+const SITE=[[/behance\.net/,'Behance'],[/instagram\.com/,'Instagram'],[/artstation\.com/,'ArtStation'],[/linkedin\.com/,'LinkedIn'],[/x\.com|twitter\.com/,'X'],[/youtube\.com/,'YouTube'],[/facebook\.com/,'Facebook'],[/dribbble\.com/,'Dribbble'],[/tiktok\.com/,'TikTok']];
 const siteName=u=>{ const f=SITE.find(([r])=>r.test(u)); if(f) return f[1]; try{ return new URL(u).hostname.replace(/^www\./,''); }catch(_){ return L('الموقع','Website'); } };
 const linkBtns=(a,cls='btn-ghost')=>{ const ls=(a.links&&a.links.length?a.links:(a.link?[a.link]:[])); return ls.map((u,i)=>`<a class="btn ${i?'btn-ghost':cls}" href="${esc(u)}" target="_blank" rel="noopener" dir="ltr">${esc(siteName(u))} ↗</a>`).join(''); };
 const cover=(w,cls='')=>w?`<img class="${cls}" loading="lazy" src="${esc(thumb(w))}" data-full="${esc(w.src)}" onerror="if(this.src!==this.dataset.full){this.src=this.dataset.full}" alt="">`:'';
