@@ -224,7 +224,8 @@ nav.main a.adm{border:1px dashed var(--warn);color:var(--warn)}
 .crumbs{font-size:14px;margin-bottom:12px}
 .crumbs a{color:var(--fg)}
 
-.bigbanner{border-radius:20px;overflow:hidden;border:3px solid var(--ink);box-shadow:0 8px 0 var(--hard);margin-top:-12px}
+.bigbanner{border-radius:20px;overflow:hidden;border:3px solid var(--ink);box-shadow:0 8px 0 var(--hard);margin-top:-12px;width:fit-content;max-width:100%}
+.bigbanner img{display:block;width:auto;max-width:100%;height:auto}
 .pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:40px}
 
 /* artists */
@@ -491,10 +492,11 @@ const cx=v=>Array.isArray(v)?L(v[0],v[1]):v;
 function worksOf(k){return state.works.filter(w=>w.m===k).sort((a,b)=>(b.hl||0)-(a.hl||0))}
 const wT=w=>LANG==='en'?(w.te||w.t||(w.m?mT(w.m):'From the archive')):(w.t||(w.m?mT(w.m):'من أرشيف أرابيسك'));
 const wB=w=>LANG==='en'?(w.be||w.by):w.by;
+const thumb=w=>/^img\/[^/]+\.jpg$/.test(w.src||'')?w.src.replace(/^img\//,'img/t/'):w.src;
 function tile(w,cls='',ctx='all'){
   const [ww,hh]=w.wh||[4,3]; const t=wT(w); const by=wB(w);
   const extra=w.ref?`<small>${esc(w.by)} · ${esc(w.lic)}</small>`:(by?`<span dir="auto">${esc(by)}</span>`:'');
-  return `<button class="tile ${cls}" data-w="${esc(w.id)}" data-ctx="${esc(ctx)}" aria-label="${esc(t)}"><img loading="lazy" src="${esc(w.src)}" width="${ww}" height="${hh}" alt="${esc(t)}"><div class="cap"><b>${esc(t)}</b>${extra}</div></button>`;
+  return `<button class="tile ${cls}" data-w="${esc(w.id)}" data-ctx="${esc(ctx)}" aria-label="${esc(t)}"><img loading="lazy" decoding="async" src="${esc(thumb(w))}" width="${ww}" height="${hh}" alt="${esc(t)}" onerror="if(this.src!==this.dataset.full){this.src=this.dataset.full}" data-full="${esc(w.src)}"><div class="cap"><b>${esc(t)}</b>${extra}</div></button>`;
 }
 const PW=n=>LANG==='en'?(n===1?'submission':'submissions'):(n===1?'مشاركة':n===2?'مشاركتين':(n>=3&&n<=10)?'مشاركات':'مشاركة');
 const pill=t=>`<span class="pill">${esc(t)}</span>`;
@@ -1000,7 +1002,7 @@ function vAdmin(){
       <form class="panel" id="t4" hidden novalidate>
         <h2>${L('تعديل الرسومات','Edit artworks')}</h2>
         <div class="fgrid">
-          <div class="field"><label for="e-month">${L('التحدي','Challenge')}</label><select id="e-month"><option value="__noname">${L('رسومات من غير اسم فنان','Artworks without an artist name')}</option>${opts(c.k,true)}</select></div>
+          <div class="field"><label for="e-month">${L('التحدي','Challenge')}</label><select id="e-month"><option value="__noname">${L('رسومات من غير اسم فنان','Artworks without an artist name')}</option><option value="__nomonth">${L('رسومات من غير شهر','Artworks without a month')}</option>${opts(c.k,true)}</select></div>
           <div class="field"><label for="e-q">${L('بحث بالاسم','Search by name')}</label><input id="e-q" list="artist-list"></div>
         </div>
         <div class="egrid" id="egrid"></div>
@@ -1050,13 +1052,13 @@ function phashOf(src){ // dHash, same steps as the server-side script
   return BigInt('0b'+bits).toString(16).padStart(16,'0');
 }
 function phDist(a,b){ if(!a||!b) return 99; let x=BigInt('0x'+a)^BigInt('0x'+b), n=0; while(x){ n+=Number(x&1n); x>>=1n; } return n; }
-function prepImage(file,max=1800){
+function prepImage(file,max=1400){
   return new Promise(res=>{
     const url=URL.createObjectURL(file), im=new Image();
     im.onload=()=>{
       let w=im.naturalWidth,h=im.naturalHeight; const s=Math.min(1,max/Math.max(w,h)); w=Math.round(w*s); h=Math.round(h*s);
       const cv=document.createElement('canvas'); cv.width=w; cv.height=h; const g=cv.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,w,h); g.drawImage(im,0,0,w,h);
-      const d=cv.toDataURL('image/jpeg',0.86); URL.revokeObjectURL(url); res({src:d,b64:d.split(',')[1],wh:[w,h],name:file.name||'',ph:phashOf(cv)});
+      const d=cv.toDataURL('image/jpeg',0.82); const ts=Math.min(1,520/Math.max(w,h)), tc=document.createElement('canvas'); tc.width=Math.round(w*ts); tc.height=Math.round(h*ts); const tg=tc.getContext('2d'); tg.imageSmoothingQuality='high'; tg.drawImage(cv,0,0,tc.width,tc.height); const td=tc.toDataURL('image/jpeg',0.78); URL.revokeObjectURL(url); res({src:d,b64:d.split(',')[1],tb64:td.split(',')[1],wh:[w,h],name:file.name||'',ph:phashOf(cv)});
     };
     im.onerror=()=>{URL.revokeObjectURL(url);res(null)}; im.src=url;
   });
@@ -1146,7 +1148,7 @@ function bindAdmin(){
     e.preventDefault(); if(!gF.length){toast(L('اختار صورة واحدة على الأقل','Choose at least one image'));return;}
     const k=$('g-month').value, by=$('g-by').value.trim(), be=$('g-by-en').value.trim(), t=$('g-t').value.trim(), hl=$('g-hl').checked?1:0;
     const files=[];
-    gF.forEach(f=>{const id='u'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64}); DATA.works.unshift({id,m:k,wh:f.wh,t,te:t,by,hl,ph:f.ph});});
+    gF.forEach(f=>{const id='u'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.works.unshift({id,m:k,wh:f.wh,t,te:t,by,hl,ph:f.ph});});
     if(by&&be){DATA.names=DATA.names||{}; DATA.names[by]=be;}
     if(await saveData(`Add ${gF.length} work(s)${by?' by '+by:''}`,files)){ gF=[]; $('g-prev').innerHTML=''; e.target.reset(); }
   });
@@ -1155,13 +1157,13 @@ function bindAdmin(){
   const edits=new Map(), dels=new Set();
   function renderEdit(){
     const k=$('e-month').value, q=$('e-q').value.trim();
-    let ws=DATA.works.filter(w=>k==='__noname'?!w.by:w.m===k);
+    let ws=DATA.works.filter(w=>k==='__noname'?!w.by:k==='__nomonth'?!w.m:w.m===k);
     if(q) ws=DATA.works.filter(w=>(w.by||'').includes(q)||(w.t||'').includes(q));
     $('e-count').textContent=A(ws.length)+' '+L('رسمة','works');
     const mo=sel=>[...MONTHS.filter(m=>m.t),MI.old].map(m=>`<option value="${m.k}" ${m.k===sel?'selected':''}>${esc(m.k==='old'?L('مختارات','Highlights'):mT(m.k))}</option>`).join('');
     $('egrid').innerHTML=ws.slice(0,300).map(w=>{const e=edits.get(w.id)||{}; const v=(f)=>e[f]!==undefined?e[f]:w[f];
       return `<div class="ecard ${dels.has(w.id)?'del':''} ${edits.has(w.id)?'dirty':''}" data-id="${esc(w.id)}">
-        <img loading="lazy" src="img/${esc(w.id)}.jpg" alt="">
+        <img loading="lazy" src="img/t/${esc(w.id)}.jpg" onerror="this.onerror=null;this.src='img/${esc(w.id)}.jpg'" alt="">
         <input data-f="by" list="artist-list" placeholder="${L('اسم الفنان','Artist name')}" value="${esc(v('by'))}">
         <input data-f="t" placeholder="${L('اسم الرسمة','Title')}" value="${esc(v('t'))}">
         <select data-f="m">${mo(v('m'))}</select>
@@ -1178,7 +1180,7 @@ function bindAdmin(){
     e.preventDefault(); if(!edits.size&&!dels.size){toast(L('مفيش تعديلات','No changes'));return;}
     edits.forEach((o,id)=>{const w=DATA.works.find(x=>x.id===id); if(!w) return; Object.assign(w,o); if(o.t!==undefined) w.te=o.t; if(o.by!==undefined) delete w.be;});
     const del=[...dels]; DATA.works=DATA.works.filter(w=>!dels.has(w.id));
-    if(await saveData(`Edit ${edits.size} / delete ${del.length} work(s)`,[],del.map(id=>`img/${id}.jpg`))){ edits.clear(); dels.clear(); renderEdit(); }
+    if(await saveData(`Edit ${edits.size} / delete ${del.length} work(s)`,[],del.flatMap(id=>[`img/${id}.jpg`,`img/t/${id}.jpg`]))){ edits.clear(); dels.clear(); renderEdit(); }
   });
 
   /* t5: import from Facebook */
@@ -1241,7 +1243,7 @@ function bindAdmin(){
       return `<div class="ecard icard ${x.sel?'':'off'} st-${x.state}" data-i="${i}">
         <label class="isel"><input type="checkbox" data-f="sel" ${x.sel?'checked':''} ${x.state==='done'?'disabled':''}> ${x.state==='done'?L('اتضافت قبل كده','Already imported'):x.state==='match'?L('موجودة غالبًا','Probably on site'):L('جديدة','New')}</label>
         <img loading="lazy" src="${esc(x.img)}" referrerpolicy="no-referrer" alt="" onerror="this.src='${esc(proxied(x.img))}';this.onerror=null">
-        ${x.match?`<div class="imatch"><img src="img/${esc(x.match.id)}.jpg" alt=""><span>${L('زي دي اللي على الموقع؟','Same as this one on the site?')}<br><label><input type="checkbox" data-f="asnew" ${x.asnew?'checked':''}> ${L('لأ، دي رسمة تانية','No, a different artwork')}</label></span></div>`:''}
+        ${x.match?`<div class="imatch"><img src="img/t/${esc(x.match.id)}.jpg" alt=""><span>${L('زي دي اللي على الموقع؟','Same as this one on the site?')}<br><label><input type="checkbox" data-f="asnew" ${x.asnew?'checked':''}> ${L('لأ، دي رسمة تانية','No, a different artwork')}</label></span></div>`:''}
         <input data-f="by" list="artist-list" placeholder="${L('اسم الفنان','Artist name')}" value="${esc(x.by)}">
         <input data-f="title" placeholder="${L('اسم الرسمة (اختياري)','Title (optional)')}" value="${esc(x.title)}">
         <select data-f="month">${monthOpts(x.month)}</select>
@@ -1279,7 +1281,7 @@ function bindAdmin(){
       for(const x of part){
         try{ const blob=await fetch(proxied(x.img)).then(r=>{ if(!r.ok) throw new Error(r.status); return r.blob(); });
           const f=await prepImage(blob); if(!f) throw new Error('decode');
-          const id='u'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64});
+          const id='u'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64});
           DATA.works.unshift({id,m:x.month||null,wh:f.wh,t:x.title,te:x.title,by:x.by,hl:0,ph:f.ph,fb:x.fbid,u:x.post,pu:x.authorUrl});
           x._ok=true;
         }catch(err){ x._ok=false; }
@@ -1299,7 +1301,7 @@ function bindAdmin(){
   $('t3').addEventListener('submit',async e=>{
     e.preventDefault(); const name=$('h-name').value.trim(); if(!name){toast(L('اكتب اسم الفنان','Enter the artist name'));return;}
     const d=$('h-date').value.trim(), ab=$('h-about').value.trim(), files=[]; let ids;
-    if(hF.length){ DATA.feat=DATA.feat||[]; ids=hF.map(f=>{const id='h'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64}); DATA.feat.push({id,wh:f.wh,t:''}); return id;}); }
+    if(hF.length){ DATA.feat=DATA.feat||[]; ids=hF.map(f=>{const id='h'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.feat.push({id,wh:f.wh,t:''}); return id;}); }
     else { ids=DATA.works.filter(w=>w.by===name).slice(0,8).map(w=>w.id); if(!ids.length){toast(L('مفيش رسومات باسمه على الموقع، ارفع صور','No artworks under that name yet; upload some'));return;} }
     DATA.aow=[{name,date:[d,d],about:ab?[ab,ab]:null,works:ids},...(DATA.aow||[])].slice(0,20);
     if(await saveData(`Artist of the week: ${name}`,files)){ hF=[]; $('h-prev').innerHTML=''; e.target.reset(); }

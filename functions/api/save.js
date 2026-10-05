@@ -70,7 +70,7 @@ export async function onRequestPost({ request, env }) {
   try { body = await request.json(); } catch { return json({ error: 'Bad request' }, 400); }
   const { data, files = [], del = [], message = 'Update' } = body || {};
   if (!data || !Array.isArray(data.works)) return json({ error: 'Missing data' }, 400);
-  const okPath = p => typeof p === 'string' && /^img\/[A-Za-z0-9_.-]+\.jpg$/.test(p);
+  const okPath = p => typeof p === 'string' && /^img\/(t\/)?[A-Za-z0-9_.-]+\.jpg$/.test(p);
   if (!files.every(f => okPath(f.path) && typeof f.b64 === 'string') || !del.every(okPath))
     return json({ error: 'Bad file path' }, 400);
 
