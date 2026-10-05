@@ -417,6 +417,7 @@ a.hero-art{display:block}
 <script>
 (async()=>{
 const ADMIN=!!window.ADMIN;
+let IS_ADMIN=false; try{ IS_ADMIN=localStorage.getItem('arabesque-admin')==='1'; }catch(_){}
 const DATA = await fetch('data.json',{cache:'no-store'}).then(r=>r.json());
 let LANG='ar', MODE='dark';
 try{ if(localStorage.getItem('arabesque-mode')==='light') MODE='light'; }catch(_){}
@@ -809,7 +810,7 @@ function renderChrome(){
     <a href="#home" data-r="home">${L('الرئيسية','Home')}</a>
     <a href="#challenges" data-r="challenges">${L('الأرشيف','Archive')}</a>
     <a href="#artists" data-r="artists">${L('الفنانين','Artists')}</a>
-    <a href="#about" data-r="about">${L('عن أرابيسك','About')}</a>${ADMIN?`\n    <a href="admin/" data-r="admin">${L('لوحة التحكم','Dashboard')}</a>`:''}`;
+    <a href="#about" data-r="about">${L('عن أرابيسك','About')}</a>${ADMIN||IS_ADMIN?`\n    <a href="admin/" data-r="admin">${L('لوحة التحكم','Dashboard')}</a>`:''}`;
   const ml=MODE==='dark'?L('الوضع الفاتح','Light mode'):L('الوضع الغامق','Dark mode');
   document.getElementById('utils').innerHTML=`
     <button class="u" id="langbtn" type="button" lang="${L('en','ar')}" title="${L('English','العربية')}" aria-label="${L('English','العربية')}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><b>${L('EN','ع')}</b></button>
@@ -959,7 +960,7 @@ function vAdmin(){
       <button data-tab="t4">${L('تعديل الرسومات','Edit artworks')}</button>
       <button data-tab="t3">${L('فنان الأسبوع','Artist of the week')}</button>
       <button data-tab="t5">${L('استيراد من فيسبوك','Import from Facebook')}</button>
-      <div class="who"><span id="whoami">${L('بيتأكد…','Checking…')}</span><br><a class="link" href="/cdn-cgi/access/logout">${L('خروج','Sign out')}</a></div>
+      <div class="who"><span id="whoami">${L('بيتأكد…','Checking…')}</span><br><a class="link" href="/cdn-cgi/access/logout" onclick="try{localStorage.removeItem('arabesque-admin')}catch(_){}">${L('خروج','Sign out')}</a></div>
     </div>
     <datalist id="artist-list">${artists.map(a=>`<option value="${esc(a)}">`).join('')}</datalist>
     <div>
@@ -1080,7 +1081,7 @@ async function saveData(message,files=[],del=[]){
 function bindAdmin(){
   const $=id=>document.getElementById(id);
   fetch('api/save',{cache:'no-store'}).then(r=>r.json()).then(j=>{
-    if(j.email){ $('whoami').textContent=j.email; if(!j.githubReady) authWarn(L('الدخول تمام، بس GITHUB_TOKEN أو GITHUB_REPO ناقصين في إعدادات Cloudflare.','Signed in, but GITHUB_TOKEN or GITHUB_REPO is missing in the Cloudflare settings.')); }
+    if(j.email){ try{localStorage.setItem('arabesque-admin','1')}catch(_){} $('whoami').textContent=j.email; if(!j.githubReady) authWarn(L('الدخول تمام، بس GITHUB_TOKEN أو GITHUB_REPO ناقصين في إعدادات Cloudflare.','Signed in, but GITHUB_TOKEN or GITHUB_REPO is missing in the Cloudflare settings.')); }
     else { $('whoami').textContent=L('مش داخل كأدمن','Not signed in as admin'); authWarn((j.message||j.reason||'')+(j.email===undefined&&j.tokenAud?' (token AUD: '+j.tokenAud+')':'')+(j.missing?' Missing: '+j.missing.join(', '):'')+(j.host?' (opened on: '+j.host+')':'')); }
   }).catch(()=>{ $('whoami').textContent=L('نسخة معاينة','Preview copy'); });
   function authWarn(msg){ const d=document.createElement('div'); d.className='authwarn'; d.dir='auto'; d.textContent=msg; document.querySelector('.admin > div:last-child').prepend(d); }
