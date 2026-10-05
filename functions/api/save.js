@@ -111,13 +111,25 @@ export async function onRequestPost({ request, env }) {
     tree.push({ path: P('data.json'), mode: '100644', type: 'blob', content: JSON.stringify(data) });
     for (const p of del) tree.push({ path: P(p), mode: '100644', type: 'blob', sha: null });
 
-    // 4) Tree -> commit -> move branch
-    const base = (await gh(`/git/commits/${head}`)).tree.sha;
-    let t;
-    try { t = await gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: base, tree }) }); }
-    catch { t = await gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: base, tree: tree.filter(x => x.sha !== null) }) }); }
-    const c = await gh('/git/commits', { method: 'POST', body: JSON.stringify({ message: `${message} (${email})`, tree: t.sha, parents: [head] }) });
-    await gh(`/git/refs/heads/${branch}`, { method: 'PATCH', body: JSON.stringify({ sha: c.sha }) });
+    // 4) Tree -> commit -> move branch. If someone pushed in between (e.g. a code update),
+    //    build the same change again on top of the new head instead of failing.
+    let parent = head, c;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const base = (await gh(`/git/commits/${parent}`)).tree.sha;
+      let t;
+      try { t = await gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: base, tree }) }); }
+      catch { t = await gh('/git/trees', { method: 'POST', body: JSON.stringify({ base_tree: base, tree: tree.filter(x => x.sha !== null) }) }); }
+      c = await gh('/git/commits', { method: 'POST', body: JSON.stringify({ message: `${message} (${email})`, tree: t.sha, parents: [parent] }) });
+      try { await gh(`/git/refs/heads/${branch}`, { method: 'PATCH', body: JSON.stringify({ sha: c.sha }) }); break; }
+      catch (err) {
+        if (attempt === 2) throw err;
+        const now = (await gh(`/git/ref/heads/${branch}`)).object.sha;
+        const f2 = await gh(`/contents/${P('data.json')}?ref=${now}`);
+        const cur2 = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(f2.content.replace(/\n/g, '')), ch => ch.charCodeAt(0))));
+        if ((cur2.rev || 0) !== (current.rev || 0)) return json({ error: 'Someone else saved changes a moment ago. Reload the page and try again.' }, 409);
+        parent = now;
+      }
+    }
     return json({ ok: true, rev: data.rev, commit: c.sha });
   } catch (e) {
     return json({ error: String(e.message || e) }, 502);
