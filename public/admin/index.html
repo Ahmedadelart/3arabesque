@@ -435,6 +435,7 @@ a.pio-frame{cursor:pointer}
 .pio-frame.sm img{border-width:6px;aspect-ratio:4/5;object-fit:cover}
 /* portraits with a small brass plaque under each */
 .pio-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:24px;margin-top:clamp(36px,5vw,64px);border-top:1px solid rgba(224,187,94,.3);padding-top:clamp(28px,4vw,44px)}
+.pio-hall{padding-top:clamp(48px,7vw,96px);min-height:70vh}
 .pio-wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:clamp(28px,3.4vw,46px);align-items:start}
 .pcard{display:grid;gap:12px;justify-items:center;align-content:start;text-decoration:none;color:#eee7d3;text-align:center;transition:transform .2s}
 .pcard:hover{transform:translateY(-4px)}
@@ -904,7 +905,7 @@ function acard(a){
 function homePio(){
   const ps=state.pioneers.slice(0,6), p=ps[0];
   return `<section class="sec pio-band"><div class="wrap">
-    <div class="pio-hall-head"><span class="pio-tag">${L('الرواد','Pioneers')}</span><h2 class="pio-title">${L('قاعة الرواد','Hall of pioneers')}</h2><p>${L('فنانين عرب رسموا الطريق لكل اللي جه بعدهم.','Arab artists who paved the way for everyone after them.')}</p></div>
+    <div class="pio-hall-head"><h2 class="pio-title">${L('قاعة الرواد','Hall of pioneers')}</h2><p>${L('فنانين عرب رسموا الطريق لكل اللي جه بعدهم.','Arab artists who paved the way for everyone after them.')}</p></div>
     <div class="pio-feature">
       <a class="pio-frame" href="#pio/${esc(fkey(p))}">${cover(p.works[0])}</a>
       <div class="pio-text">
@@ -948,8 +949,8 @@ function vAowOne(key){
 }
 function vPioneers(){
   return `
-  <section class="phead pio-head"><div class="wrap"><span class="pio-tag">${L('الرواد','Pioneers')}</span><h1 class="pio-title">${L('قاعة الرواد','Hall of pioneers')}</h1><p>${L('تحية لفنانين عرب رسموا الطريق لكل اللي جه بعدهم.','A tribute to the Arab artists who paved the way for everyone after them.')}</p></div></section>
-  <section class="sec pio-page"><div class="wrap">
+  <section class="sec pio-page pio-hall"><div class="wrap">
+    <div class="pio-hall-head"><h1 class="pio-title">${L('قاعة الرواد','Hall of pioneers')}</h1><p>${L('تحية لفنانين عرب رسموا الطريق لكل اللي جه بعدهم.','A tribute to the Arab artists who paved the way for everyone after them.')}</p></div>
     <div class="pio-wall">${state.pioneers.map(pcard).join('')||`<p class="hint">${L('قريبًا','Coming soon')}</p>`}</div>
   </div></section>`;
 }
@@ -962,7 +963,6 @@ function vPioOne(key){
     <div class="pio-feature">
       <button class="pio-frame tile" data-w="${esc(p.works[0]?.id||'')}" data-ctx="pio${i}">${cover(p.works[0])}</button>
       <div class="pio-text">
-        <span class="pio-tag">${L('الرواد','Pioneers')}</span>
         <h1 class="pio-name">${esc(nm(p.name))}</h1>
         ${p.years?`<span class="pio-years">${esc(p.years)}</span>`:''}
         <div class="prose">${paras(cx(p.about))}</div>
