@@ -31,7 +31,7 @@ kbd{background:#000;border:1px solid var(--line);border-radius:6px;padding:1px 7
 <h2>١. حط الزرار في المفضلة (مرة واحدة بس)</h2>
 <div class="card">
 <p>اسحب الزرار ده بالماوس وحطه في <b>شريط المفضلة</b> فوق في المتصفح. لو الشريط مش ظاهر، دوس <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd>.</p>
-<p><a class="bm" href="javascript:(()%20=&gt;%20{%0A%20%20if%20(window.__arabesqueCollector)%20{%20window.__arabesqueCollector.show();%20return;%20}%0A%20%20const%20KEY%20=%20&#x27;arabesque-collector-v1&#x27;;%0A%20%20let%20items%20=%20[];%0A%20%20try%20{%20items%20=%20JSON.parse(localStorage.getItem(KEY)%20||%20&#x27;[]&#x27;);%20}%20catch%20(_)%20{%20items%20=%20[];%20}%0A%20%20const%20seen%20=%20new%20Set(items.map(i%20=&gt;%20i.fbid));%0A%20%20let%20auto%20=%20false,%20autoT%20=%20null,%20lastFbid%20=%20null,%20stale%20=%200;%0A%0A%20%20const%20clean%20=%20(u,%20keep%20=%20[])%20=&gt;%20{%0A%20%20%20%20try%20{%0A%20%20%20%20%20%20const%20x%20=%20new%20URL(u,%20location.origin);%0A%20%20%20%20%20%20const%20q%20=%20new%20URLSearchParams();%0A%20%20%20%20%20%20keep.forEach(k%20=&gt;%20x.searchParams.get(k)%20&amp;&amp;%20q.set(k,%20x.searchParams.get(k)));%0A%20%20%20%20%20%20return%20x.origin%20+%20x.pathname%20+%20(q.toString()%20?%20&#x27;?&#x27;%20+%20q%20:%20&#x27;&#x27;);%0A%20%20%20%20}%20catch%20(_)%20{%20return%20&#x27;&#x27;;%20}%0A%20%20};%0A%20%20const%20fbidOf%20=%20u%20=&gt;%20{%20try%20{%20return%20new%20URL(u).searchParams.get(&#x27;fbid&#x27;);%20}%20catch%20(_)%20{%20return%20null;%20}%20};%0A%0A%20%20function%20grab()%20{%0A%20%20%20%20if%20(!/%5C/photo/.test(location.pathname))%20return%20null;%0A%20%20%20%20const%20fbid%20=%20fbidOf(location.href);%0A%20%20%20%20const%20img%20=%20[...document.querySelectorAll(&#x27;img[data-visualcompletion=%22media-vc-image%22]&#x27;)]%0A%20%20%20%20%20%20.filter(i%20=&gt;%20i.naturalWidth%20&gt;%20200%20&amp;&amp;%20i.getBoundingClientRect().width%20&gt;%2050)%0A%20%20%20%20%20%20.sort((a,%20b)%20=&gt;%20b.naturalWidth%20-%20a.naturalWidth)[0];%0A%20%20%20%20if%20(!fbid%20||%20!img)%20return%20null;%0A%20%20%20%20const%20links%20=%20[...document.querySelectorAll(&#x27;a[href]&#x27;)].filter(a%20=&gt;%20!a.closest(&#x27;[role=%22article%22]&#x27;));%0A%20%20%20%20const%20post%20=%20links.find(a%20=&gt;%20/%5C/(posts|permalink)%5C//.test(a.href)%20&amp;&amp;%20!/comment_id/.test(a.href));%0A%20%20%20%20const%20bad%20=%20/%5C/(groups|photo|photos|login|recover|hashtag|watch|stories|notifications|messages|marketplace|gaming|events|pages)%5Cb|comment_id|%5C/%5C?__tn__/;%0A%20%20%20%20const%20author%20=%20links.find(a%20=&gt;%20{%0A%20%20%20%20%20%20const%20t%20=%20(a.innerText%20||%20&#x27;&#x27;).trim();%0A%20%20%20%20%20%20return%20t%20&amp;&amp;%20t.length%20&lt;%2080%20&amp;&amp;%20/facebook%5C.com%5C//.test(a.href)%20&amp;&amp;%20!bad.test(a.href.replace(/%5C/groups%5C/[%5E/]+%5C/user%5C/%5Cd+/,%20&#x27;/u&#x27;))%0A%20%20%20%20%20%20%20%20&amp;&amp;%20a.href%20!==%20location.href%20&amp;&amp;%20!/%5E(Log%20in|Close|Facebook)/i.test(t);%0A%20%20%20%20})%20||%20links.find(a%20=&gt;%20/%5C/groups%5C/[%5E/]+%5C/user%5C/%5Cd+/.test(a.href)%20&amp;&amp;%20(a.innerText%20||%20&#x27;&#x27;).trim());%0A%20%20%20%20const%20dateText%20=%20post%20?%20(post.innerText%20||%20post.getAttribute(&#x27;aria-label&#x27;)%20||%20&#x27;&#x27;).split(&#x27;%5Cn&#x27;).pop().trim()%20:%20&#x27;&#x27;;%0A%20%20%20%20const%20alt%20=%20(img.alt%20||%20&#x27;&#x27;).replace(/%5E(May%20be|No%20photo%20description|%D8%B1%D8%A8%D9%85%D8%A7%20%D8%AA%D9%83%D9%88%D9%86|%D9%84%D8%A7%20%D9%8A%D8%AA%D9%88%D9%81%D8%B1%20%D9%88%D8%B5%D9%81).*$/i,%20&#x27;&#x27;).trim();%0A%20%20%20%20return%20{%0A%20%20%20%20%20%20fbid,%0A%20%20%20%20%20%20img:%20img.currentSrc%20||%20img.src,%0A%20%20%20%20%20%20w:%20img.naturalWidth,%20h:%20img.naturalHeight,%0A%20%20%20%20%20%20author:%20author%20?%20author.innerText.trim().split(&#x27;%5Cn&#x27;)[0]%20:%20&#x27;&#x27;,%0A%20%20%20%20%20%20authorUrl:%20author%20?%20clean(author.href,%20[&#x27;id&#x27;])%20:%20&#x27;&#x27;,%0A%20%20%20%20%20%20post:%20post%20?%20clean(post.href)%20:%20&#x27;&#x27;,%0A%20%20%20%20%20%20photo:%20clean(location.href,%20[&#x27;fbid&#x27;]),%0A%20%20%20%20%20%20set:%20new%20URL(location.href).searchParams.get(&#x27;set&#x27;)%20||%20&#x27;&#x27;,%0A%20%20%20%20%20%20date:%20dateText,%0A%20%20%20%20%20%20alt,%0A%20%20%20%20%20%20at:%20new%20Date().toISOString(),%0A%20%20%20%20};%0A%20%20}%0A%0A%20%20function%20tick()%20{%0A%20%20%20%20const%20r%20=%20grab();%0A%20%20%20%20if%20(!r)%20return;%0A%20%20%20%20if%20(r.fbid%20===%20lastFbid)%20{%20stale++;%20return;%20}%0A%20%20%20%20lastFbid%20=%20r.fbid;%20stale%20=%200;%0A%20%20%20%20if%20(seen.has(r.fbid))%20{%20render(r,%20true);%20return;%20}%0A%20%20%20%20seen.add(r.fbid);%20items.push(r);%0A%20%20%20%20try%20{%20localStorage.setItem(KEY,%20JSON.stringify(items));%20}%20catch%20(_)%20{}%0A%20%20%20%20render(r,%20false);%0A%20%20}%0A%0A%20%20function%20next()%20{%0A%20%20%20%20const%20b%20=%20document.querySelector(&#x27;[aria-label=%22Next%20photo%22],[aria-label=%22%D8%A7%D9%84%D8%B5%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%22],[aria-label=%22Next%22],[aria-label=%22%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%22]&#x27;);%0A%20%20%20%20if%20(b)%20b.click();%20else%20document.dispatchEvent(new%20KeyboardEvent(&#x27;keydown&#x27;,%20{%20key:%20&#x27;ArrowRight&#x27;,%20bubbles:%20true%20}));%0A%20%20}%0A%20%20function%20setAuto(on)%20{%0A%20%20%20%20auto%20=%20on;%20clearInterval(autoT);%0A%20%20%20%20if%20(on)%20{%0A%20%20%20%20%20%20stale%20=%200;%0A%20%20%20%20%20%20autoT%20=%20setInterval(()%20=&gt;%20{%0A%20%20%20%20%20%20%20%20if%20(stale%20&gt;%208)%20{%20setAuto(false);%20msg(&#x27;%D9%88%D9%82%D9%81%D8%AA:%20%D9%85%D9%81%D9%8A%D8%B4%20%D8%B5%D9%88%D8%B1%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%20(%D9%8A%D9%85%D9%83%D9%86%20%D9%88%D8%B5%D9%84%D8%AA%20%D9%84%D9%84%D8%A2%D8%AE%D8%B1).&#x27;);%20return;%20}%0A%20%20%20%20%20%20%20%20next();%0A%20%20%20%20%20%20},%202600%20+%20Math.random()%20*%201200);%0A%20%20%20%20}%0A%20%20%20%20btnAuto.textContent%20=%20on%20?%20&#x27;%E2%8F%B8%20%D8%A5%D9%8A%D9%82%D8%A7%D9%81&#x27;%20:%20&#x27;%E2%96%B6%20%D8%AA%D9%82%D9%84%D9%8A%D8%A8%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A&#x27;;%0A%20%20}%0A%0A%20%20%0A%20%20const%20box%20=%20document.createElement(&#x27;div&#x27;);%0A%20%20box.dir%20=%20&#x27;rtl&#x27;;%0A%20%20box.style.cssText%20=%20&#x27;position:fixed;z-index:2147483647;bottom:16px;left:16px;width:300px;background:%23061615;color:%23f3f6ef;border:2px%20solid%20%234adc87;border-radius:14px;padding:12px;font:13px/1.6%20system-ui,Segoe%20UI,Tahoma,sans-serif;box-shadow:0%2010px%2030px%20rgba(0,0,0,.4)&#x27;;%0A%20%20box.innerHTML%20=%20%60%0A%20%20%20%20&lt;div%20style=%22display:flex;justify-content:space-between;align-items:center;margin-bottom:6px%22&gt;%0A%20%20%20%20%20%20&lt;b%20style=%22font-size:15px;color:%234adc87%22&gt;%D8%A3%D8%B1%D8%A7%D8%A8%D9%8A%D8%B3%D9%83:%20%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D8%B1%D8%B3%D9%88%D9%85%D8%A7%D8%AA&lt;/b&gt;%0A%20%20%20%20%20%20&lt;button%20data-x%20style=%22background:none;border:0;color:%23aaa;font-size:16px;cursor:pointer%22&gt;%E2%9C%95&lt;/button&gt;%0A%20%20%20%20&lt;/div&gt;%0A%20%20%20%20&lt;div%20data-count%20style=%22font-size:22px;font-weight:700%22&gt;&lt;/div&gt;%0A%20%20%20%20&lt;div%20data-last%20style=%22display:flex;gap:8px;align-items:center;min-height:54px;margin:6px%200%22&gt;&lt;/div&gt;%0A%20%20%20%20&lt;div%20data-msg%20style=%22color:%23f6e61f;min-height:18px%22&gt;&lt;/div&gt;%0A%20%20%20%20&lt;div%20style=%22display:flex;gap:6px;flex-wrap:wrap;margin-top:6px%22&gt;%0A%20%20%20%20%20%20&lt;button%20data-auto%20style=%22flex:1;background:%234adc87;color:%23061615;border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer%22&gt;&lt;/button&gt;%0A%20%20%20%20%20%20&lt;button%20data-dl%20style=%22flex:1;background:%23f3f6ef;color:%23061615;border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer%22&gt;%E2%AC%87%20%D9%86%D8%B2%D9%91%D9%84%20%D8%A7%D9%84%D9%85%D9%84%D9%81&lt;/button&gt;%0A%20%20%20%20&lt;/div&gt;%0A%20%20%20%20&lt;button%20data-clear%20style=%22margin-top:6px;background:none;border:0;color:%23999;cursor:pointer;font-size:12px;text-decoration:underline%22&gt;%D8%A7%D9%85%D8%B3%D8%AD%20%D8%A7%D9%84%D9%84%D9%8A%20%D8%A7%D8%AA%D8%AC%D9%85%D8%B9%20%D9%88%D8%A7%D8%A8%D8%AF%D8%A3%20%D9%85%D9%86%20%D8%A7%D9%84%D8%A3%D9%88%D9%84&lt;/button&gt;%60;%0A%20%20document.body.appendChild(box);%0A%20%20const%20$%20=%20s%20=&gt;%20box.querySelector(s);%0A%20%20const%20btnAuto%20=%20$(&#x27;[data-auto]&#x27;);%0A%20%20const%20msg%20=%20t%20=&gt;%20{%20$(&#x27;[data-msg]&#x27;).textContent%20=%20t%20||%20&#x27;&#x27;;%20};%0A%20%20function%20render(r,%20dup)%20{%0A%20%20%20%20$(&#x27;[data-count]&#x27;).textContent%20=%20items.length%20+%20&#x27;%20%D8%B5%D9%88%D8%B1%D8%A9%20%D8%A7%D8%AA%D8%AC%D9%85%D8%B9%D8%AA&#x27;;%0A%20%20%20%20if%20(r)%20$(&#x27;[data-last]&#x27;).innerHTML%20=%20%60&lt;img%20src=%22${r.img}%22%20style=%22width:54px;height:54px;object-fit:cover;border-radius:6px%22&gt;&lt;div&gt;&lt;div&gt;${(r.author%20||%20&#x27;%D8%9F&#x27;).replace(/&lt;/g,%20&#x27;&amp;lt;&#x27;)}&lt;/div&gt;&lt;div%20style=%22color:%239fb%22&gt;${(r.date%20||%20&#x27;&#x27;).replace(/&lt;/g,%20&#x27;&amp;lt;&#x27;)}${dup%20?%20&#x27;%20%C2%B7%20%D9%85%D9%88%D8%AC%D9%88%D8%AF%D8%A9&#x27;%20:%20&#x27;&#x27;}&lt;/div&gt;&lt;/div&gt;%60;%0A%20%20}%0A%20%20render(null);%0A%20%20if%20(!/%5C/photo/.test(location.pathname))%20msg(&#x27;%D8%A7%D9%81%D8%AA%D8%AD%20%D8%A3%D9%88%D9%84%20%D8%B5%D9%88%D8%B1%D8%A9%20%D9%85%D9%86%20%D8%AA%D8%A8%D9%88%D9%8A%D8%A8%20Media%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%A8%D8%8C%20%D9%88%D8%A8%D8%B9%D8%AF%D9%8A%D9%86%20%D8%AF%D9%88%D8%B3%20%22%D8%AA%D9%82%D9%84%D9%8A%D8%A8%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%22%20%D8%A3%D9%88%20%D9%82%D9%84%D9%91%D8%A8%20%D8%A8%D8%A7%D9%84%D8%B3%D9%87%D9%85%20%E2%86%92&#x27;);%0A%20%20btnAuto.onclick%20=%20()%20=&gt;%20setAuto(!auto);%0A%20%20setAuto(false);%0A%20%20$(&#x27;[data-dl]&#x27;).onclick%20=%20()%20=&gt;%20{%0A%20%20%20%20const%20blob%20=%20new%20Blob([JSON.stringify({%20source:%20&#x27;facebook&#x27;,%20group:%20&#x27;3arabesque&#x27;,%20exported:%20new%20Date().toISOString(),%20items%20},%20null,%201)],%20{%20type:%20&#x27;application/json&#x27;%20});%0A%20%20%20%20const%20a%20=%20document.createElement(&#x27;a&#x27;);%0A%20%20%20%20a.href%20=%20URL.createObjectURL(blob);%0A%20%20%20%20a.download%20=%20%60arabesque-facebook-${new%20Date().toISOString().slice(0,%2010)}-${items.length}.json%60;%0A%20%20%20%20document.body.appendChild(a);%20a.click();%20a.remove();%0A%20%20%20%20msg(&#x27;%D8%A7%D8%AA%D9%86%D8%B2%D9%91%D9%84.%20%D8%A7%D8%B1%D9%81%D8%B9%D9%87%20%D9%81%D9%8A%20%D9%84%D9%88%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AD%D9%83%D9%85%20%E2%86%90%20%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D9%85%D9%86%20%D9%81%D9%8A%D8%B3%D8%A8%D9%88%D9%83.&#x27;);%0A%20%20};%0A%20%20$(&#x27;[data-clear]&#x27;).onclick%20=%20()%20=&gt;%20{%0A%20%20%20%20if%20(!confirm(&#x27;%D8%AA%D9%85%D8%B3%D8%AD%20&#x27;%20+%20items.length%20+%20&#x27;%20%D8%B5%D9%88%D8%B1%D8%A9%20%D9%85%D8%AA%D8%AC%D9%85%D8%B9%D8%A9%D8%9F&#x27;))%20return;%0A%20%20%20%20items%20=%20[];%20seen.clear();%20lastFbid%20=%20null;%0A%20%20%20%20try%20{%20localStorage.removeItem(KEY);%20}%20catch%20(_)%20{}%0A%20%20%20%20render(null);%0A%20%20};%0A%20%20$(&#x27;[data-x]&#x27;).onclick%20=%20()%20=&gt;%20{%20setAuto(false);%20box.style.display%20=%20&#x27;none&#x27;;%20};%0A%20%20const%20poll%20=%20setInterval(tick,%20700);%0A%20%20window.__arabesqueCollector%20=%20{%20show:%20()%20=&gt;%20{%20box.style.display%20=%20&#x27;&#x27;;%20},%20items:%20()%20=&gt;%20items,%20stop:%20()%20=&gt;%20{%20clearInterval(poll);%20setAuto(false);%20}%20};%0A})();" onclick="event.preventDefault();alert('اسحبه لشريط المفضلة، الزرار ده بيشتغل على فيسبوك بس.')">أرابيسك: اجمع</a></p>
+<p><a class="bm" href="javascript:(()%20=&gt;%20{%0A%20%20if%20(window.__arabesqueCollector)%20{%20window.__arabesqueCollector.show();%20return;%20}%0A%20%20const%20KEY%20=%20&#x27;arabesque-collector-v2&#x27;;%0A%20%20let%20store%20=%20{%20items:%20[],%20posts:%20[]%20};%0A%20%20try%20{%20const%20s%20=%20JSON.parse(localStorage.getItem(KEY)%20||%20&#x27;null&#x27;);%20if%20(s%20&amp;&amp;%20s.items)%20store%20=%20s;%20}%20catch%20(_)%20{}%0A%20%20try%20{%20const%20old%20=%20JSON.parse(localStorage.getItem(&#x27;arabesque-collector-v1&#x27;)%20||%20&#x27;[]&#x27;);%20if%20(old.length%20&amp;&amp;%20!store.items.length)%20store.items%20=%20old;%20}%20catch%20(_)%20{}%0A%20%20const%20seen%20=%20new%20Set(store.items.map(i%20=&gt;%20i.fbid));%0A%20%20const%20save%20=%20()%20=&gt;%20{%20try%20{%20localStorage.setItem(KEY,%20JSON.stringify(store));%20}%20catch%20(_)%20{}%20};%0A%20%20let%20auto%20=%20false,%20autoT%20=%20null,%20lastFbid%20=%20null,%20stale%20=%200,%20busy%20=%20false;%0A%20%20let%20postMode%20=%20null;%20//%20{start,%20photos:[],%20text,%20link,%20post,%20date}%0A%20%20const%20sleep%20=%20ms%20=&gt;%20new%20Promise(r%20=&gt;%20setTimeout(r,%20ms));%0A%0A%20%20const%20clean%20=%20(u,%20keep%20=%20[])%20=&gt;%20{%0A%20%20%20%20try%20{%0A%20%20%20%20%20%20const%20x%20=%20new%20URL(u,%20location.origin);%0A%20%20%20%20%20%20const%20q%20=%20new%20URLSearchParams();%0A%20%20%20%20%20%20keep.forEach(k%20=&gt;%20x.searchParams.get(k)%20&amp;&amp;%20q.set(k,%20x.searchParams.get(k)));%0A%20%20%20%20%20%20return%20x.origin%20+%20x.pathname%20+%20(q.toString()%20?%20&#x27;?&#x27;%20+%20q%20:%20&#x27;&#x27;);%0A%20%20%20%20}%20catch%20(_)%20{%20return%20&#x27;&#x27;;%20}%0A%20%20};%0A%20%20const%20param%20=%20(k,%20u%20=%20location.href)%20=&gt;%20{%20try%20{%20return%20new%20URL(u).searchParams.get(k);%20}%20catch%20(_)%20{%20return%20null;%20}%20};%0A%20%20const%20outLink%20=%20a%20=&gt;%20{%0A%20%20%20%20let%20h%20=%20a.href%20||%20&#x27;&#x27;;%0A%20%20%20%20if%20(/l%5C.facebook%5C.com%5C/l%5C.php/.test(h))%20h%20=%20param(&#x27;u&#x27;,%20h)%20||%20&#x27;&#x27;;%0A%20%20%20%20try%20{%20const%20x%20=%20new%20URL(h);%20if%20(/facebook%5C.com|fb%5C.com|fbcdn%5C.net|messenger%5C.com/.test(x.hostname))%20return%20&#x27;&#x27;;%20x.searchParams.delete(&#x27;fbclid&#x27;);%20return%20x.toString();%20}%20catch%20(_)%20{%20return%20&#x27;&#x27;;%20}%0A%20%20};%0A%20%20const%20DATE_RE%20=%20/(%5Cd{1,2}%5Cs*[a-zA-Z%D8%80-%DB%BF]{3,}|%5Cd+%5Cs*(m|h|d|w|y|min|hr|%D8%AF|%D8%B3|%D9%8A)%5Cb|yesterday|just%20now|%D8%A3%D9%85%D8%B3|%D8%A7%D9%84%D8%A2%D9%86|%D8%B3%D8%A7%D8%B9%D8%A9|%D9%8A%D9%88%D9%85|%D8%AF%D9%82%D9%8A%D9%82%D8%A9|%D8%A3%D8%B3%D8%A8%D9%88%D8%B9)/i;%0A%0A%20%20function%20mainImg()%20{%0A%20%20%20%20return%20[...document.querySelectorAll(&#x27;img[data-visualcompletion=%22media-vc-image%22]&#x27;)]%0A%20%20%20%20%20%20.filter(i%20=&gt;%20i.naturalWidth%20&gt;%20200%20&amp;&amp;%20i.getBoundingClientRect().width%20&gt;%2050)%0A%20%20%20%20%20%20.sort((a,%20b)%20=&gt;%20b.naturalWidth%20-%20a.naturalWidth)[0];%0A%20%20}%0A%20%20//%20Facebook%20hides%20the%20post%20link%20and%20the%20full%20date%20until%20the%20timestamp%20is%20hovered.%0A%20%20async%20function%20hoverStamp()%20{%0A%20%20%20%20const%20links%20=%20[...document.querySelectorAll(&#x27;a[role=%22link%22],%20a[href]&#x27;)].filter(a%20=&gt;%20!a.closest(&#x27;[role=%22article%22]&#x27;)%20&amp;&amp;%20a.getBoundingClientRect().width%20&gt;%200);%0A%20%20%20%20let%20cand%20=%20links.filter(a%20=&gt;%20/%5C/(posts|permalink)%5C/|story_fbid=|%5C/pcb%5C.|multi_permalinks/.test(a.href)%20&amp;&amp;%20!/comment_id/.test(a.href));%0A%20%20%20%20if%20(!cand.length)%20cand%20=%20links.filter(a%20=&gt;%20(a.getAttribute(&#x27;href&#x27;)%20===%20&#x27;%23&#x27;%20||%20!a.getAttribute(&#x27;href&#x27;))%20&amp;&amp;%20DATE_RE.test(a.innerText%20||%20a.getAttribute(&#x27;aria-label&#x27;)%20||%20&#x27;&#x27;));%0A%20%20%20%20for%20(const%20a%20of%20cand.slice(0,%203))%20{%0A%20%20%20%20%20%20[&#x27;pointerover&#x27;,%20&#x27;mouseover&#x27;,%20&#x27;mouseenter&#x27;,%20&#x27;focus&#x27;].forEach(t%20=&gt;%20a.dispatchEvent(new%20MouseEvent(t,%20{%20bubbles:%20true%20})));%0A%20%20%20%20%20%20await%20sleep(650);%0A%20%20%20%20%20%20const%20tip%20=%20[...document.querySelectorAll(&#x27;[role=%22tooltip%22]&#x27;)].map(t%20=&gt;%20t.innerText.trim()).filter(Boolean).pop()%20||%20&#x27;&#x27;;%0A%20%20%20%20%20%20const%20href%20=%20a.href%20&amp;&amp;%20!/%23$/.test(a.href)%20?%20a.href%20:%20&#x27;&#x27;;%0A%20%20%20%20%20%20[&#x27;pointerout&#x27;,%20&#x27;mouseout&#x27;,%20&#x27;mouseleave&#x27;,%20&#x27;blur&#x27;].forEach(t%20=&gt;%20a.dispatchEvent(new%20MouseEvent(t,%20{%20bubbles:%20true%20})));%0A%20%20%20%20%20%20if%20(href%20||%20tip)%20return%20{%20post:%20href%20&amp;&amp;%20!/comment_id/.test(href)%20?%20clean(href,%20[&#x27;story_fbid&#x27;,%20&#x27;id&#x27;])%20:%20&#x27;&#x27;,%20date:%20tip%20||%20(a.getAttribute(&#x27;aria-label&#x27;)%20||%20a.innerText%20||%20&#x27;&#x27;).split(&#x27;%5Cn&#x27;).pop().trim()%20};%0A%20%20%20%20}%0A%20%20%20%20return%20{%20post:%20&#x27;&#x27;,%20date:%20&#x27;&#x27;%20};%0A%20%20}%0A%20%20function%20authorOf()%20{%0A%20%20%20%20const%20links%20=%20[...document.querySelectorAll(&#x27;a[href]&#x27;)].filter(a%20=&gt;%20!a.closest(&#x27;[role=%22article%22]&#x27;));%0A%20%20%20%20const%20bad%20=%20/%5C/(photo|photos|login|recover|hashtag|watch|stories|notifications|messages|marketplace|gaming|events)%5Cb|comment_id|%5C/%5C?__tn__|%5C/groups%5C/[%5E/]+%5C/?(%5C?|$)/;%0A%20%20%20%20const%20a%20=%20links.find(a%20=&gt;%20/%5C/groups%5C/[%5E/]+%5C/user%5C/%5Cd+/.test(a.href)%20&amp;&amp;%20(a.innerText%20||%20&#x27;&#x27;).trim())%0A%20%20%20%20%20%20||%20links.find(a%20=&gt;%20{%20const%20t%20=%20(a.innerText%20||%20&#x27;&#x27;).trim();%20return%20t%20&amp;&amp;%20t.length%20&lt;%2080%20&amp;&amp;%20/facebook%5C.com%5C//.test(a.href)%20&amp;&amp;%20!bad.test(a.href)%20&amp;&amp;%20a.href%20!==%20location.href%20&amp;&amp;%20!/%5E(Log%20in|Close|Facebook)/i.test(t);%20});%0A%20%20%20%20return%20a%20?%20{%20author:%20a.innerText.trim().split(&#x27;%5Cn&#x27;)[0],%20authorUrl:%20clean(a.href,%20[&#x27;id&#x27;])%20}%20:%20{%20author:%20&#x27;&#x27;,%20authorUrl:%20&#x27;&#x27;%20};%0A%20%20}%0A%20%20function%20postFromSet()%20{%0A%20%20%20%20const%20set%20=%20param(&#x27;set&#x27;)%20||%20&#x27;&#x27;;%0A%20%20%20%20const%20m%20=%20set.match(/%5E(?:gm|pcb)%5C.(%5Cd+)/);%0A%20%20%20%20if%20(!m)%20return%20&#x27;&#x27;;%0A%20%20%20%20return%20set.startsWith(&#x27;gm.&#x27;)%20?%20%60https://www.facebook.com/groups/3arabesque/posts/${m[1]}/%60%20:%20%60https://www.facebook.com/${m[1]}%60;%0A%20%20}%0A%20%20async%20function%20grab()%20{%0A%20%20%20%20if%20(!/%5C/photo/.test(location.pathname))%20return%20null;%0A%20%20%20%20const%20fbid%20=%20param(&#x27;fbid&#x27;),%20img%20=%20mainImg();%0A%20%20%20%20if%20(!fbid%20||%20!img)%20return%20null;%0A%20%20%20%20const%20st%20=%20await%20hoverStamp();%0A%20%20%20%20return%20{%0A%20%20%20%20%20%20fbid,%20img:%20img.currentSrc%20||%20img.src,%20w:%20img.naturalWidth,%20h:%20img.naturalHeight,%0A%20%20%20%20%20%20...authorOf(),%0A%20%20%20%20%20%20post:%20st.post%20||%20postFromSet(),%20date:%20st.date,%0A%20%20%20%20%20%20photo:%20clean(location.href,%20[&#x27;fbid&#x27;]),%20set:%20param(&#x27;set&#x27;)%20||%20&#x27;&#x27;,%0A%20%20%20%20%20%20at:%20new%20Date().toISOString(),%0A%20%20%20%20};%0A%20%20}%0A%20%20async%20function%20postText()%20{%0A%20%20%20%20const%20more%20=%20[...document.querySelectorAll(&#x27;[role=%22button%22],div,span&#x27;)].find(b%20=&gt;%20!b.closest(&#x27;[role=%22article%22]&#x27;)%20&amp;&amp;%20/%5E(See%20more|%D8%B9%D8%B1%D8%B6%20%D8%A7%D9%84%D9%85%D8%B2%D9%8A%D8%AF)$/.test((b.innerText%20||%20&#x27;&#x27;).trim()));%0A%20%20%20%20if%20(more)%20{%20more.click();%20await%20sleep(600);%20}%0A%20%20%20%20const%20blocks%20=%20[...document.querySelectorAll(&#x27;[data-ad-preview=%22message%22],[data-ad-comet-preview=%22message%22],[data-ad-rendering-role=%22story_message%22]&#x27;)].filter(x%20=&gt;%20!x.closest(&#x27;[role=%22article%22]&#x27;));%0A%20%20%20%20let%20t%20=%20blocks.map(b%20=&gt;%20b.innerText.trim()).sort((a,%20b)%20=&gt;%20b.length%20-%20a.length)[0]%20||%20&#x27;&#x27;;%0A%20%20%20%20if%20(!t)%20{%0A%20%20%20%20%20%20const%20c%20=%20[...document.querySelectorAll(&#x27;div[dir=%22auto%22],span[dir=%22auto%22]&#x27;)].filter(x%20=&gt;%20!x.closest(&#x27;[role=%22article%22]&#x27;)%20&amp;&amp;%20x.getBoundingClientRect().width%20&gt;%200).map(x%20=&gt;%20x.innerText.trim()).filter(x%20=&gt;%20x.length%20&gt;%2015);%0A%20%20%20%20%20%20t%20=%20c.sort((a,%20b)%20=&gt;%20b.length%20-%20a.length)[0]%20||%20&#x27;&#x27;;%0A%20%20%20%20}%0A%20%20%20%20return%20t.replace(/%5Cn?(See%20less|%D8%B9%D8%B1%D8%B6%20%D8%A3%D9%82%D9%84)%5Cs*$/,%20&#x27;&#x27;).trim();%0A%20%20}%0A%20%20function%20firstLink()%20{%0A%20%20%20%20const%20inPanel%20=%20[...document.querySelectorAll(&#x27;a[href]&#x27;)].map(outLink).filter(Boolean);%0A%20%20%20%20return%20inPanel[0]%20||%20&#x27;&#x27;;%0A%20%20}%0A%0A%20%20async%20function%20tick()%20{%0A%20%20%20%20if%20(busy)%20return;%0A%20%20%20%20const%20fbid%20=%20param(&#x27;fbid&#x27;);%0A%20%20%20%20if%20(!fbid%20||%20fbid%20===%20lastFbid%20||%20!mainImg())%20{%20if%20(fbid%20===%20lastFbid)%20stale++;%20return;%20}%0A%20%20%20%20busy%20=%20true;%0A%20%20%20%20try%20{%0A%20%20%20%20%20%20const%20r%20=%20await%20grab();%0A%20%20%20%20%20%20if%20(!r)%20return;%0A%20%20%20%20%20%20lastFbid%20=%20r.fbid;%20stale%20=%200;%0A%20%20%20%20%20%20if%20(postMode)%20{%0A%20%20%20%20%20%20%20%20if%20(postMode.photos.some(p%20=&gt;%20p.fbid%20===%20r.fbid))%20{%20await%20finishPost();%20return;%20}%0A%20%20%20%20%20%20%20%20postMode.photos.push({%20fbid:%20r.fbid,%20img:%20r.img,%20w:%20r.w,%20h:%20r.h%20});%0A%20%20%20%20%20%20%20%20if%20(!postMode.post%20&amp;&amp;%20r.post)%20postMode.post%20=%20r.post;%0A%20%20%20%20%20%20%20%20if%20(!postMode.date%20&amp;&amp;%20r.date)%20postMode.date%20=%20r.date;%0A%20%20%20%20%20%20%20%20render(r,%20false);%20return;%0A%20%20%20%20%20%20}%0A%20%20%20%20%20%20if%20(seen.has(r.fbid))%20{%20render(r,%20true);%20return;%20}%0A%20%20%20%20%20%20seen.add(r.fbid);%20store.items.push(r);%20save();%20render(r,%20false);%0A%20%20%20%20}%20finally%20{%20busy%20=%20false;%20}%0A%20%20}%0A%0A%20%20async%20function%20startPost()%20{%0A%20%20%20%20if%20(!/%5C/photo/.test(location.pathname))%20{%20msg(&#x27;%D8%A7%D9%81%D8%AA%D8%AD%20%D8%A3%D9%88%D9%84%20%D8%B5%D9%88%D8%B1%D8%A9%20%D9%81%D9%8A%20%D8%A7%D9%84%D9%85%D9%86%D8%B4%D9%88%D8%B1%20%D8%A7%D9%84%D8%A3%D9%88%D9%84.&#x27;);%20return;%20}%0A%20%20%20%20setAuto(false);%0A%20%20%20%20postMode%20=%20{%20photos:%20[],%20text:%20&#x27;&#x27;,%20link:%20&#x27;&#x27;,%20post:%20postFromSet(),%20date:%20&#x27;&#x27;,%20started:%20new%20Date().toISOString()%20};%0A%20%20%20%20msg(&#x27;%D8%A8%D9%8A%D9%82%D8%B1%D8%A7%20%D8%A7%D9%84%D9%83%D9%84%D8%A7%D9%85%E2%80%A6&#x27;);%0A%20%20%20%20postMode.text%20=%20await%20postText();%0A%20%20%20%20postMode.link%20=%20firstLink();%0A%20%20%20%20lastFbid%20=%20null;%0A%20%20%20%20msg(&#x27;%D8%A8%D9%8A%D8%AC%D9%85%D8%B9%20%D8%B5%D9%88%D8%B1%20%D8%A7%D9%84%D9%85%D9%86%D8%B4%D9%88%D8%B1%E2%80%A6&#x27;);%0A%20%20%20%20setAuto(true);%0A%20%20}%0A%20%20async%20function%20finishPost()%20{%0A%20%20%20%20const%20p%20=%20postMode;%20postMode%20=%20null;%20setAuto(false);%0A%20%20%20%20if%20(!p%20||%20!p.photos.length)%20return;%0A%20%20%20%20store.posts%20=%20store.posts.filter(x%20=&gt;%20!(x.post%20&amp;&amp;%20x.post%20===%20p.post)%20&amp;&amp;%20x.photos[0]?.fbid%20!==%20p.photos[0].fbid);%0A%20%20%20%20store.posts.push({%20kind:%20&#x27;feature&#x27;,%20...p%20});%0A%20%20%20%20save();%20render(null);%0A%20%20%20%20msg(%60%D8%A7%D8%AA%D8%B3%D8%AC%D9%84%20%D8%A7%D9%84%D9%85%D9%86%D8%B4%D9%88%D8%B1:%20${p.photos.length}%20%D8%B5%D9%88%D8%B1%D8%A9${p.link%20?%20&#x27;%20+%20%D9%84%D9%8A%D9%86%D9%83&#x27;%20:%20&#x27;&#x27;}.%20%D8%A7%D9%81%D8%AA%D8%AD%20%D8%A7%D9%84%D9%85%D9%86%D8%B4%D9%88%D8%B1%20%D8%A7%D9%84%D9%84%D9%8A%20%D8%A8%D8%B9%D8%AF%D9%87.%60);%0A%20%20}%0A%0A%20%20function%20next()%20{%0A%20%20%20%20const%20b%20=%20document.querySelector(&#x27;[aria-label=%22Next%20photo%22],[aria-label=%22%D8%A7%D9%84%D8%B5%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%D8%A9%22],[aria-label=%22Next%22],[aria-label=%22%D8%A7%D9%84%D8%AA%D8%A7%D9%84%D9%8A%22]&#x27;);%0A%20%20%20%20if%20(b)%20b.click();%20else%20document.dispatchEvent(new%20KeyboardEvent(&#x27;keydown&#x27;,%20{%20key:%20&#x27;ArrowRight&#x27;,%20bubbles:%20true%20}));%0A%20%20}%0A%20%20function%20setAuto(on)%20{%0A%20%20%20%20auto%20=%20on;%20clearInterval(autoT);%0A%20%20%20%20if%20(on)%20{%0A%20%20%20%20%20%20stale%20=%200;%0A%20%20%20%20%20%20autoT%20=%20setInterval(()%20=&gt;%20{%0A%20%20%20%20%20%20%20%20if%20(busy)%20return;%0A%20%20%20%20%20%20%20%20if%20(stale%20&gt;%208)%20{%20if%20(postMode)%20finishPost();%20else%20{%20setAuto(false);%20msg(&#x27;%D9%88%D9%82%D9%81%D8%AA:%20%D9%85%D9%81%D9%8A%D8%B4%20%D8%B5%D9%88%D8%B1%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%20(%D9%8A%D9%85%D9%83%D9%86%20%D9%88%D8%B5%D9%84%D8%AA%20%D9%84%D9%84%D8%A2%D8%AE%D8%B1).&#x27;);%20}%20return;%20}%0A%20%20%20%20%20%20%20%20next();%0A%20%20%20%20%20%20},%20(postMode%20?%202200%20:%202800)%20+%20Math.random()%20*%201200);%0A%20%20%20%20}%0A%20%20%20%20btnAuto.textContent%20=%20on%20?%20&#x27;%E2%8F%B8%20%D8%A5%D9%8A%D9%82%D8%A7%D9%81&#x27;%20:%20&#x27;%E2%96%B6%20%D8%AA%D9%82%D9%84%D9%8A%D8%A8%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A&#x27;;%0A%20%20}%0A%0A%20%20%0A%20%20const%20box%20=%20document.createElement(&#x27;div&#x27;);%0A%20%20box.dir%20=%20&#x27;rtl&#x27;;%0A%20%20box.style.cssText%20=%20&#x27;position:fixed;z-index:2147483647;bottom:16px;left:16px;width:310px;background:%23061615;color:%23f3f6ef;border:2px%20solid%20%234adc87;border-radius:14px;padding:12px;font:13px/1.6%20system-ui,Segoe%20UI,Tahoma,sans-serif;box-shadow:0%2010px%2030px%20rgba(0,0,0,.4)&#x27;;%0A%20%20const%20B%20=%20(k,%20bg,%20fg,%20t)%20=&gt;%20%60&lt;button%20data-${k}%20style=%22flex:1;background:${bg};color:${fg};border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer%22&gt;${t}&lt;/button&gt;%60;%0A%20%20box.innerHTML%20=%20%60%0A%20%20%20%20&lt;div%20style=%22display:flex;justify-content:space-between;align-items:center;margin-bottom:6px%22&gt;%0A%20%20%20%20%20%20&lt;b%20style=%22font-size:15px;color:%234adc87%22&gt;%D8%A3%D8%B1%D8%A7%D8%A8%D9%8A%D8%B3%D9%83:%20%D8%AC%D9%85%D8%B9&lt;/b&gt;%0A%20%20%20%20%20%20&lt;button%20data-x%20style=%22background:none;border:0;color:%23aaa;font-size:16px;cursor:pointer%22&gt;%E2%9C%95&lt;/button&gt;%0A%20%20%20%20&lt;/div&gt;%0A%20%20%20%20&lt;div%20data-count%20style=%22font-size:18px;font-weight:700%22&gt;&lt;/div&gt;%0A%20%20%20%20&lt;div%20data-last%20style=%22display:flex;gap:8px;align-items:center;min-height:54px;margin:6px%200%22&gt;&lt;/div&gt;%0A%20%20%20%20&lt;div%20data-msg%20style=%22color:%23f6e61f;min-height:18px%22&gt;&lt;/div&gt;%0A%20%20%20%20&lt;div%20style=%22display:flex;gap:6px;flex-wrap:wrap;margin-top:6px%22&gt;${B(&#x27;auto&#x27;,%20&#x27;%234adc87&#x27;,%20&#x27;%23061615&#x27;,%20&#x27;&#x27;)}${B(&#x27;post&#x27;,%20&#x27;%23d4a72c&#x27;,%20&#x27;%23061615&#x27;,%20&#x27;%F0%9F%93%9A%20%D8%A7%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D9%85%D9%86%D8%B4%D9%88%D8%B1%20%D8%AF%D9%87&#x27;)}&lt;/div&gt;%0A%20%20%20%20&lt;div%20style=%22display:flex;gap:6px;margin-top:6px%22&gt;${B(&#x27;dl&#x27;,%20&#x27;%23f3f6ef&#x27;,%20&#x27;%23061615&#x27;,%20&#x27;%E2%AC%87%20%D9%86%D8%B2%D9%91%D9%84%20%D8%A7%D9%84%D9%85%D9%84%D9%81&#x27;)}&lt;/div&gt;%0A%20%20%20%20&lt;button%20data-clear%20style=%22margin-top:6px;background:none;border:0;color:%23999;cursor:pointer;font-size:12px;text-decoration:underline%22&gt;%D8%A7%D9%85%D8%B3%D8%AD%20%D8%A7%D9%84%D9%84%D9%8A%20%D8%A7%D8%AA%D8%AC%D9%85%D8%B9%20%D9%88%D8%A7%D8%A8%D8%AF%D8%A3%20%D9%85%D9%86%20%D8%A7%D9%84%D8%A3%D9%88%D9%84&lt;/button&gt;%60;%0A%20%20document.body.appendChild(box);%0A%20%20const%20$%20=%20s%20=&gt;%20box.querySelector(s);%0A%20%20const%20btnAuto%20=%20$(&#x27;[data-auto]&#x27;);%0A%20%20const%20msg%20=%20t%20=&gt;%20{%20$(&#x27;[data-msg]&#x27;).textContent%20=%20t%20||%20&#x27;&#x27;;%20};%0A%20%20const%20esc%20=%20s%20=&gt;%20String(s%20||%20&#x27;&#x27;).replace(/[&amp;&lt;&gt;%22]/g,%20c%20=&gt;%20({%20&#x27;&amp;&#x27;:%20&#x27;&amp;amp;&#x27;,%20&#x27;&lt;&#x27;:%20&#x27;&amp;lt;&#x27;,%20&#x27;&gt;&#x27;:%20&#x27;&amp;gt;&#x27;,%20&#x27;%22&#x27;:%20&#x27;&amp;quot;&#x27;%20}[c]));%0A%20%20function%20render(r,%20dup)%20{%0A%20%20%20%20$(&#x27;[data-count]&#x27;).textContent%20=%20%60${store.items.length}%20%D8%B5%D9%88%D8%B1%D8%A9%20%C2%B7%20${store.posts.length}%20%D9%85%D9%86%D8%B4%D9%88%D8%B1%60%20+%20(postMode%20?%20%60%20%C2%B7%20%D8%A7%D9%84%D9%85%D9%86%D8%B4%D9%88%D8%B1%20%D8%AF%D9%87:%20${postMode.photos.length}%60%20:%20&#x27;&#x27;);%0A%20%20%20%20if%20(r)%20$(&#x27;[data-last]&#x27;).innerHTML%20=%20%60&lt;img%20src=%22${esc(r.img)}%22%20style=%22width:54px;height:54px;object-fit:cover;border-radius:6px%22&gt;&lt;div&gt;&lt;div&gt;${esc(r.author%20||%20&#x27;%D8%9F&#x27;)}&lt;/div&gt;&lt;div%20style=%22color:%239fb%22&gt;${esc(r.date%20||%20&#x27;%D9%85%D9%86%20%D8%BA%D9%8A%D8%B1%20%D8%AA%D8%A7%D8%B1%D9%8A%D8%AE&#x27;)}${dup%20?%20&#x27;%20%C2%B7%20%D9%85%D9%88%D8%AC%D9%88%D8%AF%D8%A9&#x27;%20:%20&#x27;&#x27;}&lt;/div&gt;&lt;/div&gt;%60;%0A%20%20}%0A%20%20render(null);%0A%20%20if%20(!/%5C/photo/.test(location.pathname))%20msg(&#x27;%D8%A7%D9%81%D8%AA%D8%AD%20%D8%B5%D9%88%D8%B1%D8%A9%20%D9%85%D9%86%20%D8%AA%D8%A8%D9%88%D9%8A%D8%A8%20Media%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AC%D8%B1%D9%88%D8%A8%20%D9%88%D8%AF%D9%88%D8%B3%20%C2%AB%D8%AA%D9%82%D9%84%D9%8A%D8%A8%20%D8%AA%D9%84%D9%82%D8%A7%D8%A6%D9%8A%C2%BB%D8%8C%20%D8%A3%D9%88%20%D8%A7%D9%81%D8%AA%D8%AD%20%D8%A3%D9%88%D9%84%20%D8%B5%D9%88%D8%B1%D8%A9%20%D9%81%D9%8A%20%D9%85%D9%86%D8%B4%D9%88%D8%B1%20%D9%81%D9%86%D8%A7%D9%86%20%D8%A7%D9%84%D8%A3%D8%B3%D8%A8%D9%88%D8%B9%20%D9%88%D8%AF%D9%88%D8%B3%20%C2%AB%D8%A7%D8%AC%D9%85%D8%B9%20%D8%A7%D9%84%D9%85%D9%86%D8%B4%D9%88%D8%B1%20%D8%AF%D9%87%C2%BB.&#x27;);%0A%20%20btnAuto.onclick%20=%20()%20=&gt;%20setAuto(!auto);%0A%20%20$(&#x27;[data-post]&#x27;).onclick%20=%20()%20=&gt;%20startPost();%0A%20%20setAuto(false);%0A%20%20$(&#x27;[data-dl]&#x27;).onclick%20=%20()%20=&gt;%20{%0A%20%20%20%20const%20blob%20=%20new%20Blob([JSON.stringify({%20source:%20&#x27;facebook&#x27;,%20exported:%20new%20Date().toISOString(),%20items:%20store.items,%20posts:%20store.posts%20},%20null,%201)],%20{%20type:%20&#x27;application/json&#x27;%20});%0A%20%20%20%20const%20a%20=%20document.createElement(&#x27;a&#x27;);%0A%20%20%20%20a.href%20=%20URL.createObjectURL(blob);%0A%20%20%20%20a.download%20=%20%60arabesque-facebook-${new%20Date().toISOString().slice(0,%2010)}-${store.items.length}p-${store.posts.length}posts.json%60;%0A%20%20%20%20document.body.appendChild(a);%20a.click();%20a.remove();%0A%20%20%20%20msg(&#x27;%D8%A7%D8%AA%D9%86%D8%B2%D9%91%D9%84.%20%D8%A7%D8%B1%D9%81%D8%B9%D9%87%20%D9%81%D9%8A%20%D9%84%D9%88%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AD%D9%83%D9%85%20%E2%86%90%20%D8%A7%D8%B3%D8%AA%D9%8A%D8%B1%D8%A7%D8%AF%20%D9%85%D9%86%20%D9%81%D9%8A%D8%B3%D8%A8%D9%88%D9%83.&#x27;);%0A%20%20};%0A%20%20$(&#x27;[data-clear]&#x27;).onclick%20=%20()%20=&gt;%20{%0A%20%20%20%20if%20(!confirm(%60%D8%AA%D9%85%D8%B3%D8%AD%20${store.items.length}%20%D8%B5%D9%88%D8%B1%D8%A9%20%D9%88%20${store.posts.length}%20%D9%85%D9%86%D8%B4%D9%88%D8%B1%D8%9F%60))%20return;%0A%20%20%20%20store%20=%20{%20items:%20[],%20posts:%20[]%20};%20seen.clear();%20lastFbid%20=%20null;%20postMode%20=%20null;%0A%20%20%20%20try%20{%20localStorage.removeItem(KEY);%20localStorage.removeItem(&#x27;arabesque-collector-v1&#x27;);%20}%20catch%20(_)%20{}%0A%20%20%20%20render(null);%0A%20%20};%0A%20%20$(&#x27;[data-x]&#x27;).onclick%20=%20()%20=&gt;%20{%20setAuto(false);%20box.style.display%20=%20&#x27;none&#x27;;%20};%0A%20%20const%20poll%20=%20setInterval(tick,%20700);%0A%20%20window.__arabesqueCollector%20=%20{%20show:%20()%20=&gt;%20{%20box.style.display%20=%20&#x27;&#x27;;%20},%20data:%20()%20=&gt;%20store,%20stop:%20()%20=&gt;%20{%20clearInterval(poll);%20setAuto(false);%20}%20};%0A})();" onclick="event.preventDefault();alert('اسحبه لشريط المفضلة، الزرار ده بيشتغل على فيسبوك بس.')">أرابيسك: اجمع</a></p>
 </div>
 
 <h2>٢. اجمع الصور</h2>
@@ -44,6 +44,15 @@ kbd{background:#000;border:1px solid var(--line);border-radius:6px;padding:1px 7
 </ol>
 <p class="mute">لو قفلت الصفحة في النص، اللي اتجمع ما بيضيعش. افتح أي صورة تانية ودوس الزرار، هيكمّل على اللي فات.</p>
 </div>
+
+<h2>منشورات فنان الأسبوع والرواد</h2>
+<div class="card"><ol>
+<li>افتح صفحة أرابيسك على فيسبوك، وادخل على منشور فنان الأسبوع أو الرواد، ودوس على <b>أول صورة</b> فيه.</li>
+<li>دوس زرار «أرابيسك: اجمع» من المفضلة، وبعدين <b>«📚 اجمع المنشور ده»</b>.</li>
+<li>هيقرا كلام المنشور، ولينك أعمال الفنان من أول كومنت لو موجود، ويقلّب في كل صور المنشور لوحده لحد ما يرجع لأول صورة.</li>
+<li>لما يقولك «اتسجل المنشور»، روح للمنشور اللي بعده وكرر. ولما تخلص كله، دوس «نزّل الملف» مرة واحدة.</li>
+</ol>
+<p class="mute">في لوحة التحكم، المنشورات بتظهر فوق لوحدها. الاسم والنوع (فنان الأسبوع ولا الرواد) والسنين بيتملوا لوحدهم من كلام المنشور، وراجعهم قبل الاستيراد.</p></div>
 
 <h2>٣. ارفع الملف</h2>
 <div class="card"><p>في <a href="../admin/">لوحة التحكم</a> ← <b>استيراد من فيسبوك</b>: ارفع الملف، وراجع الاسم والشهر لكل رسمة، ودوس «استورد».</p>
@@ -63,11 +72,15 @@ kbd{background:#000;border:1px solid var(--line);border-radius:6px;padding:1px 7
 <div class="card"><p class="mute">على صفحة الصورة في فيسبوك، دوس <kbd>F12</kbd> وروح لتبويب <b>Console</b>، والزق الكود ده ودوس <kbd>Enter</kbd>. لو Chrome طلب، اكتب <code>allow pasting</code> الأول.</p>
 <textarea id="code" readonly>(() =&gt; {
   if (window.__arabesqueCollector) { window.__arabesqueCollector.show(); return; }
-  const KEY = &#x27;arabesque-collector-v1&#x27;;
-  let items = [];
-  try { items = JSON.parse(localStorage.getItem(KEY) || &#x27;[]&#x27;); } catch (_) { items = []; }
-  const seen = new Set(items.map(i =&gt; i.fbid));
-  let auto = false, autoT = null, lastFbid = null, stale = 0;
+  const KEY = &#x27;arabesque-collector-v2&#x27;;
+  let store = { items: [], posts: [] };
+  try { const s = JSON.parse(localStorage.getItem(KEY) || &#x27;null&#x27;); if (s &amp;&amp; s.items) store = s; } catch (_) {}
+  try { const old = JSON.parse(localStorage.getItem(&#x27;arabesque-collector-v1&#x27;) || &#x27;[]&#x27;); if (old.length &amp;&amp; !store.items.length) store.items = old; } catch (_) {}
+  const seen = new Set(store.items.map(i =&gt; i.fbid));
+  const save = () =&gt; { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (_) {} };
+  let auto = false, autoT = null, lastFbid = null, stale = 0, busy = false;
+  let postMode = null; // {start, photos:[], text, link, post, date}
+  const sleep = ms =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
   const clean = (u, keep = []) =&gt; {
     try {
@@ -77,49 +90,115 @@ kbd{background:#000;border:1px solid var(--line);border-radius:6px;padding:1px 7
       return x.origin + x.pathname + (q.toString() ? &#x27;?&#x27; + q : &#x27;&#x27;);
     } catch (_) { return &#x27;&#x27;; }
   };
-  const fbidOf = u =&gt; { try { return new URL(u).searchParams.get(&#x27;fbid&#x27;); } catch (_) { return null; } };
+  const param = (k, u = location.href) =&gt; { try { return new URL(u).searchParams.get(k); } catch (_) { return null; } };
+  const outLink = a =&gt; {
+    let h = a.href || &#x27;&#x27;;
+    if (/l\.facebook\.com\/l\.php/.test(h)) h = param(&#x27;u&#x27;, h) || &#x27;&#x27;;
+    try { const x = new URL(h); if (/facebook\.com|fb\.com|fbcdn\.net|messenger\.com/.test(x.hostname)) return &#x27;&#x27;; x.searchParams.delete(&#x27;fbclid&#x27;); return x.toString(); } catch (_) { return &#x27;&#x27;; }
+  };
+  const DATE_RE = /(\d{1,2}\s*[a-zA-Z؀-ۿ]{3,}|\d+\s*(m|h|d|w|y|min|hr|د|س|ي)\b|yesterday|just now|أمس|الآن|ساعة|يوم|دقيقة|أسبوع)/i;
 
-  function grab() {
-    if (!/\/photo/.test(location.pathname)) return null;
-    const fbid = fbidOf(location.href);
-    const img = [...document.querySelectorAll(&#x27;img[data-visualcompletion=&quot;media-vc-image&quot;]&#x27;)]
+  function mainImg() {
+    return [...document.querySelectorAll(&#x27;img[data-visualcompletion=&quot;media-vc-image&quot;]&#x27;)]
       .filter(i =&gt; i.naturalWidth &gt; 200 &amp;&amp; i.getBoundingClientRect().width &gt; 50)
       .sort((a, b) =&gt; b.naturalWidth - a.naturalWidth)[0];
-    if (!fbid || !img) return null;
+  }
+  // Facebook hides the post link and the full date until the timestamp is hovered.
+  async function hoverStamp() {
+    const links = [...document.querySelectorAll(&#x27;a[role=&quot;link&quot;], a[href]&#x27;)].filter(a =&gt; !a.closest(&#x27;[role=&quot;article&quot;]&#x27;) &amp;&amp; a.getBoundingClientRect().width &gt; 0);
+    let cand = links.filter(a =&gt; /\/(posts|permalink)\/|story_fbid=|\/pcb\.|multi_permalinks/.test(a.href) &amp;&amp; !/comment_id/.test(a.href));
+    if (!cand.length) cand = links.filter(a =&gt; (a.getAttribute(&#x27;href&#x27;) === &#x27;#&#x27; || !a.getAttribute(&#x27;href&#x27;)) &amp;&amp; DATE_RE.test(a.innerText || a.getAttribute(&#x27;aria-label&#x27;) || &#x27;&#x27;));
+    for (const a of cand.slice(0, 3)) {
+      [&#x27;pointerover&#x27;, &#x27;mouseover&#x27;, &#x27;mouseenter&#x27;, &#x27;focus&#x27;].forEach(t =&gt; a.dispatchEvent(new MouseEvent(t, { bubbles: true })));
+      await sleep(650);
+      const tip = [...document.querySelectorAll(&#x27;[role=&quot;tooltip&quot;]&#x27;)].map(t =&gt; t.innerText.trim()).filter(Boolean).pop() || &#x27;&#x27;;
+      const href = a.href &amp;&amp; !/#$/.test(a.href) ? a.href : &#x27;&#x27;;
+      [&#x27;pointerout&#x27;, &#x27;mouseout&#x27;, &#x27;mouseleave&#x27;, &#x27;blur&#x27;].forEach(t =&gt; a.dispatchEvent(new MouseEvent(t, { bubbles: true })));
+      if (href || tip) return { post: href &amp;&amp; !/comment_id/.test(href) ? clean(href, [&#x27;story_fbid&#x27;, &#x27;id&#x27;]) : &#x27;&#x27;, date: tip || (a.getAttribute(&#x27;aria-label&#x27;) || a.innerText || &#x27;&#x27;).split(&#x27;\n&#x27;).pop().trim() };
+    }
+    return { post: &#x27;&#x27;, date: &#x27;&#x27; };
+  }
+  function authorOf() {
     const links = [...document.querySelectorAll(&#x27;a[href]&#x27;)].filter(a =&gt; !a.closest(&#x27;[role=&quot;article&quot;]&#x27;));
-    const post = links.find(a =&gt; /\/(posts|permalink)\//.test(a.href) &amp;&amp; !/comment_id/.test(a.href));
-    const bad = /\/(groups|photo|photos|login|recover|hashtag|watch|stories|notifications|messages|marketplace|gaming|events|pages)\b|comment_id|\/\?__tn__/;
-    const author = links.find(a =&gt; {
-      const t = (a.innerText || &#x27;&#x27;).trim();
-      return t &amp;&amp; t.length &lt; 80 &amp;&amp; /facebook\.com\//.test(a.href) &amp;&amp; !bad.test(a.href.replace(/\/groups\/[^/]+\/user\/\d+/, &#x27;/u&#x27;))
-        &amp;&amp; a.href !== location.href &amp;&amp; !/^(Log in|Close|Facebook)/i.test(t);
-    }) || links.find(a =&gt; /\/groups\/[^/]+\/user\/\d+/.test(a.href) &amp;&amp; (a.innerText || &#x27;&#x27;).trim());
-    const dateText = post ? (post.innerText || post.getAttribute(&#x27;aria-label&#x27;) || &#x27;&#x27;).split(&#x27;\n&#x27;).pop().trim() : &#x27;&#x27;;
-    const alt = (img.alt || &#x27;&#x27;).replace(/^(May be|No photo description|ربما تكون|لا يتوفر وصف).*$/i, &#x27;&#x27;).trim();
+    const bad = /\/(photo|photos|login|recover|hashtag|watch|stories|notifications|messages|marketplace|gaming|events)\b|comment_id|\/\?__tn__|\/groups\/[^/]+\/?(\?|$)/;
+    const a = links.find(a =&gt; /\/groups\/[^/]+\/user\/\d+/.test(a.href) &amp;&amp; (a.innerText || &#x27;&#x27;).trim())
+      || links.find(a =&gt; { const t = (a.innerText || &#x27;&#x27;).trim(); return t &amp;&amp; t.length &lt; 80 &amp;&amp; /facebook\.com\//.test(a.href) &amp;&amp; !bad.test(a.href) &amp;&amp; a.href !== location.href &amp;&amp; !/^(Log in|Close|Facebook)/i.test(t); });
+    return a ? { author: a.innerText.trim().split(&#x27;\n&#x27;)[0], authorUrl: clean(a.href, [&#x27;id&#x27;]) } : { author: &#x27;&#x27;, authorUrl: &#x27;&#x27; };
+  }
+  function postFromSet() {
+    const set = param(&#x27;set&#x27;) || &#x27;&#x27;;
+    const m = set.match(/^(?:gm|pcb)\.(\d+)/);
+    if (!m) return &#x27;&#x27;;
+    return set.startsWith(&#x27;gm.&#x27;) ? `https://www.facebook.com/groups/3arabesque/posts/${m[1]}/` : `https://www.facebook.com/${m[1]}`;
+  }
+  async function grab() {
+    if (!/\/photo/.test(location.pathname)) return null;
+    const fbid = param(&#x27;fbid&#x27;), img = mainImg();
+    if (!fbid || !img) return null;
+    const st = await hoverStamp();
     return {
-      fbid,
-      img: img.currentSrc || img.src,
-      w: img.naturalWidth, h: img.naturalHeight,
-      author: author ? author.innerText.trim().split(&#x27;\n&#x27;)[0] : &#x27;&#x27;,
-      authorUrl: author ? clean(author.href, [&#x27;id&#x27;]) : &#x27;&#x27;,
-      post: post ? clean(post.href) : &#x27;&#x27;,
-      photo: clean(location.href, [&#x27;fbid&#x27;]),
-      set: new URL(location.href).searchParams.get(&#x27;set&#x27;) || &#x27;&#x27;,
-      date: dateText,
-      alt,
+      fbid, img: img.currentSrc || img.src, w: img.naturalWidth, h: img.naturalHeight,
+      ...authorOf(),
+      post: st.post || postFromSet(), date: st.date,
+      photo: clean(location.href, [&#x27;fbid&#x27;]), set: param(&#x27;set&#x27;) || &#x27;&#x27;,
       at: new Date().toISOString(),
     };
   }
+  async function postText() {
+    const more = [...document.querySelectorAll(&#x27;[role=&quot;button&quot;],div,span&#x27;)].find(b =&gt; !b.closest(&#x27;[role=&quot;article&quot;]&#x27;) &amp;&amp; /^(See more|عرض المزيد)$/.test((b.innerText || &#x27;&#x27;).trim()));
+    if (more) { more.click(); await sleep(600); }
+    const blocks = [...document.querySelectorAll(&#x27;[data-ad-preview=&quot;message&quot;],[data-ad-comet-preview=&quot;message&quot;],[data-ad-rendering-role=&quot;story_message&quot;]&#x27;)].filter(x =&gt; !x.closest(&#x27;[role=&quot;article&quot;]&#x27;));
+    let t = blocks.map(b =&gt; b.innerText.trim()).sort((a, b) =&gt; b.length - a.length)[0] || &#x27;&#x27;;
+    if (!t) {
+      const c = [...document.querySelectorAll(&#x27;div[dir=&quot;auto&quot;],span[dir=&quot;auto&quot;]&#x27;)].filter(x =&gt; !x.closest(&#x27;[role=&quot;article&quot;]&#x27;) &amp;&amp; x.getBoundingClientRect().width &gt; 0).map(x =&gt; x.innerText.trim()).filter(x =&gt; x.length &gt; 15);
+      t = c.sort((a, b) =&gt; b.length - a.length)[0] || &#x27;&#x27;;
+    }
+    return t.replace(/\n?(See less|عرض أقل)\s*$/, &#x27;&#x27;).trim();
+  }
+  function firstLink() {
+    const inPanel = [...document.querySelectorAll(&#x27;a[href]&#x27;)].map(outLink).filter(Boolean);
+    return inPanel[0] || &#x27;&#x27;;
+  }
 
-  function tick() {
-    const r = grab();
-    if (!r) return;
-    if (r.fbid === lastFbid) { stale++; return; }
-    lastFbid = r.fbid; stale = 0;
-    if (seen.has(r.fbid)) { render(r, true); return; }
-    seen.add(r.fbid); items.push(r);
-    try { localStorage.setItem(KEY, JSON.stringify(items)); } catch (_) {}
-    render(r, false);
+  async function tick() {
+    if (busy) return;
+    const fbid = param(&#x27;fbid&#x27;);
+    if (!fbid || fbid === lastFbid || !mainImg()) { if (fbid === lastFbid) stale++; return; }
+    busy = true;
+    try {
+      const r = await grab();
+      if (!r) return;
+      lastFbid = r.fbid; stale = 0;
+      if (postMode) {
+        if (postMode.photos.some(p =&gt; p.fbid === r.fbid)) { await finishPost(); return; }
+        postMode.photos.push({ fbid: r.fbid, img: r.img, w: r.w, h: r.h });
+        if (!postMode.post &amp;&amp; r.post) postMode.post = r.post;
+        if (!postMode.date &amp;&amp; r.date) postMode.date = r.date;
+        render(r, false); return;
+      }
+      if (seen.has(r.fbid)) { render(r, true); return; }
+      seen.add(r.fbid); store.items.push(r); save(); render(r, false);
+    } finally { busy = false; }
+  }
+
+  async function startPost() {
+    if (!/\/photo/.test(location.pathname)) { msg(&#x27;افتح أول صورة في المنشور الأول.&#x27;); return; }
+    setAuto(false);
+    postMode = { photos: [], text: &#x27;&#x27;, link: &#x27;&#x27;, post: postFromSet(), date: &#x27;&#x27;, started: new Date().toISOString() };
+    msg(&#x27;بيقرا الكلام…&#x27;);
+    postMode.text = await postText();
+    postMode.link = firstLink();
+    lastFbid = null;
+    msg(&#x27;بيجمع صور المنشور…&#x27;);
+    setAuto(true);
+  }
+  async function finishPost() {
+    const p = postMode; postMode = null; setAuto(false);
+    if (!p || !p.photos.length) return;
+    store.posts = store.posts.filter(x =&gt; !(x.post &amp;&amp; x.post === p.post) &amp;&amp; x.photos[0]?.fbid !== p.photos[0].fbid);
+    store.posts.push({ kind: &#x27;feature&#x27;, ...p });
+    save(); render(null);
+    msg(`اتسجل المنشور: ${p.photos.length} صورة${p.link ? &#x27; + لينك&#x27; : &#x27;&#x27;}. افتح المنشور اللي بعده.`);
   }
 
   function next() {
@@ -131,9 +210,10 @@ kbd{background:#000;border:1px solid var(--line);border-radius:6px;padding:1px 7
     if (on) {
       stale = 0;
       autoT = setInterval(() =&gt; {
-        if (stale &gt; 8) { setAuto(false); msg(&#x27;وقفت: مفيش صور جديدة (يمكن وصلت للآخر).&#x27;); return; }
+        if (busy) return;
+        if (stale &gt; 8) { if (postMode) finishPost(); else { setAuto(false); msg(&#x27;وقفت: مفيش صور جديدة (يمكن وصلت للآخر).&#x27;); } return; }
         next();
-      }, 2600 + Math.random() * 1200);
+      }, (postMode ? 2200 : 2800) + Math.random() * 1200);
     }
     btnAuto.textContent = on ? &#x27;⏸ إيقاف&#x27; : &#x27;▶ تقليب تلقائي&#x27;;
   }
@@ -141,49 +221,50 @@ kbd{background:#000;border:1px solid var(--line);border-radius:6px;padding:1px 7
   
   const box = document.createElement(&#x27;div&#x27;);
   box.dir = &#x27;rtl&#x27;;
-  box.style.cssText = &#x27;position:fixed;z-index:2147483647;bottom:16px;left:16px;width:300px;background:#061615;color:#f3f6ef;border:2px solid #4adc87;border-radius:14px;padding:12px;font:13px/1.6 system-ui,Segoe UI,Tahoma,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.4)&#x27;;
+  box.style.cssText = &#x27;position:fixed;z-index:2147483647;bottom:16px;left:16px;width:310px;background:#061615;color:#f3f6ef;border:2px solid #4adc87;border-radius:14px;padding:12px;font:13px/1.6 system-ui,Segoe UI,Tahoma,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.4)&#x27;;
+  const B = (k, bg, fg, t) =&gt; `&lt;button data-${k} style=&quot;flex:1;background:${bg};color:${fg};border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer&quot;&gt;${t}&lt;/button&gt;`;
   box.innerHTML = `
     &lt;div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px&quot;&gt;
-      &lt;b style=&quot;font-size:15px;color:#4adc87&quot;&gt;أرابيسك: جمع الرسومات&lt;/b&gt;
+      &lt;b style=&quot;font-size:15px;color:#4adc87&quot;&gt;أرابيسك: جمع&lt;/b&gt;
       &lt;button data-x style=&quot;background:none;border:0;color:#aaa;font-size:16px;cursor:pointer&quot;&gt;✕&lt;/button&gt;
     &lt;/div&gt;
-    &lt;div data-count style=&quot;font-size:22px;font-weight:700&quot;&gt;&lt;/div&gt;
+    &lt;div data-count style=&quot;font-size:18px;font-weight:700&quot;&gt;&lt;/div&gt;
     &lt;div data-last style=&quot;display:flex;gap:8px;align-items:center;min-height:54px;margin:6px 0&quot;&gt;&lt;/div&gt;
     &lt;div data-msg style=&quot;color:#f6e61f;min-height:18px&quot;&gt;&lt;/div&gt;
-    &lt;div style=&quot;display:flex;gap:6px;flex-wrap:wrap;margin-top:6px&quot;&gt;
-      &lt;button data-auto style=&quot;flex:1;background:#4adc87;color:#061615;border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer&quot;&gt;&lt;/button&gt;
-      &lt;button data-dl style=&quot;flex:1;background:#f3f6ef;color:#061615;border:0;border-radius:8px;padding:7px;font-weight:700;cursor:pointer&quot;&gt;⬇ نزّل الملف&lt;/button&gt;
-    &lt;/div&gt;
+    &lt;div style=&quot;display:flex;gap:6px;flex-wrap:wrap;margin-top:6px&quot;&gt;${B(&#x27;auto&#x27;, &#x27;#4adc87&#x27;, &#x27;#061615&#x27;, &#x27;&#x27;)}${B(&#x27;post&#x27;, &#x27;#d4a72c&#x27;, &#x27;#061615&#x27;, &#x27;📚 اجمع المنشور ده&#x27;)}&lt;/div&gt;
+    &lt;div style=&quot;display:flex;gap:6px;margin-top:6px&quot;&gt;${B(&#x27;dl&#x27;, &#x27;#f3f6ef&#x27;, &#x27;#061615&#x27;, &#x27;⬇ نزّل الملف&#x27;)}&lt;/div&gt;
     &lt;button data-clear style=&quot;margin-top:6px;background:none;border:0;color:#999;cursor:pointer;font-size:12px;text-decoration:underline&quot;&gt;امسح اللي اتجمع وابدأ من الأول&lt;/button&gt;`;
   document.body.appendChild(box);
   const $ = s =&gt; box.querySelector(s);
   const btnAuto = $(&#x27;[data-auto]&#x27;);
   const msg = t =&gt; { $(&#x27;[data-msg]&#x27;).textContent = t || &#x27;&#x27;; };
+  const esc = s =&gt; String(s || &#x27;&#x27;).replace(/[&amp;&lt;&gt;&quot;]/g, c =&gt; ({ &#x27;&amp;&#x27;: &#x27;&amp;amp;&#x27;, &#x27;&lt;&#x27;: &#x27;&amp;lt;&#x27;, &#x27;&gt;&#x27;: &#x27;&amp;gt;&#x27;, &#x27;&quot;&#x27;: &#x27;&amp;quot;&#x27; }[c]));
   function render(r, dup) {
-    $(&#x27;[data-count]&#x27;).textContent = items.length + &#x27; صورة اتجمعت&#x27;;
-    if (r) $(&#x27;[data-last]&#x27;).innerHTML = `&lt;img src=&quot;${r.img}&quot; style=&quot;width:54px;height:54px;object-fit:cover;border-radius:6px&quot;&gt;&lt;div&gt;&lt;div&gt;${(r.author || &#x27;؟&#x27;).replace(/&lt;/g, &#x27;&amp;lt;&#x27;)}&lt;/div&gt;&lt;div style=&quot;color:#9fb&quot;&gt;${(r.date || &#x27;&#x27;).replace(/&lt;/g, &#x27;&amp;lt;&#x27;)}${dup ? &#x27; · موجودة&#x27; : &#x27;&#x27;}&lt;/div&gt;&lt;/div&gt;`;
+    $(&#x27;[data-count]&#x27;).textContent = `${store.items.length} صورة · ${store.posts.length} منشور` + (postMode ? ` · المنشور ده: ${postMode.photos.length}` : &#x27;&#x27;);
+    if (r) $(&#x27;[data-last]&#x27;).innerHTML = `&lt;img src=&quot;${esc(r.img)}&quot; style=&quot;width:54px;height:54px;object-fit:cover;border-radius:6px&quot;&gt;&lt;div&gt;&lt;div&gt;${esc(r.author || &#x27;؟&#x27;)}&lt;/div&gt;&lt;div style=&quot;color:#9fb&quot;&gt;${esc(r.date || &#x27;من غير تاريخ&#x27;)}${dup ? &#x27; · موجودة&#x27; : &#x27;&#x27;}&lt;/div&gt;&lt;/div&gt;`;
   }
   render(null);
-  if (!/\/photo/.test(location.pathname)) msg(&#x27;افتح أول صورة من تبويب Media في الجروب، وبعدين دوس &quot;تقليب تلقائي&quot; أو قلّب بالسهم →&#x27;);
+  if (!/\/photo/.test(location.pathname)) msg(&#x27;افتح صورة من تبويب Media في الجروب ودوس «تقليب تلقائي»، أو افتح أول صورة في منشور فنان الأسبوع ودوس «اجمع المنشور ده».&#x27;);
   btnAuto.onclick = () =&gt; setAuto(!auto);
+  $(&#x27;[data-post]&#x27;).onclick = () =&gt; startPost();
   setAuto(false);
   $(&#x27;[data-dl]&#x27;).onclick = () =&gt; {
-    const blob = new Blob([JSON.stringify({ source: &#x27;facebook&#x27;, group: &#x27;3arabesque&#x27;, exported: new Date().toISOString(), items }, null, 1)], { type: &#x27;application/json&#x27; });
+    const blob = new Blob([JSON.stringify({ source: &#x27;facebook&#x27;, exported: new Date().toISOString(), items: store.items, posts: store.posts }, null, 1)], { type: &#x27;application/json&#x27; });
     const a = document.createElement(&#x27;a&#x27;);
     a.href = URL.createObjectURL(blob);
-    a.download = `arabesque-facebook-${new Date().toISOString().slice(0, 10)}-${items.length}.json`;
+    a.download = `arabesque-facebook-${new Date().toISOString().slice(0, 10)}-${store.items.length}p-${store.posts.length}posts.json`;
     document.body.appendChild(a); a.click(); a.remove();
     msg(&#x27;اتنزّل. ارفعه في لوحة التحكم ← استيراد من فيسبوك.&#x27;);
   };
   $(&#x27;[data-clear]&#x27;).onclick = () =&gt; {
-    if (!confirm(&#x27;تمسح &#x27; + items.length + &#x27; صورة متجمعة؟&#x27;)) return;
-    items = []; seen.clear(); lastFbid = null;
-    try { localStorage.removeItem(KEY); } catch (_) {}
+    if (!confirm(`تمسح ${store.items.length} صورة و ${store.posts.length} منشور؟`)) return;
+    store = { items: [], posts: [] }; seen.clear(); lastFbid = null; postMode = null;
+    try { localStorage.removeItem(KEY); localStorage.removeItem(&#x27;arabesque-collector-v1&#x27;); } catch (_) {}
     render(null);
   };
   $(&#x27;[data-x]&#x27;).onclick = () =&gt; { setAuto(false); box.style.display = &#x27;none&#x27;; };
   const poll = setInterval(tick, 700);
-  window.__arabesqueCollector = { show: () =&gt; { box.style.display = &#x27;&#x27;; }, items: () =&gt; items, stop: () =&gt; { clearInterval(poll); setAuto(false); } };
+  window.__arabesqueCollector = { show: () =&gt; { box.style.display = &#x27;&#x27;; }, data: () =&gt; store, stop: () =&gt; { clearInterval(poll); setAuto(false); } };
 })();</textarea>
 <p><button type="button" onclick="navigator.clipboard.writeText(document.getElementById('code').value).then(()=>this.textContent='اتنسخ ✓')">انسخ الكود</button></p></div>
 </div></body></html>
