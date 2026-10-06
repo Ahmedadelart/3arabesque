@@ -526,6 +526,40 @@ a.pio-frame{cursor:pointer}
 .jgal .tile[hidden]{display:none}
 .jgal .tile img{width:100%;height:100%;object-fit:cover}
 @media (max-width:600px){.jgal{gap:6px}.jgal .tile{border-radius:8px}.jgal .tile .cap{display:none}}
+
+/* email signup band (footer) */
+.subband{background:var(--mint);color:var(--ink);border:3px solid var(--ink);border-radius:20px;box-shadow:0 8px 0 var(--ink);padding:clamp(20px,3vw,30px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px 32px;align-items:center;margin-bottom:48px}
+.subband h3{margin:0;font-family:var(--f-display);font-size:clamp(24px,3vw,34px);line-height:1.25}
+footer .subband p{margin:6px 0 0;font-size:14.5px;color:#0b2321;max-width:none}
+footer .subband h3{color:#061615}
+.subform{display:flex;gap:10px;min-width:0}
+.subform input[type=email]{flex:1;min-width:0;background:#f3f6ef;color:#061615;border:2px solid var(--ink);border-radius:12px;padding:12px 14px;font:inherit}
+.subform input[type=email]:focus{outline:3px solid #061615;outline-offset:1px}
+.subform .btn{background:#061615;color:#4adc87;border-color:#061615;white-space:nowrap}
+.subform{position:relative}.subform .hp{position:absolute;inset-inline-start:0;top:0;width:1px;height:1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);opacity:0;pointer-events:none}
+.submsg{grid-column:2;font-size:14px;font-weight:600;min-height:1.4em;margin-top:-8px}
+@media (max-width:760px){.subband{grid-template-columns:1fr}.submsg{grid-column:1}.subform{flex-direction:column}.subform .btn{justify-content:center}}
+/* dashboard stats */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi b{display:block;font-family:var(--f-display);font-size:30px;line-height:1.2;color:var(--acc)}
+.kpi span{font-size:13px;color:var(--mute)}
+.bars{display:flex;align-items:flex-end;gap:3px;height:150px;padding:10px;background:var(--bg);border:1px solid var(--line);border-radius:14px;direction:ltr}
+.bars i{flex:1;min-width:0;background:var(--mint);border-radius:3px 3px 0 0;position:relative;min-height:2px}
+.bars i:hover{background:var(--star)}
+.tops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.top{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-width:0}
+.top h4{margin:0 0 8px;font-size:14px}
+.top ol{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:14px}
+.top li{display:flex;justify-content:space-between;gap:10px;min-width:0}
+.top li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top li b{color:var(--acc);font-weight:600}
+.subs{width:100%;border-collapse:collapse;font-size:14px}
+.subs td,.subs th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:start}
+.subs td:first-child{direction:ltr;text-align:left;word-break:break-all}
+.subs button{background:none;border:1px solid var(--line);color:var(--mute);border-radius:8px;padding:2px 9px;cursor:pointer;font:inherit;font-size:12px}
+.subs button:hover{border-color:#e66;color:#e66}
+@media (max-width:700px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.tops{grid-template-columns:1fr}}
 </style>
 
 
@@ -1125,6 +1159,15 @@ function renderChrome(){
     <span class="usep" aria-hidden="true"></span>
     <button class="u" id="modebtn" type="button" title="${ml}" aria-label="${ml}">${MODE==='dark'?SUN:MOON}</button>`;
   document.getElementById('foot').innerHTML=`<div class="wrap">
+    ${ADMIN?'':`<div class="subband">
+      <div><h3>${L('يوصلك التحدي الجديد على إيميلك','Get the next challenge by email')}</h3><p>${L('رسالة واحدة في الشهر فيها موضوع التحدي ومصادره. تقدر تلغي في أي وقت.','One email a month with the challenge topic and its sources. Unsubscribe any time.')}</p></div>
+      <form class="subform" id="subform" novalidate>
+        <input type="email" name="email" required autocomplete="email" dir="ltr" placeholder="${L('الإيميل','Email address')}" aria-label="${L('الإيميل','Email address')}">
+        <input class="hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="btn" type="submit">${L('اشترك','Subscribe')}</button>
+      </form>
+      <div class="submsg" id="submsg" role="status"></div>
+    </div>`}
     <div class="foot-grid">
       <div><img src="img/logo.png" alt="Arabesque" width="768" height="378"><p>${L('تحدي شهري للتصميم النابع من التراث العربي والإسلامي.','A monthly design challenge rooted in Arab and Islamic heritage.')}</p></div>
       <div><h4>${L('الموقع','Site')}</h4><ul><li><a class="link" href="#challenges">${L('الأرشيف','Archive')}</a></li><li><a class="link" href="#artists">${L('الفنانين','Artists')}</a></li><li><a class="link" href="#about">${L('القواعد','Rules')}</a></li></ul></div>
@@ -1136,6 +1179,29 @@ function renderChrome(){
     </div>
     <div class="fine"><span>${L('كل الأعمال ملك أصحابها. الصور المرجعية من ويكيميديا كومنز بتراخيصها.','All artworks belong to their artists. Reference photos from Wikimedia Commons under their licenses.')}</span><span>${L('أرابيسك','Arabesque')}</span></div>
   </div>`;
+}
+
+/* ---------- email signup + visit counter ---------- */
+document.addEventListener('submit',async e=>{
+  if(e.target.id!=='subform') return;
+  e.preventDefault();
+  const f=e.target, msg=document.getElementById('submsg'), email=f.email.value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)){ msg.textContent=L('اكتب إيميل صحيح.','Please enter a valid email.'); f.email.focus(); return; }
+  const btn=f.querySelector('button'); btn.disabled=true; msg.textContent=L('ثانية…','One moment…');
+  try{
+    const r=await fetch('x/sub',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email,hp:f.hp.value,lang:LANG,src:(location.hash||'#home').slice(0,30)})});
+    const j=await r.json();
+    if(j.ok){ msg.textContent=j.already?L('إنت مشترك بالفعل. هيوصلك التحدي الجاي.','You are already subscribed.'):L('تمام! هيوصلك التحدي الجاي أول ما ينزل.','Done! The next challenge will reach you as soon as it is out.'); f.reset(); }
+    else msg.textContent=L('الإيميل ده مش مظبوط.','That email does not look right.');
+  }catch(_){ msg.textContent=L('حصلت مشكلة، جرّب تاني بعد شوية.','Something went wrong, please try again later.'); }
+  btn.disabled=false;
+});
+let hitFirst=true, hitLast='';
+function sendHit(){
+  if(ADMIN||IS_ADMIN||navigator.webdriver||!/(^|\.)3arabesque\.art$/.test(location.hostname)) return;
+  const p=location.hash||'#home'; if(p===hitLast) return; hitLast=p;
+  try{ fetch('x/hit',{method:'POST',keepalive:true,headers:{'content-type':'application/json'},body:JSON.stringify({p,f:hitFirst?1:0,r:hitFirst?document.referrer:''})}).catch(()=>{}); }catch(_){}
+  hitFirst=false;
 }
 
 /* ---------- router ---------- */
@@ -1157,6 +1223,7 @@ function route(keepScroll){
   else {html=vHome(); r='home';}
   app.innerHTML=`<div class="fade">${html}</div>`;
   mark(r);
+  sendHit();
   if(!keepScroll) window.scrollTo(0,0);
   startReels();
   startHeroRot();
@@ -1276,6 +1343,7 @@ function vAdmin(){
       <button data-tab="t4">${L('تعديل الرسومات','Edit artworks')}</button>
       <button data-tab="t3">${L('فنان الأسبوع','Artist of the week')}</button>
       <button data-tab="t5">${L('استيراد من فيسبوك','Import from Facebook')}</button>
+      <button data-tab="t6">${L('الإحصائيات والمشتركين','Stats and subscribers')}</button>
       <div class="who"><span id="whoami">${L('بيتأكد…','Checking…')}</span><br><a class="link" href="/cdn-cgi/access/logout" onclick="try{localStorage.removeItem('arabesque-admin')}catch(_){}">${L('خروج','Sign out')}</a></div>
     </div>
     <datalist id="artist-list">${artists.map(a=>`<option value="${esc(a)}">`).join('')}</datalist>
@@ -1325,6 +1393,11 @@ function vAdmin(){
         <div class="egrid" id="egrid"></div>
         <div class="row-end"><span class="hint" id="e-count"></span><button class="btn btn-mint" type="submit">${L('احفظ التعديلات','Save changes')}</button></div>
       </form>
+      <div class="panel" id="t6" hidden>
+        <h2>${L('الإحصائيات والمشتركين','Stats and subscribers')}</h2>
+        <div class="field" style="max-width:220px"><label for="s-days">${L('المدة','Period')}</label><select id="s-days"><option value="7">${L('آخر ٧ أيام','Last 7 days')}</option><option value="30" selected>${L('آخر ٣٠ يوم','Last 30 days')}</option><option value="90">${L('آخر ٩٠ يوم','Last 90 days')}</option><option value="365">${L('آخر سنة','Last year')}</option></select></div>
+        <div id="s-body"><p class="hint">${L('بيحمّل…','Loading…')}</p></div>
+      </div>
       <form class="panel" id="t5" hidden novalidate>
         <h2>${L('استيراد من فيسبوك','Import from Facebook')}</h2>
         <ol class="steps-mini">
@@ -1412,10 +1485,69 @@ function bindAdmin(){
   function authWarn(msg){ const d=document.createElement('div'); d.className='authwarn'; d.dir='auto'; d.textContent=msg; document.querySelector('.admin > div:last-child').prepend(d); }
   document.querySelectorAll('.aside [data-tab]').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('.aside [data-tab]').forEach(x=>x.classList.toggle('on',x===b));
-    ['t1','t2','t3','t4','t5'].forEach(id=>$(id).hidden=id!==b.dataset.tab);
+    ['t1','t2','t3','t4','t5','t6'].forEach(id=>$(id).hidden=id!==b.dataset.tab);
     if(b.dataset.tab==='t4') renderEdit();
+    if(b.dataset.tab==='t6') loadStats();
   }));
   const pv=(el,arr)=>{el.innerHTML=arr.map(x=>`<img src="${x.src}" alt="">`).join('')};
+
+  /* t6: stats and subscribers */
+  const PAGE={'#home':L('الرئيسية','Home'),'#challenges':L('الأرشيف','Archive'),'#artists':L('الفنانين','Artists'),'#aow':L('فنان الأسبوع','Artist of the week'),'#aow/…':L('صفحات فناني الأسبوع','Artist-of-the-week pages'),'#pioneers':L('الرواد','Pioneers'),'#pio/…':L('صفحات الرواد','Pioneer pages'),'#about':L('عن أرابيسك','About'),'#brief':L('الرئيسية: المطلوب','Home: brief')};
+  const pname=k=>PAGE[k]||(k.startsWith('#c-')?(MI[k.slice(3)]?(k==='#c-old'?L('مختارات','Highlights'):mT(k.slice(3))):k):k);
+  let cname=c=>c; try{ const dn=new Intl.DisplayNames([LANG],{type:'region'}); cname=c=>{try{return c==='??'?L('غير معروف','Unknown'):dn.of(c)}catch(_){return c}}; }catch(_){}
+  const SRCN={direct:L('مباشر / تطبيق','Direct / app'),'facebook.com':'Facebook','instagram.com':'Instagram','google.com':'Google','t.co':'X / Twitter'};
+  const devn={mobile:L('موبايل','Mobile'),desktop:L('كمبيوتر','Desktop')};
+  let STATS=null;
+  async function loadStats(){
+    const box=$('s-body'), days=$('s-days').value;
+    box.innerHTML=`<p class="hint">${L('بيحمّل…','Loading…')}</p>`;
+    let j; try{ j=await (await fetch('api/stats?days='+days,{cache:'no-store'})).json(); }catch(_){ j={error:'net'}; }
+    if(!j.ok){ box.innerHTML=`<p class="hint">${j.error==='no_db'?L('قاعدة البيانات لسه مش جاهزة. هتشتغل بعد أول نشر.','The database is not ready yet. It works after the next deploy.'):L('مقدرتش أجيب الإحصائيات. اتأكد إنك داخل كأدمن.','Could not load the stats. Make sure you are signed in as admin.')}</p>`; return; }
+    STATS=j;
+    const sum=pre=>{const m={}; j.rows.filter(r=>r.k.startsWith(pre)).forEach(r=>{const k=r.k.slice(pre.length); m[k]=(m[k]||0)+r.n}); return Object.entries(m).sort((a,b)=>b[1]-a[1]);};
+    const tot=k=>j.rows.filter(r=>r.k===k).reduce((s,r)=>s+r.n,0);
+    const byDay={}; j.rows.filter(r=>r.k==='all').forEach(r=>byDay[r.d]=r.n);
+    const dl=[]; for(let i=+days-1;i>=0;i--){ const d=new Date(Date.now()-i*864e5).toISOString().slice(0,10); dl.push([d,byDay[d]||0]); }
+    const mx=Math.max(1,...dl.map(x=>x[1]));
+    const sv=sum('p:'), sc=sum('c:'), sr=sum('r:'), sd=sum('dev:');
+    const list=(arr,nm)=>arr.length?`<ol>${arr.slice(0,8).map(([k,n])=>`<li><span>${esc(nm(k))}</span><b>${A(n)}</b></li>`).join('')}</ol>`:`<p class="hint">${L('لسه مفيش','Nothing yet')}</p>`;
+    const fd=t=>new Date(t).toLocaleDateString(LANG==='ar'?'ar-EG':'en-GB',{day:'numeric',month:'short',year:'numeric'});
+    box.innerHTML=`
+      <div class="kpis">
+        <div class="kpi"><b>${A(tot('all'))}</b><span>${L('مشاهدة صفحة','page views')}</span></div>
+        <div class="kpi"><b>${A(tot('u'))}</b><span>${L('زائر (تقريبًا، يوميًا)','visitors (approx., daily)')}</span></div>
+        <div class="kpi"><b>${A(j.subs.length)}</b><span>${L('مشترك بالإيميل','email subscribers')}</span></div>
+        <div class="kpi"><b>${A(j.allTime)}</b><span>${L('مشاهدة من البداية','views since launch')}</span></div>
+      </div>
+      <div class="bars" title="${L('المشاهدات يوميًا','Views per day')}">${dl.map(([d,n])=>`<i style="height:${Math.round(n/mx*100)}%" title="${d}: ${n}"></i>`).join('')}</div>
+      <div class="tops">
+        <div class="top"><h4>${L('أكتر الصفحات','Top pages')}</h4>${list(sv,pname)}</div>
+        <div class="top"><h4>${L('جايين منين','Where visitors come from')}</h4>${list(sr,k=>SRCN[k]||k)}</div>
+        <div class="top"><h4>${L('البلاد','Countries')}</h4>${list(sc,cname)}</div>
+        <div class="top"><h4>${L('الأجهزة','Devices')}</h4>${list(sd,k=>devn[k]||k)}</div>
+      </div>
+      <p class="hint">${L('العدّاد مش بيستخدم كوكيز ومش بيحفظ أي بيانات شخصية. زياراتك إنت كأدمن مش بتتحسب.','The counter uses no cookies and stores no personal data. Your own visits as admin are not counted.')}</p>
+      <h3 style="margin:8px 0 0">${L('المشتركين','Subscribers')} (${A(j.subs.length)})</h3>
+      ${j.subs.length?`<div class="row-end" style="justify-content:flex-start;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-mint" type="button" id="s-csv">${L('نزّل CSV','Download CSV')}</button>
+        <button class="btn btn-ghost" type="button" id="s-copy">${L('انسخ كل الإيميلات','Copy all emails')}</button>
+      </div>
+      <div style="overflow-x:auto"><table class="subs"><thead><tr><th>${L('الإيميل','Email')}</th><th>${L('اللغة','Language')}</th><th>${L('التاريخ','Date')}</th><th></th></tr></thead><tbody>
+        ${j.subs.map(s=>`<tr><td>${esc(s.email)}</td><td>${s.lang==='en'?'EN':'ع'}</td><td>${fd(s.t)}</td><td><button type="button" data-del="${esc(s.email)}">${L('شيل','Remove')}</button></td></tr>`).join('')}
+      </tbody></table></div>`:`<p class="hint">${L('لسه مفيش مشتركين. الفورم موجود تحت في كل صفحات الموقع.','No subscribers yet. The signup form is at the bottom of every page.')}</p>`}`;
+    const csv=$('s-csv'); if(csv) csv.onclick=()=>{
+      const rows=[['email','language','subscribed']].concat(j.subs.map(s=>[s.email,s.lang,new Date(s.t).toISOString().slice(0,10)]));
+      const blob=new Blob(['﻿'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='arabesque-subscribers.csv'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+    };
+    const cp=$('s-copy'); if(cp) cp.onclick=()=>navigator.clipboard.writeText(j.subs.map(s=>s.email).join(', ')).then(()=>toast(L('اتنسخت','Copied')));
+    box.querySelectorAll('[data-del]').forEach(x=>x.onclick=async()=>{
+      if(!window.confirm(L('تشيل ','Remove ')+x.dataset.del+'?')) return;
+      await fetch('api/stats',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({del:x.dataset.del})});
+      loadStats();
+    });
+  }
+  $('s-days').addEventListener('change',loadStats);
 
   /* t1: challenge */
   let art=null, ban=null;

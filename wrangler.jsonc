@@ -11,5 +11,8 @@
     "ACCESS_TEAM": "3arabesque.cloudflareaccess.com",
     "ACCESS_AUD": "d5cf3bbc20bb6bdb5d756b7108534d27f2b094382bc467950441b3fc050d0283"
   },
+  // Private database for visit counts and email subscribers (never in the public repo).
+  // No id needed: Wrangler creates it automatically on the first deploy.
+  "d1_databases": [{ "binding": "DB", "database_name": "arabesque" }],
   "observability": { "enabled": true }
 }

@@ -1,0 +1,5 @@
+{
+  "name": "3arabesque",
+  "private": true,
+  "devDependencies": { "wrangler": "^4.148.0" }
+}
