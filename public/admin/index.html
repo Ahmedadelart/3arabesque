@@ -824,7 +824,7 @@ function vChallenges(){
   <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('الأرشيف','Archive')}</h1><p>${L('كل تحدي وكل المشاركات فيه، في مكان واحد.','Every challenge and every submission, in one place.')}</p></div></section>
   <section class="sec"><div class="wrap">
     <div class="sec-head"><h2>${L('١٤٤٧ هـ','1447 AH')}</h2></div>
-    <div class="months">${MONTHS.slice().reverse().map(mcard).join('')}</div>
+    <div class="months">${MONTHS.filter(m=>m.t).reverse().map(mcard).join('')}</div>
   </div></section>
   <section class="sec" style="padding-top:0"><div class="wrap">
     <div class="sec-head"><h2>${L('المجموعة القديمة','The original group')}</h2></div>
@@ -987,7 +987,7 @@ function pcard(p){
 /* archive pages */
 function vAow(){
   return `
-  <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('فنان الأسبوع','Artist of the week')}</h1><p>${L(`كل أسبوع بنختار فنان ونعرض شغله على صفحة أرابيسك. ${A(state.aow.length)} فنان لحد دلوقتي.`,`Every week we feature an artist on the Arabesque page. ${state.aow.length} so far.`)}</p></div></section>
+  <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('فنان الأسبوع','Artist of the week')}</h1><p>${L('كل أسبوع بنختار فنان ونعرض شغله على صفحة أرابيسك.','Every week we feature an artist on the Arabesque page.')}</p></div></section>
   <section class="sec"><div class="wrap">
     <label class="search" style="max-width:420px;margin-bottom:22px"><span aria-hidden="true">⌕</span><input id="aowsearch" type="search" placeholder="${L('ابحث باسم الفنان','Search by name')}" autocomplete="off"></label>
     <div class="acards grid" id="aowgrid">${state.aow.map(acard).join('')||`<p class="hint">${L('قريبًا','Coming soon')}</p>`}</div>
