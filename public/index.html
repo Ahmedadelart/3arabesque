@@ -657,7 +657,8 @@ const cx=v=>Array.isArray(v)?L(v[0],v[1]):v;
 
 function worksOf(k){return state.works.filter(w=>w.m===k).sort((a,b)=>(b.hl||0)-(a.hl||0))}
 const wT=w=>LANG==='en'?(w.te||w.t||(w.m?mT(w.m):'From the archive')):(w.t||(w.m?mT(w.m):'من أرشيف أرابيسك'));
-const wB=w=>LANG==='en'?(w.be||w.by):w.by;
+const wB=w=>LANG==='en'?(w.be||nm(w.by)):w.by;
+const AR0=v=>Array.isArray(v)?v[0]:(v||'');
 const thumb=w=>/^img\/[^/]+\.jpg$/.test(w.src||'')?w.src.replace(/^img\//,'img/t/'):w.src;
 function tile(w,cls='',ctx='all'){
   const [ww,hh]=w.wh||[4,3]; const t=wT(w); const by=wB(w);
@@ -700,13 +701,13 @@ const SRC={
   arch:[MATSON,MET,[['الملابس التقليدية، ويكيبيديا','Traditional dress, Wikipedia'],'wiki:أزياء تقليدية|Folk costume']],
   chips:[['تطريز فلسطيني','Palestinian embroidery thobe'],['الطوارق','Tuareg dress'],['زي سيوة','Siwa traditional dress'],['الزي النوبي','Nubian dress'],['الجلابية الصعيدية','Egyptian galabiya'],['الملاية اللف','Melaya laff']]},
  ramadan:{books:[],arch:[[['جروب أرابيسك','Arabesque group'],'https://www.facebook.com/groups/3arabesque']],chips:[['فانوس رمضان','Ramadan lantern'],['المسحراتي','Mesaharati']]},
- shaban:{books:[['كليلة ودمنة','Ibn al-Muqaffa'],['The Arabian Nights: A Companion','Robert Irwin']],
+ shaban:{books:[[['كليلة ودمنة','Kalila and Dimna'],'Ibn al-Muqaffa'],['The Arabian Nights: A Companion','Robert Irwin']],
   arch:[GALLICA,MET,[['كليلة ودمنة، ويكيبيديا','Kalila and Dimna, Wikipedia'],'wiki:كليلة ودمنة|Kalila and Dimna']],
   chips:[['مخطوطة كليلة ودمنة','Kalila wa Dimna manuscript'],['ابن آوى','Golden jackal'],['أسد','Barbary lion'],['منمنمات إسلامية','Islamic miniature painting']]},
- jumada2:{books:[['ما وراء الطبيعة','أحمد خالد توفيق'],['رجل المستحيل','نبيل فاروق']],
+ jumada2:{books:[[['ما وراء الطبيعة','Ma Wara’a al-Tabi’a (Beyond Nature)'],['أحمد خالد توفيق','Ahmed Khaled Tawfik']],[['رجل المستحيل','Ragul al-Mustahil (The Man of the Impossible)'],['نبيل فاروق','Nabil Farouk']]],
   arch:[[['المؤسسة العربية الحديثة','Modern Arab Association'],null,'المؤسسة العربية الحديثة روايات مصرية للجيب'],[['روايات مصرية للجيب، ويكيبيديا','Egyptian pocket novels, Wikipedia'],'wiki:روايات مصرية للجيب|Rewayat']],
   chips:[['القاهرة في التسعينات','Cairo 1990s street'],['أغلفة إسماعيل دياب','Egyptian pulp covers'],['وسط البلد','Downtown Cairo']]},
- rabi2:{books:[['عجائب المخلوقات وغرائب الموجودات','القزويني'],['The Arabian Nights: A Companion','Robert Irwin']],
+ rabi2:{books:[[['عجائب المخلوقات وغرائب الموجودات','The Wonders of Creation'],['القزويني','Zakariya al-Qazwini']],['The Arabian Nights: A Companion','Robert Irwin']],
   arch:[GALLICA,MET,[['الجن في الفولكلور، ويكيبيديا','Jinn, Wikipedia'],'wiki:جن|Jinn']],
   chips:[['مخطوطة القزويني','Qazwini manuscript'],['طائر الرخ','Roc bird'],['الغول','Ghoul folklore'],['الجن','Jinn illustration']]},
  rabi1:{books:[['Manners and Customs of the Modern Egyptians','Edward William Lane'],['Description de l\'Égypte','Commission des sciences et des arts']],
@@ -729,7 +730,7 @@ function srcSection(k,{pad=true}={}){
   return `<section class="sec" ${pad?'':'style="padding-top:0"'}><div class="wrap">
     <div class="sec-head"><h2>${L('مصادر','Sources')}</h2><p>${L('كتب وأرشيفات وصور تساعدك تفهم الموضوع قبل ما ترسم.','Books, archives and images to study the topic before you draw.')}</p></div>
     <div class="src-grid">
-      ${s.books?.length?`<div class="src"><h3>${L('كتب','Books')}</h3><ul>${s.books.map(x=>`<li><a href="${esc(G(x[0]+' '+x[1]))}" target="_blank" rel="noopener"><div dir="auto" style="text-align:start"><b>${esc(x[0])}</b><span>${esc(x[1])}</span></div><em>${FW()}</em></a></li>`).join('')}</ul></div>`:''}
+      ${s.books?.length?`<div class="src"><h3>${L('كتب','Books')}</h3><ul>${s.books.map(x=>`<li><a href="${esc(x[2]||G(AR0(x[0])+' '+AR0(x[1])))}" target="_blank" rel="noopener"><div dir="auto" style="text-align:start"><b>${esc(cx(x[0]))}</b><span>${esc(cx(x[1]))}</span></div><em>${FW()}</em></a></li>`).join('')}</ul></div>`:''}
       ${s.arch?.length?'':'<!--'}<div class="src"><h3>${L('أرشيفات','Archives')}</h3><ul>${s.arch.map(x=>`<li><a href="${esc(aurl(x))}" target="_blank" rel="noopener"><div><b>${esc(cx(x[0]))}</b></div><em>${FW()}</em></a></li>`).join('')}</ul></div>${s.arch?.length?'':'-->'}
       ${s.chips?.length?'':'<!--'}<div class="src"><h3>${L('صور','Images')}</h3><div class="chips">${s.chips.map(ch=>`<a class="chip" href="https://commons.wikimedia.org/w/index.php?title=Special:MediaSearch&type=image&search=${encodeURIComponent(ch[1])}" target="_blank" rel="noopener">${esc(L(ch[0],ch[1]))}</a>`).join('')}</div></div>${s.chips?.length?'':'-->'}
     </div>
@@ -1353,9 +1354,13 @@ function vAdmin(){
           <div class="field"><label class="chk" style="margin-top:30px"><input type="checkbox" id="f-cur" checked style="width:auto"> ${L('خليه التحدي الحالي','Make it the current challenge')}</label></div>
           <div class="field"><label for="f-title">${L('العنوان','Title')}</label><input id="f-title"></div>
           <div class="field"><label for="f-title-en">${L('العنوان بالإنجليزي','Title in English')}</label><input id="f-title-en" dir="ltr"></div>
-          <div class="field full"><label for="f-intro">${L('سطر التعريف (فوق في الرئيسية)','Intro line (top of home page)')}</label><textarea id="f-intro" style="min-height:80px"></textarea></div>
-          <div class="field full"><label for="f-about">${L('عن التحدي','About the challenge')}</label><textarea id="f-about" style="min-height:110px"></textarea></div>
-          <div class="field full"><label for="f-ask">${L('المطلوب','The brief')}</label><textarea id="f-ask" style="min-height:80px"></textarea></div>
+          <div class="field"><label for="f-intro">${L('سطر التعريف (فوق في الرئيسية)','Intro line (top of home page)')}</label><textarea id="f-intro" style="min-height:80px"></textarea></div>
+          <div class="field"><label for="f-intro-en">${L('سطر التعريف بالإنجليزي','Intro line in English')}</label><textarea id="f-intro-en" dir="ltr" style="min-height:80px"></textarea></div>
+          <div class="field"><label for="f-about">${L('عن التحدي','About the challenge')}</label><textarea id="f-about" style="min-height:110px"></textarea></div>
+          <div class="field"><label for="f-about-en">${L('عن التحدي بالإنجليزي','About the challenge in English')}</label><textarea id="f-about-en" dir="ltr" style="min-height:110px"></textarea></div>
+          <div class="field"><label for="f-ask">${L('المطلوب','The brief')}</label><textarea id="f-ask" style="min-height:80px"></textarea></div>
+          <div class="field"><label for="f-ask-en">${L('المطلوب بالإنجليزي','The brief in English')}</label><textarea id="f-ask-en" dir="ltr" style="min-height:80px"></textarea></div>
+          <p class="hint full" style="grid-column:1/-1;margin:0">${L('لو سبت الإنجليزي فاضي، النسخة الإنجليزية من الموقع هتعرض الكلام العربي.','If you leave the English empty, the English site shows the Arabic text.')}</p>
           <div class="field"><label for="f-artby">${L('رسام البانر','Banner artist')}</label><input id="f-artby" list="artist-list"></div>
           <div class="field"><label>${L('صورة التحدي','Challenge image')}</label><label class="drop" for="f-art"><input type="file" id="f-art" accept="image/*"><b>${L('اختار صورة','Choose image')}</b><small id="f-art-name">${L('الرسمة اللي جوه البانر','The artwork inside the banner')}</small></label></div>
           <div class="field full"><label>${L('بانر كامل (اختياري)','Full banner (optional)')}</label><label class="drop" for="f-ban"><input type="file" id="f-ban" accept="image/*"><b>${L('اختار صورة','Choose image')}</b><small id="f-ban-name">${L('لو مفيش، الموقع هيعمل البانر لوحده','If empty, the site draws the banner itself')}</small></label></div>
@@ -1429,6 +1434,7 @@ function vAdmin(){
           <div class="field"><label for="h-link">${L('لينك أعماله (Behance وغيره)','Portfolio link (Behance etc.)')}</label><input id="h-link" dir="ltr" placeholder="https://"></div>
           <div class="field"><label for="h-date">${L('التاريخ','Date')}</label><input id="h-date" placeholder="${L('مثلًا: ٢ أكتوبر','e.g. 2 October')}"></div>
           <div class="field full"><label for="h-about">${L('نبذة','About')}</label><textarea id="h-about" style="min-height:100px"></textarea></div>
+          <div class="field full"><label for="h-about-en">${L('النبذة بالإنجليزي (اختياري)','About in English (optional)')}</label><textarea id="h-about-en" dir="ltr" style="min-height:100px"></textarea></div>
           <div class="field full"><label>${L('الأعمال','Works')}</label><label class="drop" for="h-files"><input type="file" id="h-files" accept="image/*" multiple><b>${L('اختار الصور','Choose images')}</b><small>${L('لو سبتها فاضية، هناخد رسوماته اللي على الموقع','Leave empty to use their artworks already on the site')}</small></label><div class="prev-row" id="h-prev"></div></div>
         </div>
         <div class="row-end"><button class="btn btn-mint" type="submit">${L('انشر','Publish')}</button></div>
@@ -1552,9 +1558,10 @@ function bindAdmin(){
     const m=MI[k], s=DATA.src?.[k]||SRC[k]||{}, isC=DATA.current&&DATA.current.k===k;
     $('f-title').value=m.t?m.t[0]:''; $('f-title-en').value=m.t&&m.t[1]!==m.t[0]?m.t[1]:'';
     const C=isC?DATA.current:{};
-    $('f-intro').value=C.intro?C.intro[0]:''; $('f-about').value=C.about?C.about[0]:''; $('f-ask').value=C.ask?C.ask[0]:''; $('f-artby').value=C.artBy||'';
-    $('f-books').value=(s.books||[]).map(b=>b[1]?b[0]+' - '+b[1]:b[0]).join('\n');
-    $('f-arch').value=(s.arch||[]).map(a=>cx(a[0])+(a[1]&&!a[1].startsWith('wiki:')?' | '+a[1]:'')).join('\n');
+    $('f-intro').value=C.intro?C.intro[0]:''; $('f-about').value=C.about?C.about[0]:''; $('f-ask').value=C.ask?C.ask[0]:'';
+    const EN=v=>v&&v[1]&&v[1]!==v[0]?v[1]:''; $('f-intro-en').value=EN(C.intro); $('f-about-en').value=EN(C.about); $('f-ask-en').value=EN(C.ask); $('f-artby').value=C.artBy||'';
+    $('f-books').value=(s.books||[]).map(b=>AR0(b[1])?AR0(b[0])+' - '+AR0(b[1]):AR0(b[0])).join('\n');
+    $('f-arch').value=(s.arch||[]).map(a=>AR0(a[0])+(a[1]&&!a[1].startsWith('wiki:')?' | '+a[1]:'')).join('\n');
     $('f-chips').value=(s.chips||[]).map(ch=>ch[0]).join('، ');
     art=null; ban=null; $('f-art-name').textContent=m.t?L('موجودة. اختار صورة لو عايز تغيرها','Already set. Choose one to replace it'):L('مطلوبة لشهر جديد','Required for a new month'); $('f-ban-name').textContent=L('لو مفيش، الموقع هيعمل البانر لوحده','If empty, the site draws the banner itself');
     $('f-cur').checked=isC||!m.t;
@@ -1574,17 +1581,19 @@ function bindAdmin(){
     if(ban){ files.push({path:`img/b-${k}.jpg`,b64:ban.b64}); DATA.banners=DATA.banners||{}; DATA.banners[k]=1; }
     const lines=v=>v.split('\n').map(x=>x.trim()).filter(Boolean);
     DATA.src=DATA.src||{};
+    // keep the English of entries that were not changed
+    const prevS=DATA.src[k]||SRC[k]||{}, keep=(arr,key,make)=>v=>{const o=(arr||[]).find(e=>key(e)===key(make(v)));return o||make(v);};
     DATA.src[k]={
-      books:lines($('f-books').value).map(l=>{const i=l.search(/\s[-–—]\s/); return i>0?[l.slice(0,i).trim(),l.slice(i+3).trim()]:[l,'']}),
-      arch:lines($('f-arch').value).map(l=>{const [n,u]=l.split('|').map(x=>x.trim()); return [[n,n],u||null]}),
-      chips:$('f-chips').value.split(/[,،]/).map(x=>x.trim()).filter(Boolean).map(x=>[x,x])
+      books:lines($('f-books').value).map(keep(prevS.books,e=>AR0(e[0])+'|'+AR0(e[1]),l=>{const i=l.search(/\s[-–—]\s/); return i>0?[l.slice(0,i).trim(),l.slice(i+3).trim()]:[l,'']})),
+      arch:lines($('f-arch').value).map(l=>{const [n,u]=l.split('|').map(x=>x.trim()); const o=(prevS.arch||[]).find(e=>AR0(e[0])===n); return o&&(!u||u===o[1])?o:[o?o[0]:[n,n],u||(o&&o[1])||null];}),
+      chips:$('f-chips').value.split(/[,،]/).map(x=>x.trim()).filter(Boolean).map(keep(prevS.chips,e=>AR0(e),x=>[x,x]))
     };
     if($('f-cur').checked){
       DATA.soon=false;
       const old=DATA.current&&DATA.current.k===k?DATA.current:{};
-      const two=v=>[v,v];
+      const two=id=>{const a=$(id).value.trim(), e=$(id+'-en').value.trim(); return [a,e||a];};
       DATA.current={...old,k,art:art?`img/c-${k}.jpg?v=${uid()}`:(old.art||`img/c-${k}.jpg`),
-        artBy:$('f-artby').value.trim()||old.artBy||'', intro:two($('f-intro').value.trim()), about:two($('f-about').value.trim()), ask:two($('f-ask').value.trim()), styles:old.styles||[]};
+        artBy:$('f-artby').value.trim()||old.artBy||'', intro:two('f-intro'), about:two('f-about'), ask:two('f-ask'), styles:old.styles||[]};
     }
     if(await saveData(`Challenge: ${t}`,files)){ m.t=[t,te]; }
   });
@@ -1830,11 +1839,11 @@ function bindAdmin(){
   $('h-files').addEventListener('change',async e=>{hF=await prepAll(e.target.files);pv($('h-prev'),hF);});
   $('t3').addEventListener('submit',async e=>{
     e.preventDefault(); const name=$('h-name').value.trim(); if(!name){toast(L('اكتب اسم الفنان','Enter the artist name'));return;}
-    const d=$('h-date').value.trim(), ab=$('h-about').value.trim(), files=[]; let ids;
+    const d=$('h-date').value.trim(), ab=$('h-about').value.trim(), abe=$('h-about-en').value.trim(), files=[]; let ids;
     if(hF.length){ DATA.feat=DATA.feat||[]; ids=hF.map(f=>{const id='h'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.feat.push({id,wh:f.wh,t:''}); return id;}); }
     else { ids=DATA.works.filter(w=>w.by===name).slice(0,8).map(w=>w.id); if(!ids.length){toast(L('مفيش رسومات باسمه على الموقع، ارفع صور','No artworks under that name yet; upload some'));return;} }
     const kind=$('h-kind').value, ne=$('h-ne').value.trim(), link=$('h-link').value.trim(), years=$('h-years').value.trim();
-    const entry={name,date:[d,d],about:ab?[ab,ab]:null,works:ids,link:link||undefined,at:new Date().toISOString()};
+    const entry={name,date:[d,d],about:ab?[ab,abe||ab]:null,works:ids,link:link||undefined,at:new Date().toISOString()};
     if(ne){ DATA.names=DATA.names||{}; DATA.names[name]=ne; }
     if(kind==='pio'){ entry.years=years||undefined; DATA.pioneers=[entry,...(DATA.pioneers||[])]; }
     else DATA.aow=[entry,...(DATA.aow||[])];
