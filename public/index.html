@@ -77,9 +77,15 @@ nav.main a{text-decoration:none;padding:8px 14px;border-radius:10px;font-weight:
 nav.main a:hover{color:var(--fg)}
 nav.main a.on{color:var(--ink);background:var(--mint)}
 nav.main a.adm{border:1px dashed var(--warn);color:var(--warn)}
-.burger{display:none;margin-inline-start:8px;background:none;border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+.burger{display:none;margin-inline-start:8px;background:none;border:1px solid var(--line);border-radius:12px;width:44px;height:44px;padding:0;cursor:pointer;color:var(--fg);place-items:center}
+.burger svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.burger path{transition:transform .25s,opacity .2s;transform-origin:12px 12px}
+.burger[aria-expanded=true]{background:var(--mint);color:var(--ink);border-color:var(--mint)}
+.burger[aria-expanded=true] .l1{transform:translateY(5px) rotate(45deg)}
+.burger[aria-expanded=true] .l2{opacity:0}
+.burger[aria-expanded=true] .l3{transform:translateY(-5px) rotate(-45deg)}
 @media (max-width:860px){
-  .burger{display:block}
+  .burger{display:grid}
   .utils{margin-inline-start:auto}
   nav.main{display:none;position:absolute;top:72px;inset-inline:0;background:var(--s1);flex-direction:column;padding:12px var(--gut) 20px;border-bottom:1px solid var(--line)}
   nav.main.open{display:flex}
@@ -1170,7 +1176,7 @@ function renderChrome(){
   document.title=L('أرابيسك','Arabesque');
   document.getElementById('proto').textContent=ADMIN?'':(/3arabesque\./.test(location.hostname)?'':L('نسخة تجريبية','Prototype'));
   document.getElementById('proto').hidden=!document.getElementById('proto').textContent;
-  document.getElementById('burger').textContent=L('القائمة','Menu');
+  {const bg=document.getElementById('burger'); bg.setAttribute('aria-label',L('القائمة','Menu')); bg.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path class="l1" d="M4 7h16"/><path class="l2" d="M4 12h16"/><path class="l3" d="M4 17h16"/></svg>';}
   document.getElementById('nav').innerHTML=`
     <a href="#home" data-r="home">${L('الرئيسية','Home')}</a>
     <a href="#challenges" data-r="challenges">${L('الأرشيف','Archive')}</a>
@@ -1255,7 +1261,7 @@ function route(keepScroll){
   const as=document.getElementById('aowsearch'); if(as) as.addEventListener('input',()=>{ const q=as.value.trim().toLowerCase(); document.querySelectorAll('#aowgrid .acard2').forEach(c=>c.hidden=q&&!c.textContent.toLowerCase().includes(q)); });
   if(r==='artists'&&document.getElementById('asearch')){renderDir(); document.getElementById('asearch').addEventListener('input',renderDir);}
 }
-function mark(r){document.querySelectorAll('nav.main a').forEach(a=>a.classList.toggle('on',a.dataset.r===r)); document.getElementById('nav').classList.remove('open');}
+function mark(r){document.querySelectorAll('nav.main a').forEach(a=>a.classList.toggle('on',a.dataset.r===r)); document.getElementById('nav').classList.remove('open'); document.getElementById('burger').setAttribute('aria-expanded','false');}
 window.addEventListener('hashchange',()=>route());
 
 
