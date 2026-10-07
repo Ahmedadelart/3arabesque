@@ -604,22 +604,45 @@ footer .subband h3{color:#061615}
 }
 
 /* about page */
-.about-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,4vw,64px)}
-.about-block h2{font-size:clamp(28px,3.4vw,40px);margin-bottom:14px}
-.about-block .prose{max-width:62ch}
-.offers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.offer{position:relative;display:flex;flex-direction:column;gap:10px;padding:22px 22px 52px;background:var(--bg);border:1px solid var(--line);border-radius:18px;text-decoration:none;color:var(--fg);transition:border-color .2s,transform .2s}
-.offer:hover{border-color:var(--acc);transform:translateY(-3px)}
-.offer i{font-style:normal;font-family:var(--f-display);font-size:22px;color:var(--ink);background:var(--mint);width:40px;height:40px;display:grid;place-items:center;border-radius:10px}
-.offer h3{font-size:21px;margin:0}
-.offer p{margin:0;color:var(--mute);font-size:15px;line-height:1.75}
-.offer .go{position:absolute;bottom:18px;inset-inline-start:22px;color:var(--acc)}
-.founders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:760px}
-.founder{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px 22px;background:var(--s1);border:1px solid var(--line);border-radius:18px;text-decoration:none;color:var(--fg);transition:border-color .2s}
+.ab-wrap{max-width:1320px}
+.kicker{display:inline-block;font-weight:700;font-size:14px;letter-spacing:.3px;color:var(--ink);background:var(--mint);border:2px solid var(--ink);box-shadow:0 4px 0 var(--ink);border-radius:10px;padding:3px 14px;margin-bottom:18px}
+.kicker.dark{background:var(--ink);color:var(--mint);border-color:var(--ink);box-shadow:none}
+.ab-intro{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,72px);align-items:center}
+.ab-lead{font-family:var(--f-display);font-size:clamp(30px,3.2vw,44px);line-height:1.35;margin:0 0 16px;color:var(--fg)}
+.ab-body{font-size:clamp(17px,1.4vw,20px);line-height:1.9;color:var(--mute);margin:0;max-width:56ch}
+.ab-facts{display:flex;gap:0;margin-top:28px;border-block:1px solid var(--line)}
+.ab-facts div{flex:1;padding:16px 18px;border-inline-start:1px solid var(--line)}
+.ab-facts div:first-child{border-inline-start:0;padding-inline-start:0}
+.ab-facts b{display:block;font-family:var(--f-display);font-weight:400;font-size:34px;line-height:1.1;color:var(--acc)}
+.ab-facts span{font-size:14px;color:var(--mute)}
+.ab-collage{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:14px;aspect-ratio:1/1.05}
+.ab-pic{border:3px solid #000;border-radius:18px;overflow:hidden;box-shadow:0 7px 0 #000;background:var(--s1)}
+.ab-pic img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.ab-pic.p0{transform:rotate(-2deg)}.ab-pic.p1{transform:rotate(2deg) translateY(18px)}.ab-pic.p2{transform:rotate(1.5deg) translateY(-6px)}.ab-pic.p3{transform:rotate(-1.5deg) translateY(12px)}
+.ab-mission{padding-block:clamp(48px,6vw,84px);border-block:4px solid #000}
+.ab-mcard{background:var(--mint);color:var(--ink);border:3px solid #000;border-radius:24px;box-shadow:0 10px 0 #000;padding:clamp(26px,4vw,52px);max-width:980px;margin-inline:auto;text-align:center}
+.ab-mcard p{margin:0;font-family:var(--f-display);font-size:clamp(24px,2.6vw,36px);line-height:1.55;color:var(--ink)}
+.offers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.offer{display:flex;flex-direction:column;background:var(--s1);border:1px solid var(--line);border-radius:20px;overflow:hidden;text-decoration:none;color:var(--fg);transition:border-color .2s,transform .2s}
+.offer:hover{border-color:var(--acc);transform:translateY(-4px)}
+.offer-img{display:block;aspect-ratio:4/3;background:var(--s2);overflow:hidden}
+.offer-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.offer:hover .offer-img img{transform:scale(1.04)}
+.offer-body{display:flex;flex-direction:column;gap:10px;padding:20px 22px 24px}
+.offer h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(24px,2vw,30px);line-height:1.25;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.offer h3 em{font-style:normal;color:var(--acc);font-size:20px}
+.offer p{margin:0;color:var(--mute);font-size:17px;line-height:1.8}
+.founders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:820px}
+.founder{display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--s1);border:1px solid var(--line);border-radius:20px;text-decoration:none;color:var(--fg);transition:border-color .2s}
 .founder:hover{border-color:var(--acc)}
-.founder b{font-family:var(--f-display);font-weight:400;font-size:28px;line-height:1.2}
-.fbi{display:inline-flex;align-items:center;gap:6px;color:var(--acc);font-size:14px;font-weight:600;white-space:nowrap}
+.fmono{width:58px;height:58px;flex:0 0 58px;display:grid;place-items:center;border-radius:16px;background:var(--mint);color:var(--ink);border:2px solid #000;font-family:var(--f-display);font-size:30px}
+.founder b{flex:1;font-family:var(--f-display);font-weight:400;font-size:28px;line-height:1.2}
+.fbi{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line);color:var(--acc);transition:background .2s,color .2s}
+.founder:hover .fbi{background:var(--acc);color:var(--ink)}
 .fbi svg{width:18px;height:18px;fill:currentColor}
+@media (max-width:1100px){.offers{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){.ab-intro{grid-template-columns:1fr}.ab-collage{max-width:520px;width:100%;margin-inline:auto}}
+@media (max-width:600px){.offers,.founders{grid-template-columns:1fr}.ab-facts b{font-size:28px}.ab-facts div{padding:12px 10px}.founder b{font-size:24px}.ab-mcard{text-align:start}}
 .site-credit{margin:44px 0 0;padding-top:18px;border-top:1px solid var(--line);font-size:13.5px;color:var(--mute)}
 .site-credit a{color:var(--mute);text-decoration:underline;text-underline-offset:3px}
 .site-credit a:hover{color:var(--acc)}
@@ -1200,33 +1223,56 @@ const RULES=[
 ];
 function vAbout(){
   const FB='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9h3l.5-4h-3.5V8.8c0-.5.3-.8.8-.8Z"/></svg>';
+  const byId=id=>state.works.find(w=>w.id===id);
+  const pics=['e263','e319','e270','e300'].map(byId).filter(Boolean);
+  while(pics.length<4){ const w=state.works.find(x=>x.hl&&!pics.includes(x)); if(!w) break; pics.push(w); }
+  const lastM=MONTHS.filter(m=>m.t).slice(-1)[0];
   const founders=[[L('إسلام أبوشادي','Eslam Aboshady'),'https://www.facebook.com/eslam.aboshady.694086'],[L('أحمد نبيل','Ahmed Nabil'),'https://www.facebook.com/ahmed.nabil.547']];
+  const artistsN=new Set(state.works.filter(w=>w.by).map(w=>w.by)).size;
   const offers=[
-    ['#challenges',L('أرشيف التحديات','Challenge archive'),L('كل تحدٍّ بموضوعه ومصادره والأعمال المشاركة فيه.','Every challenge with its theme, sources and submitted works.')],
-    ['#artists',L('دليل الفنانين','Artist directory'),L('صفحة لكل فنان شارك في أرابيسك تجمع أعماله.','A page for every artist who has taken part, gathering their work.')],
-    ['#aow',L('فنان الأسبوع','Artist of the week'),L('تعريف أسبوعي بفنان من المجتمع وأعماله.','A weekly introduction to an artist from the community and their work.')],
-    ['#pioneers',L('قاعة الرواد','Hall of pioneers'),L('تحية لرواد الفن العربي الذين مهّدوا الطريق للأجيال التالية.','A tribute to the pioneers of Arab art who paved the way for the generations after them.')]
+    ['#challenges',L('أرشيف التحديات','Challenge archive'),L('كل تحدٍّ بموضوعه ومصادره والأعمال المشاركة فيه.','Every challenge with its theme, sources and submitted works.'),lastM?`<img loading="lazy" src="img/c-${lastM.k}.jpg" alt="">`:''],
+    ['#artists',L('دليل الفنانين','Artist directory'),L('صفحة لكل فنان شارك في أرابيسك تجمع أعماله.','A page for every artist who has taken part, gathering their work.'),cover(byId('e332')||pics[0])],
+    ['#aow',L('فنان الأسبوع','Artist of the week'),L('تعريف أسبوعي بفنان من المجتمع وأعماله.','A weekly introduction to an artist from the community and their work.'),cover(state.aow[0]&&state.aow[0].works[0])],
+    ['#pioneers',L('قاعة الرواد','Hall of pioneers'),L('تحية لرواد الفن العربي الذين مهّدوا الطريق للأجيال التالية.','A tribute to the pioneers of Arab art who paved the way for the generations after them.'),cover(state.pioneers[0]&&state.pioneers[0].works[0])]
   ];
   return `
-  <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('عن أرابيسك','About')}</h1>
+  <section class="phead lattice"><div class="wrap ab-wrap"><h1 class="sticker">${L('عن أرابيسك','About')}</h1>
     <p>${L('تحدٍّ فني شهري يستلهم التراث العربي والإسلامي، التاريخي والأدبي والخيالي.','A monthly art challenge inspired by Arab and Islamic heritage: historical, literary and imagined.')}</p></div></section>
-  <section class="sec"><div class="wrap">
-    <div class="about-grid">
-      <div class="about-block"><h2>${L('من نحن','Who we are')}</h2>
-        <p class="prose big">${L('أرابيسك مجتمع فني عربي تأسس منذ نحو عشر سنوات على يد الفنانَين إسلام أبوشادي وأحمد نبيل. يطرح كل شهر موضوعًا مستمدًّا من التاريخ أو التراث أو الأدب العربي، ويدعو الفنانين إلى تقديم رؤيتهم له من خلال تصميم الشخصيات والأماكن والمشاهد.','Arabesque is an Arab art community founded about ten years ago by artists Eslam Aboshady and Ahmed Nabil. Each month it sets a theme drawn from Arab history, heritage or literature, and invites artists to present their vision of it through the design of characters, places and scenes.')}</p></div>
-      <div class="about-block"><h2>${L('رسالتنا','Our mission')}</h2>
-        <p class="prose big">${L('نسعى إلى أن يكون أرابيسك أكثر من مجموعة للرسم: مساحة تشجع الفنانين على الإنتاج المستمر، وتدفعهم إلى تجربة أساليب وموضوعات جديدة، وتعرّفهم على جوانب من تاريخنا وتراثنا من خلال البحث الذي يسبق كل عمل.','We want Arabesque to be more than a drawing group: a space that encourages artists to keep making work, pushes them to try new styles and subjects, and introduces them to parts of our history and heritage through the research behind every piece.')}</p></div>
+
+  <section class="sec"><div class="wrap ab-wrap">
+    <div class="ab-intro">
+      <div class="ab-text">
+        <span class="kicker">${L('من نحن','Who we are')}</span>
+        <p class="ab-lead">${L('أرابيسك مجتمع فني عربي تأسس عام ٢٠١٦ على يد الفنانَين إسلام أبوشادي وأحمد نبيل.','Arabesque is an Arab art community founded in 2016 by artists Eslam Aboshady and Ahmed Nabil.')}</p>
+        <p class="ab-body">${L('يطرح كل شهر موضوعًا مستمدًّا من التاريخ أو التراث أو الأدب العربي، ويدعو الفنانين إلى تقديم رؤيتهم له من خلال تصميم الشخصيات والأماكن والمشاهد.','Each month it sets a theme drawn from Arab history, heritage or literature, and invites artists to present their vision of it through the design of characters, places and scenes.')}</p>
+        <div class="ab-facts">
+          <div><b>${L('٢٠١٦','2016')}</b><span>${L('سنة التأسيس','Founded')}</span></div>
+          <div><b>${A(MONTHS.filter(m=>m.t).length)}</b><span>${L('تحديًا في ١٤٤٧','challenges in 1447 AH')}</span></div>
+          <div><b>${A(artistsN)}+</b><span>${L('فنانًا شاركوا','artists took part')}</span></div>
+        </div>
+      </div>
+      <div class="ab-collage" aria-hidden="true">${pics.slice(0,4).map((w,i)=>`<div class="ab-pic p${i}">${cover(w)}</div>`).join('')}</div>
     </div>
   </div></section>
-  <section class="sec hl"><div class="wrap">
+
+  <section class="ab-mission lattice"><div class="wrap ab-wrap">
+    <div class="ab-mcard">
+      <span class="kicker dark">${L('رسالتنا','Our mission')}</span>
+      <p>${L('نسعى إلى أن يكون أرابيسك أكثر من مجموعة للرسم: مساحة تشجع الفنانين على الإنتاج المستمر، وتدفعهم إلى تجربة أساليب وموضوعات جديدة، وتعرّفهم على جوانب من تاريخنا وتراثنا من خلال البحث الذي يسبق كل عمل.','We want Arabesque to be more than a drawing group: a space that encourages artists to keep making work, pushes them to try new styles and subjects, and introduces them to parts of our history and heritage through the research behind every piece.')}</p>
+    </div>
+  </div></section>
+
+  <section class="sec"><div class="wrap ab-wrap">
     <div class="sec-head"><h2>${L('ماذا يقدم الموقع','What the site offers')}</h2></div>
-    <div class="offers">${offers.map(([h,t,d],i)=>`<a class="offer" href="${h}"><i>${A(i+1)}</i><h3>${esc(t)}</h3><p>${esc(d)}</p><span class="go">${FW()}</span></a>`).join('')}</div>
+    <div class="offers">${offers.map(([h,t,d,img])=>`<a class="offer" href="${h}"><span class="offer-img">${img}</span><span class="offer-body"><h3>${esc(t)} <em>${FW()}</em></h3><p>${esc(d)}</p></span></a>`).join('')}</div>
   </div></section>
-  <section class="sec"><div class="wrap">
+
+  <section class="sec" style="padding-top:0"><div class="wrap ab-wrap">
     <div class="sec-head"><h2>${L('المؤسسون','Founders')}</h2></div>
-    <div class="founders">${founders.map(([n,u])=>`<a class="founder" href="${u}" target="_blank" rel="noopener"><b>${esc(n)}</b><span class="fbi">${FB}<span>Facebook</span> ↗</span></a>`).join('')}</div>
+    <div class="founders">${founders.map(([n,u])=>`<a class="founder" href="${u}" target="_blank" rel="noopener" aria-label="${esc(n)} · Facebook"><b>${esc(n)}</b><span class="fbi">${FB}</span></a>`).join('')}</div>
   </div></section>
-  <section class="sec" style="padding-top:0"><div class="wrap">
+
+  <section class="sec" style="padding-top:0"><div class="wrap ab-wrap">
     <div class="sec-head"><h2>${L('القواعد','Rules')}</h2></div>
     <ol class="rules">${RULES.map(r=>`<li><span>${esc(cx(r))}</span></li>`).join('')}</ol>
     <p class="site-credit">${L('تصميم الموقع وتطويره:','Website design and development:')} <a href="https://www.facebook.com/ahmedadel.art/" target="_blank" rel="noopener">${L('أحمد عادل','Ahmed Adel')} ↗</a></p>
