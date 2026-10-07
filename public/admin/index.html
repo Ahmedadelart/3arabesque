@@ -607,9 +607,11 @@ footer .subband h3{color:#061615}
 .ab-wrap{max-width:1320px}
 .kicker{display:inline-block;font-weight:700;font-size:14px;letter-spacing:.3px;color:var(--ink);background:var(--mint);border:2px solid var(--ink);box-shadow:0 4px 0 var(--ink);border-radius:10px;padding:3px 14px;margin-bottom:18px}
 .kicker.dark{background:var(--ink);color:var(--mint);border-color:var(--ink);box-shadow:none}
-.ab-intro{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,72px);align-items:center}
+.ab-intro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(28px,5vw,72px);align-items:start}
+.ab-text .ab-body+.ab-body{margin-top:14px}
+.ab-collage{position:sticky;top:110px}
 .ab-lead{font-family:var(--f-display);font-size:clamp(30px,3.2vw,44px);line-height:1.35;margin:0 0 16px;color:var(--fg)}
-.ab-body{font-size:clamp(17px,1.4vw,20px);line-height:1.9;color:var(--mute);margin:0;max-width:56ch}
+.ab-body{font-size:clamp(16.5px,1.25vw,19px);line-height:1.95;color:var(--mute);margin:0;max-width:62ch}
 .ab-facts{display:flex;gap:0;margin-top:28px;border-block:1px solid var(--line)}
 .ab-facts div{flex:1;padding:16px 18px;border-inline-start:1px solid var(--line)}
 .ab-facts div:first-child{border-inline-start:0;padding-inline-start:0}
@@ -654,6 +656,11 @@ footer .subband h3{color:#061615}
 @media (max-width:1000px){.offers{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:700px){.about-grid{grid-template-columns:1fr}.offers{grid-template-columns:1fr}.founder b{font-size:24px}}
 @media (max-width:600px){.founders{gap:12px}.founder{border-width:2px;border-radius:16px;box-shadow:0 5px 0 #000}.fname{padding:10px 12px;border-top-width:2px;gap:6px}.founder b{font-size:17px}.fbi{width:30px;height:30px;flex:0 0 30px}.fbi svg{width:14px;height:14px}}
+.ab-future{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,5vw,72px);align-items:start}
+.ab-future h2{font-size:clamp(32px,3.6vw,50px);line-height:1.2;margin:0}
+.ab-plans{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.ab-plans span{border:1px solid var(--chipb);color:var(--fg);border-radius:999px;padding:7px 16px;font-size:15px;font-weight:600;background:var(--s1)}
+@media (max-width:860px){.ab-future{grid-template-columns:1fr}.ab-collage{position:static}}
 </style>
 
 
@@ -1248,8 +1255,10 @@ function vAbout(){
     <div class="ab-intro">
       <div class="ab-text">
         <span class="kicker">${L('من نحن','Who we are')}</span>
-        <p class="ab-lead">${L('أرابيسك مجتمع فني عربي تأسس عام ٢٠١٦ على يد الفنانَين إسلام أبوشادي وأحمد نبيل.','Arabesque is an Arab art community founded in 2016 by artists Eslam Aboshady and Ahmed Nabil.')}</p>
-        <p class="ab-body">${L('يطرح كل شهر موضوعًا مستمدًّا من التاريخ أو التراث أو الأدب العربي، ويدعو الفنانين إلى تقديم رؤيتهم له من خلال تصميم الشخصيات والأماكن والمشاهد.','Each month it sets a theme drawn from Arab history, heritage or literature, and invites artists to present their vision of it through the design of characters, places and scenes.')}</p>
+        <p class="ab-lead">${L('لا يخلو عالمنا العربي من الإبداع الفني.','The Arab world is never lacking in artistic creativity.')}</p>
+        <p class="ab-body">${L('بل لطالما ظل مزدحمًا بالفنانين المبهرين، والأفكار المتنوعة، وكنوز لا تُقدَّر من التراث الواقعي وحتى الخيالي، لكن قلما أُتيح لكل هذا المحتوى الغني أن يُسلَّط عليه الضوء، محجوبًا خلف مزيج من نقص في العرض وتغريب في الثقافة.','It is rather full of amazing artists, incredible ideas and a very rich heritage, both historical and fantastical. Yet much of it never gets its chance in the spotlight, overshadowed by outside cultural influence and a lack of artistic outlets.')}</p>
+        <p class="ab-body">${L('ومن هذه النقطة ظهر أرابيسك. لم يكن سوى فكرة اجتمع عليها اثنان من الفنانين لهدف بسيط: جمع شتات المشهد الفني العربي المتفرق في مجتمع متصل متماسك، وإخراج كنوز التاريخ والتراث الأدبي إلى دائرة الضوء، ليصبح محورًا أساسيًا للفنانين والجمهور على حد سواء.','That is why Arabesque was born: a simple idea shared by two artists, to bring the fragmented Arab art scene together into one connected community, and to bring the rich historical and literary heritage of the Arab world to the forefront, for artists and audiences alike.')}</p>
+        <p class="ab-body">${L('بدأت فكرة أرابيسك عام ٢٠١٦ من خلال مسابقات وتحديات مشتركة يجتمع فيها الفنانون العرب من مختلف المستويات، تدور حصرًا حول موضوعات عربية خالصة. وخلال السنوات التالية نجح أرابيسك بشكل أكبر مما أوحت به بدايته البسيطة، فتحول إلى مجتمع فني كامل على تواصل مباشر مع كثير من الفنانين العرب المحترفين، مع إعطاء المساحة والفرصة لكثير من الفنانين المبتدئين للظهور أمام جمهور أكبر مما يصل إليه جهدهم الفردي. بل وأصبح أرابيسك شاهدًا في أحيان كثيرة على بزوغ نجم فنانين بدأوا طريقهم معه، وتطوروا حتى أصبحوا من الفنانين المؤثرين في المجال الفني العربي.','Arabesque started in 2016 with shared contests and challenges that brought together Arab artists of every level, focused entirely on Arab subjects. In the years that followed it grew well beyond its humble beginnings into a full art community, in direct contact with many professional Arab artists, while giving many beginners the chance to reach a wider audience than they could on their own. Arabesque has even witnessed artists who started their journey with it grow into established names in the Arab art and media industry.')}</p>
         <div class="ab-facts">
           <div><b>${L('٢٠١٦','2016')}</b><span>${L('سنة التأسيس','Founded')}</span></div>
           <div><b>${A(MONTHS.filter(m=>m.t).length)}</b><span>${L('تحديًا في ١٤٤٧','challenges in 1447 AH')}</span></div>
@@ -1262,8 +1271,20 @@ function vAbout(){
 
   <section class="ab-mission lattice"><div class="wrap ab-wrap">
     <div class="ab-mcard">
-      <span class="kicker dark">${L('رسالتنا','Our mission')}</span>
-      <p>${L('نسعى إلى أن يكون أرابيسك أكثر من مجموعة للرسم: مساحة تشجع الفنانين على الإنتاج المستمر، وتدفعهم إلى تجربة أساليب وموضوعات جديدة، وتعرّفهم على جوانب من تاريخنا وتراثنا من خلال البحث الذي يسبق كل عمل.','We want Arabesque to be more than a drawing group: a space that encourages artists to keep making work, pushes them to try new styles and subjects, and introduces them to parts of our history and heritage through the research behind every piece.')}</p>
+      <span class="kicker dark">${L('هدفنا','Our mission')}</span>
+      <p>${L('أن نجعل المتابع العربي يعيد النظر إلى نفسه، يعيد اكتشاف تاريخه وإرثه الثقافي الغني، يراه بعينه لا بعين غيره، ويعبّر عنه بقلمه وريشته لا باقتباسه من غيره.','To get the audience to look inward: to rediscover our own heritage, culture and history, and to see and express it through our own vision and artistry.')}</p>
+    </div>
+  </div></section>
+
+  <section class="sec"><div class="wrap ab-wrap">
+    <div class="ab-future">
+      <div><span class="kicker">${L('ماذا بعد؟','The future')}</span>
+        <h2>${L('أكثر من مجتمع فني','More than a community')}</h2></div>
+      <div>
+        <p class="ab-body">${L('بينما استمر مجتمع أرابيسك في النمو عبر السنين، أصبح مصدر إلهام وموطنًا لمئات الأعمال الفنية العربية الخالصة لأكثر من مائة فنان عربي. ولدينا خطط لمستقبل أكبر، إذ يهدف أرابيسك في مراحله القادمة إلى أن يتحول إلى منصة متكاملة تقدم المزيد للمجتمع الفني العربي.','As Arabesque grew over the years, it became an inspiration and a home for hundreds of artworks by more than a hundred Arab artists. We have more plans ahead: Arabesque aims to grow into a complete platform that gives more back to the Arab art community.')}</p>
+        <div class="ab-plans"><span>${L('تحليل فني','Artistic analysis')}</span><span>${L('مواد تعليمية','Teaching material')}</span><span>${L('إصدارات مطبوعة','Printed publications')}</span><span>${L('غير ربحي','Non-profit')}</span></div>
+        <p class="ab-body">${L('مع المحافظة على أرابيسك كمجموعة غير ربحية، حيث نؤمن أنه ليس منتجًا، بل حصيلة فنية مشتركة لجميع الفنانين المشاركين فيه، والذين سيساعدوننا بعملهم ودعمهم أن نجعل من أرابيسك ليس فقط مجتمعًا فنيًا، بل نهضة كاملة، ومنارة فنية وثقافية للعالم العربي.','Arabesque will stay strictly non-profit. We believe it is not a product but a collective built from the contributions of all its artists, whose work and support will help it become more than a community: a movement, and a beacon of art and culture in the Arab world.')}</p>
+      </div>
     </div>
   </div></section>
 
