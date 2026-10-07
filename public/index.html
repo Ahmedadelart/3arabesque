@@ -301,8 +301,15 @@ nav.main a.adm{border:1px dashed var(--warn);color:var(--warn)}
 .lb-side h3{font-size:30px}
 .lb-side .who{font-size:18px}
 .lb-side .miss{font-size:14px;color:var(--mute);background:var(--s2);border-radius:10px;padding:10px 12px}
-.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:var(--mint);color:var(--ink);border:2px solid var(--ink);width:46px;height:46px;border-radius:12px;font-size:22px;cursor:pointer;font-weight:700}
-.lb-prev{inset-inline-start:18px}.lb-next{inset-inline-end:18px}
+.lb-bar{position:absolute;inset:0;pointer-events:none}
+.lb-nav{pointer-events:auto;position:absolute;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:rgba(6,22,21,.55);color:#f3f6ef;border:1px solid rgba(243,246,239,.22);backdrop-filter:blur(6px);font-size:20px;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.lb-nav:hover{background:var(--mint);color:var(--ink);border-color:var(--mint)}
+.lb-prev{inset-inline-start:20px}.lb-next{inset-inline-end:20px}
+.lb-count{display:none}
+.lb-x{position:absolute;top:16px;inset-inline-end:16px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(6,22,21,.55);color:#f3f6ef;border:1px solid rgba(243,246,239,.22);backdrop-filter:blur(6px);cursor:pointer;z-index:2;padding:0}
+.lb:focus{outline:none}
+.lb-x:hover{background:var(--mint);color:var(--ink);border-color:var(--mint)}
+.lb-x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
 [dir=ltr] .mcard .bar{padding:6px 40px 6px 18px;clip-path:polygon(0 0,100% 0,calc(100% - 28px) 100%,0 100%)}
 .lang{border:1px solid var(--warn);background:none;color:var(--warn);border-radius:10px;padding:7px 12px;cursor:pointer;font-weight:700;font-size:14px;margin-inline-start:6px}
 .lang:hover{background:var(--star);color:var(--ink)}
@@ -310,8 +317,12 @@ nav.main a.adm{border:1px dashed var(--warn);color:var(--warn)}
 .refgrid .tile{margin-bottom:12px}
 .refgrid .cap small{display:block;color:var(--mute);font-size:11.5px}
 .lb-side .lic{font-size:13px;color:var(--mute)}
-.lb-x{align-self:flex-start;background:none;border:1px solid var(--line);border-radius:10px;padding:6px 14px;cursor:pointer}
-@media (max-width:860px){.lb{grid-template-columns:1fr;grid-template-rows:1fr auto}.lb-side{border:0;border-top:1px solid var(--line);padding:16px 18px;max-height:40vh}.lb-stage img{max-height:52vh}}
+@media (max-width:860px){.lb{grid-template-columns:1fr;grid-template-rows:1fr auto}.lb-side{border:0;border-top:1px solid var(--line);padding:16px 20px;max-height:40vh}
+  .lb-stage{padding:64px 16px 76px}.lb-stage img{max-height:calc(60vh - 140px)}
+  .lb-x{top:12px;inset-inline-end:12px}
+  .lb-bar{inset:auto 0 14px 0;display:flex;justify-content:center;align-items:center;gap:18px;pointer-events:auto}
+  .lb-nav{position:static;transform:none;width:44px;height:44px}
+  .lb-count{display:block;min-width:64px;text-align:center;font-size:15px;color:var(--fg);font-variant-numeric:tabular-nums}}
 
 /* admin */
 .admin{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;align-items:start}
@@ -1331,19 +1342,23 @@ function openLB(){
   const meta=w.ref
     ?`<div class="who" dir="auto">${esc(w.by)}</div><span class="lic">${esc(w.lic)} · Wikimedia Commons</span><a class="link" href="${esc(w.page)}" target="_blank" rel="noopener">${L('المصدر','Source')} ↗</a>`
     :`${by?(w.pu?`<a class="who" dir="auto" href="${esc(w.pu)}" target="_blank" rel="noopener">${esc(by)} ↗</a>`:`<div class="who" dir="auto">${esc(by)}</div>`):`<div class="miss">${L('الاسم قريبًا','Name coming soon')}</div>`}${w.m&&w.m!=='old'||w.m==='old'?`<a class="link" href="#c-${w.m}">${esc(w.m==='old'?L('المجموعة القديمة','The original group'):mT(w.m))} ${FW()}</a>`:''}${w.u?`<a class="link" href="${esc(w.u)}" target="_blank" rel="noopener">${L('المنشور على فيسبوك','The post on Facebook')} ↗</a>`:''}`;
-  lb.innerHTML=`<div class="lb" role="dialog" aria-modal="true" aria-label="${esc(t)}">
+  lb.innerHTML=`<div class="lb" role="dialog" aria-modal="true" tabindex="-1" aria-label="${esc(t)}">
     <div class="lb-stage"><img src="${esc(w.src)}" alt="${esc(t)}">
-      ${lbList.length>1?`<button class="lb-nav lb-prev" aria-label="${L('السابق','Previous')}">${BK()}</button><button class="lb-nav lb-next" aria-label="${L('التالي','Next')}">${FW()}</button>`:''}</div>
+      <button class="lb-x" aria-label="${L('إغلاق','Close')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      ${lbList.length>1?`<div class="lb-bar"><button class="lb-nav lb-prev" aria-label="${L('السابق','Previous')}">${BK()}</button><span class="lb-count">${A(lbI+1)} / ${A(lbList.length)}</span><button class="lb-nav lb-next" aria-label="${L('التالي','Next')}">${FW()}</button></div>`:''}</div>
     <div class="lb-side">
-      <button class="lb-x">${L('إغلاق','Close')} ✕</button>
       ${w.m&&!w.ref?pill(mM(w.m)):''}
       <h3>${esc(t)}</h3>
       ${meta}
-      <span class="hint" style="margin-top:auto">${A(lbI+1)} ${L('من','of')} ${A(lbList.length)}</span>
     </div></div>`;
-  lb.hidden=false; document.body.style.overflow='hidden'; lb.querySelector('.lb-x').focus();
+  lb.hidden=false; document.body.style.overflow='hidden'; lb.querySelector('.lb').focus({preventScroll:true});
 }
 function closeLB(){lb.hidden=true;lb.innerHTML='';document.body.style.overflow='';}
+{ let x0=null;
+  lb.addEventListener('touchstart',e=>{ x0=e.target.closest('.lb-stage')&&e.touches.length===1?e.touches[0].clientX:null; },{passive:true});
+  lb.addEventListener('touchend',e=>{ if(x0===null||lbList.length<2) return; const dx=e.changedTouches[0].clientX-x0; x0=null;
+    if(Math.abs(dx)>45){ const step=(dx<0)===(LANG==='ar')?-1:1; lbI=(lbI+step+lbList.length)%lbList.length; openLB(); } });
+}
 lb.addEventListener('click',e=>{
   if(e.target.closest('.lb-x')||e.target.classList.contains('lb-stage')) return closeLB();
   if(e.target.closest('.lb-next')){lbI=(lbI+1)%lbList.length;openLB();}
