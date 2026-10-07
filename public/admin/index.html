@@ -602,6 +602,30 @@ footer .subband h3{color:#061615}
   .home-past .mcard:nth-child(n+5){display:none}
   .aow-more .acards.grid.six > :nth-child(n+5){display:none}
 }
+
+/* about page */
+.about-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,4vw,64px)}
+.about-block h2{font-size:clamp(28px,3.4vw,40px);margin-bottom:14px}
+.about-block .prose{max-width:62ch}
+.offers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.offer{position:relative;display:flex;flex-direction:column;gap:10px;padding:22px 22px 52px;background:var(--bg);border:1px solid var(--line);border-radius:18px;text-decoration:none;color:var(--fg);transition:border-color .2s,transform .2s}
+.offer:hover{border-color:var(--acc);transform:translateY(-3px)}
+.offer i{font-style:normal;font-family:var(--f-display);font-size:22px;color:var(--ink);background:var(--mint);width:40px;height:40px;display:grid;place-items:center;border-radius:10px}
+.offer h3{font-size:21px;margin:0}
+.offer p{margin:0;color:var(--mute);font-size:15px;line-height:1.75}
+.offer .go{position:absolute;bottom:18px;inset-inline-start:22px;color:var(--acc)}
+.founders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:760px}
+.founder{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px 22px;background:var(--s1);border:1px solid var(--line);border-radius:18px;text-decoration:none;color:var(--fg);transition:border-color .2s}
+.founder:hover{border-color:var(--acc)}
+.founder b{font-family:var(--f-display);font-weight:400;font-size:28px;line-height:1.2}
+.fbi{display:inline-flex;align-items:center;gap:6px;color:var(--acc);font-size:14px;font-weight:600;white-space:nowrap}
+.fbi svg{width:18px;height:18px;fill:currentColor}
+.site-credit{margin:44px 0 0;padding-top:18px;border-top:1px solid var(--line);font-size:13.5px;color:var(--mute)}
+.site-credit a{color:var(--mute);text-decoration:underline;text-underline-offset:3px}
+.site-credit a:hover{color:var(--acc)}
+[dir=ltr] .rules li::before{content:counter(r)}
+@media (max-width:1000px){.offers{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.about-grid,.founders{grid-template-columns:1fr}.offers{grid-template-columns:1fr}.founder b{font-size:24px}}
 </style>
 
 
@@ -1175,13 +1199,37 @@ const RULES=[
  ['أي عمل مخالف دينيًا أو أخلاقيًا أو مهين هيتحذف.','Religiously or morally offensive or insulting work will be removed.']
 ];
 function vAbout(){
+  const FB='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9h3l.5-4h-3.5V8.8c0-.5.3-.8.8-.8Z"/></svg>';
+  const founders=[[L('إسلام أبوشادي','Eslam Aboshady'),'https://www.facebook.com/eslam.aboshady.694086'],[L('أحمد نبيل','Ahmed Nabil'),'https://www.facebook.com/ahmed.nabil.547']];
+  const offers=[
+    ['#challenges',L('أرشيف التحديات','Challenge archive'),L('كل تحدٍّ بموضوعه ومصادره والأعمال المشاركة فيه.','Every challenge with its theme, sources and submitted works.')],
+    ['#artists',L('دليل الفنانين','Artist directory'),L('صفحة لكل فنان شارك في أرابيسك تجمع أعماله.','A page for every artist who has taken part, gathering their work.')],
+    ['#aow',L('فنان الأسبوع','Artist of the week'),L('تعريف أسبوعي بفنان من المجتمع وأعماله.','A weekly introduction to an artist from the community and their work.')],
+    ['#pioneers',L('قاعة الرواد','Hall of pioneers'),L('تحية لرواد الفن العربي الذين مهّدوا الطريق للأجيال التالية.','A tribute to the pioneers of Arab art who paved the way for the generations after them.')]
+  ];
   return `
   <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('عن أرابيسك','About')}</h1>
-    <p>${L('تحدي شهري للتصميم النابع من التراث العربي والإسلامي، التاريخي والخيالي والأدبي.','A monthly design challenge rooted in Arab and Islamic heritage: historical, imagined and literary.')}</p></div></section>
+    <p>${L('تحدٍّ فني شهري يستلهم التراث العربي والإسلامي، التاريخي والأدبي والخيالي.','A monthly art challenge inspired by Arab and Islamic heritage: historical, literary and imagined.')}</p></div></section>
   <section class="sec"><div class="wrap">
-    <p class="prose big" style="margin-bottom:28px">${L('كل شهر موضوع جديد. شارك بتصميم شخصية أو مكان أو مشهد كامل، بأي أسلوب، واقعي أو خيالي، طالما في حدود الموضوع.','Every month brings a new topic. Share a character, a place or a full scene, in any style, realistic or imagined, as long as it fits the theme.')}</p>
+    <div class="about-grid">
+      <div class="about-block"><h2>${L('من نحن','Who we are')}</h2>
+        <p class="prose big">${L('أرابيسك مجتمع فني عربي تأسس منذ نحو عشر سنوات على يد الفنانَين إسلام أبوشادي وأحمد نبيل. يطرح كل شهر موضوعًا مستمدًّا من التاريخ أو التراث أو الأدب العربي، ويدعو الفنانين إلى تقديم رؤيتهم له من خلال تصميم الشخصيات والأماكن والمشاهد.','Arabesque is an Arab art community founded about ten years ago by artists Eslam Aboshady and Ahmed Nabil. Each month it sets a theme drawn from Arab history, heritage or literature, and invites artists to present their vision of it through the design of characters, places and scenes.')}</p></div>
+      <div class="about-block"><h2>${L('رسالتنا','Our mission')}</h2>
+        <p class="prose big">${L('نسعى إلى أن يكون أرابيسك أكثر من مجموعة للرسم: مساحة تشجع الفنانين على الإنتاج المستمر، وتدفعهم إلى تجربة أساليب وموضوعات جديدة، وتعرّفهم على جوانب من تاريخنا وتراثنا من خلال البحث الذي يسبق كل عمل.','We want Arabesque to be more than a drawing group: a space that encourages artists to keep making work, pushes them to try new styles and subjects, and introduces them to parts of our history and heritage through the research behind every piece.')}</p></div>
+    </div>
+  </div></section>
+  <section class="sec hl"><div class="wrap">
+    <div class="sec-head"><h2>${L('ماذا يقدم الموقع','What the site offers')}</h2></div>
+    <div class="offers">${offers.map(([h,t,d],i)=>`<a class="offer" href="${h}"><i>${A(i+1)}</i><h3>${esc(t)}</h3><p>${esc(d)}</p><span class="go">${FW()}</span></a>`).join('')}</div>
+  </div></section>
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><h2>${L('المؤسسون','Founders')}</h2></div>
+    <div class="founders">${founders.map(([n,u])=>`<a class="founder" href="${u}" target="_blank" rel="noopener"><b>${esc(n)}</b><span class="fbi">${FB}<span>Facebook</span> ↗</span></a>`).join('')}</div>
+  </div></section>
+  <section class="sec" style="padding-top:0"><div class="wrap">
     <div class="sec-head"><h2>${L('القواعد','Rules')}</h2></div>
     <ol class="rules">${RULES.map(r=>`<li><span>${esc(cx(r))}</span></li>`).join('')}</ol>
+    <p class="site-credit">${L('تصميم الموقع وتطويره:','Website design and development:')} <a href="https://www.facebook.com/ahmedadel.art/" target="_blank" rel="noopener">${L('أحمد عادل','Ahmed Adel')} ↗</a></p>
   </div></section>`;
 }
 function renderChrome(){
