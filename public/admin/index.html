@@ -632,7 +632,8 @@ footer .subband h3{color:#061615}
 .offer h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(24px,2vw,30px);line-height:1.25;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .offer h3 em{font-style:normal;color:var(--acc);font-size:20px}
 .offer p{margin:0;color:var(--mute);font-size:17px;line-height:1.8}
-.founders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;max-width:760px}
+.founders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;max-width:720px;margin-inline:auto}
+.sec-head.center{justify-content:center;text-align:center}
 .founder{display:flex;flex-direction:column;background:var(--s1);border:3px solid #000;border-radius:22px;overflow:hidden;box-shadow:0 8px 0 #000;text-decoration:none;color:var(--fg);transition:transform .2s,box-shadow .2s}
 .founder:hover{transform:translateY(-4px);box-shadow:0 12px 0 #000}
 .fpic{display:block;aspect-ratio:4/5;overflow:hidden;background:var(--s2)}
@@ -1272,7 +1273,7 @@ function vAbout(){
   </div></section>
 
   <section class="sec" style="padding-top:0"><div class="wrap ab-wrap">
-    <div class="sec-head"><h2>${L('المؤسسون','Founders')}</h2></div>
+    <div class="sec-head center"><h2>${L('المؤسسون','Founders')}</h2></div>
     <div class="founders">${founders.map(([n,u,img])=>`<a class="founder" href="${u}" target="_blank" rel="noopener" aria-label="${esc(n)} · Facebook"><span class="fpic"><img loading="lazy" src="${img}" alt="${esc(n)}" width="800" height="1000"></span><span class="fname"><b>${esc(n)}</b><span class="fbi">${FB}</span></span></a>`).join('')}</div>
   </div></section>
 
