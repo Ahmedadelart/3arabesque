@@ -61,7 +61,7 @@ p{margin:0}
 
 /* proto bar + header */
 .proto{background:var(--star);color:var(--ink);font-size:13px;font-weight:600;text-align:center;padding:6px 16px}
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--hdr);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top{position:sticky;top:0;z-index:40;background:var(--hdr);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:24px;height:72px}
 .brand img{height:46px;width:auto}
 nav.main{display:flex;gap:4px;margin-inline-start:auto;flex-wrap:wrap}
@@ -259,7 +259,7 @@ nav.main a.adm{border:1px dashed var(--warn);color:var(--warn)}
 .seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px}
 .seg button{background:none;border:0;padding:8px 14px;border-radius:9px;cursor:pointer;color:var(--mute);font-weight:500}
 .seg button.on{background:var(--mint);color:var(--ink)}
-.letters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;position:sticky;top:calc(72px + env(safe-area-inset-top,0px));z-index:5;background:var(--s1);padding:8px 0}
+.letters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;position:sticky;top:72px;z-index:5;background:var(--s1);padding:8px 0}
 .letters a{text-decoration:none;min-width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:var(--bg);border:1px solid var(--line);font-weight:600;font-size:14px}
 .letters a:hover{background:var(--mint);color:var(--ink)}
 .agroup{display:grid;grid-template-columns:64px minmax(0,1fr);gap:16px;padding-block:18px;border-top:1px solid var(--line);scroll-margin-top:140px}
@@ -294,7 +294,7 @@ nav.main a.adm{border:1px dashed var(--warn);color:var(--warn)}
 .filters button.on{background:var(--mint);color:var(--ink);border-color:var(--mint);font-weight:600}
 
 /* lightbox */
-.lb{position:fixed;inset:0;z-index:90;background:var(--lbbg);display:grid;grid-template-columns:minmax(0,1fr) 320px;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.lb{position:fixed;inset:0;z-index:90;background:var(--lbbg);display:grid;grid-template-columns:minmax(0,1fr) 320px;padding:0}
 .lb-stage{display:grid;place-items:center;padding:24px;position:relative;min-width:0}
 .lb-stage img{max-height:calc(100vh - 48px);max-width:100%;width:auto;object-fit:contain;border-radius:8px}
 .lb-side{background:var(--s1);border-inline-start:1px solid var(--line);padding:28px 24px;display:flex;flex-direction:column;gap:14px;overflow:auto}
