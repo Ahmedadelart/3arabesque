@@ -897,7 +897,7 @@ function vHome(){
   const c=cur(), cw=worksOf(c.k);
   const pick=state.works.filter(w=>w.m==='old').slice(0,36);
   const mc=['m1','m2','m4','m3','m3','m4','m3','m3','m4','m4','m3','m3'];
-  const artists=new Set(state.works.filter(w=>w.by).map(w=>w.by));
+  const artists=new Set(state.works.filter(w=>w.by).map(aKey));
   const a=state.aow[0];
   const wiki=L('https://ar.wikipedia.org/wiki/عمارة_إسلامية','https://en.wikipedia.org/wiki/Islamic_architecture');
   return `
@@ -1175,7 +1175,7 @@ function vPioOne(key){
   </div></section>`:''}`;
 }
 function vArtists(){
-  const n=new Set(state.works.filter(w=>w.by).map(w=>w.by)).size;
+  const n=new Set(state.works.filter(w=>w.by).map(aKey)).size;
   const hues=['var(--mint)','var(--star)','#7fd3c4'];
   return `
   <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('الفنانين','Artists')}</h1><p>${L('كل الفنانين اللي شاركوا في أرابيسك.','Everyone who has taken part in Arabesque.')}</p></div></section>
@@ -1199,12 +1199,15 @@ function vArtists(){
   </div></section>
   <div id="artistWorks"></div>`;
 }
+/* two different people can share a name: a work's optional "aid" tells them apart */
+const aKey=w=>!w||!w.by?'':(w.aid?w.by+'|'+w.aid:w.by);
+const aName=k=>k.split('|')[0];
 function renderDir(){
   const box=document.getElementById('dirlist'); if(!box) return;
   const q=(document.getElementById('asearch').value||'').trim().toLowerCase();
   const sort=document.querySelector('.seg .on').dataset.sort;
-  const map={}; state.works.forEach(w=>{if(!w.by)return;(map[w.by]=map[w.by]||[]).push(w)});
-  let list=Object.entries(map).map(([k,ws])=>[k,ws,nm(k)]).filter(e=>!q||e[2].toLowerCase().includes(q)||e[0].toLowerCase().includes(q));
+  const map={}; state.works.forEach(w=>{if(!w.by)return; const k=aKey(w); (map[k]=map[k]||[]).push(w)});
+  let list=Object.entries(map).map(([k,ws])=>[k,ws,nm(aName(k))]).filter(e=>!q||e[2].toLowerCase().includes(q)||e[0].toLowerCase().includes(q));
   const isAr=s=>/[؀-ۿ]/.test(s[0]);
   const key=s=>isAr(s)?s[0]:s[0].toUpperCase();
   const card=([k,ws,d])=>{const ms=[...new Set(ws.map(x=>x.m).filter(Boolean))].map(mT);
@@ -1237,7 +1240,7 @@ function vAbout(){
   while(pics.length<4){ const w=state.works.find(x=>x.hl&&!pics.includes(x)); if(!w) break; pics.push(w); }
   const lastM=MONTHS.filter(m=>m.t).slice(-1)[0];
   const founders=[[L('إسلام أبوشادي','Eslam Aboshady'),'https://www.facebook.com/eslam.aboshady.694086','img/founder-eslam.jpg'],[L('أحمد نبيل','Ahmed Nabil'),'https://www.facebook.com/ahmed.nabil.547','img/founder-nabil.jpg']];
-  const artistsN=new Set(state.works.filter(w=>w.by).map(w=>w.by)).size;
+  const artistsN=new Set(state.works.filter(w=>w.by).map(aKey)).size;
   const offers=[
     ['#challenges',L('أرشيف التحديات','Challenge archive'),L('كل تحدٍّ بموضوعه ومصادره والأعمال المشاركة فيه.','Every challenge with its theme, sources and submitted works.'),lastM?`<img loading="lazy" src="img/c-${lastM.k}.jpg" alt="">`:''],
     ['#artists',L('دليل الفنانين','Artist directory'),L('صفحة لكل فنان شارك في أرابيسك تجمع أعماله.','A page for every artist who has taken part, gathering their work.'),cover(byId('e332')||pics[0])],
@@ -1425,7 +1428,7 @@ function ctxList(ctx){
   if(ctx.startsWith('m-')) return worksOf(ctx.slice(2));
   if(ctx.startsWith('aow')) return state.aow[+ctx.slice(3)].works;
   if(ctx.startsWith('pio')) return state.pioneers[+ctx.slice(3)].works;
-  if(ctx.startsWith('by-')) return state.works.filter(w=>w.by===ctx.slice(3));
+  if(ctx.startsWith('by-')) return state.works.filter(w=>aKey(w)===ctx.slice(3));
   if(ctx==='hl') return [...document.querySelectorAll('.tile[data-ctx="hl"]')].filter(b=>!b.hidden).map(b=>findW(b.dataset.w));
   if(ctx==='all') return [...document.querySelectorAll('#allgrid .tile')].filter(b=>!b.hidden).map(b=>findW(b.dataset.w));
   return state.works;
@@ -1449,8 +1452,8 @@ document.addEventListener('click',e=>{
   const jp=e.target.closest('[data-jump]');
   if(jp){e.preventDefault(); const g=document.querySelector(`.agroup[data-letter="${CSS.escape(jp.dataset.jump)}"]`); if(g) g.scrollIntoView({behavior:'smooth',block:'start'}); return;}
   const ar=e.target.closest('[data-artist]');
-  if(ar){ const n=ar.dataset.artist, ws=state.works.filter(w=>w.by===n), box=document.getElementById('artistWorks');
-    box.innerHTML=`<section class="sec"><div class="wrap"><div class="sec-head"><h2 dir="auto">${esc(nm(n))}</h2><p>${A(ws.length)} ${L(ws.length>2&&ws.length<11?'رسومات':'رسمة',ws.length===1?'work':'works')}</p></div><div class="masonry">${ws.map(w=>tile(w,'','by-'+n)).join('')}</div></div></section>`;
+  if(ar){ const n=ar.dataset.artist, ws=state.works.filter(w=>aKey(w)===n), box=document.getElementById('artistWorks');
+    box.innerHTML=`<section class="sec"><div class="wrap"><div class="sec-head"><h2 dir="auto">${esc(nm(aName(n)))}</h2><p>${A(ws.length)} ${L(ws.length>2&&ws.length<11?'رسومات':'رسمة',ws.length===1?'work':'works')}</p></div><div class="masonry">${ws.map(w=>tile(w,'','by-'+n)).join('')}</div></div></section>`;
     box.scrollIntoView({behavior:'smooth',block:'start'}); return;}
   const sc=e.target.closest('[data-scroll]');
   if(sc){ e.preventDefault(); document.getElementById('brief').scrollIntoView({behavior:'smooth'}); }
