@@ -659,6 +659,32 @@ footer .subband h3{color:#061615}
 .ab-plans{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
 .ab-plans span{border:1px solid var(--chipb);color:var(--fg);border-radius:999px;padding:7px 16px;font-size:15px;font-weight:600;background:var(--s1)}
 @media (max-width:860px){.ab-future{grid-template-columns:1fr}.ab-collage{position:static}}
+
+/* link pages (business-card QR) */
+.linkmode header.top,.linkmode footer,.linkmode #proto{display:none!important}
+.lk{min-height:100vh;min-height:100dvh;padding:44px 20px 36px;display:flex;justify-content:center}
+.lk-col{width:100%;max-width:460px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.lk-ava{width:150px;aspect-ratio:4/5;border:3px solid #000;border-radius:24px;overflow:hidden;box-shadow:0 8px 0 #000;background:var(--s1);transform:rotate(-2deg)}
+.lk-ava img{width:100%;height:100%;object-fit:cover;display:block}
+.lk-logo{width:230px;height:auto;margin-bottom:18px;filter:drop-shadow(0 6px 0 rgba(0,0,0,.45))}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.lk-name{font-size:clamp(40px,11vw,56px);line-height:1.15;margin:22px 0 4px}
+.lk-role{margin:0 0 26px;color:#eaf4ef;font-size:16px;background:rgba(0,0,0,.28);padding:6px 16px;border-radius:999px}
+.lk-list{width:100%;display:grid;gap:12px}
+.lk-btn{display:flex;align-items:center;gap:14px;padding:14px 18px;min-height:60px;border-radius:16px;background:rgba(6,22,21,.78);color:#f3f6ef;border:2px solid #000;box-shadow:0 5px 0 #000;text-decoration:none;font-weight:600;font-size:16px;text-align:start;transition:transform .15s,box-shadow .15s,background .2s}
+.lk-btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 #000;background:#0b2321}
+.lk-btn:active{transform:translateY(2px);box-shadow:0 3px 0 #000}
+.lk-btn.primary{background:var(--mint);color:#061615}
+.lk-ic{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:10px;background:rgba(74,220,135,.16);color:var(--mint)}
+.lk-btn.primary .lk-ic{background:#061615;color:var(--mint)}
+.lk-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.lk-t{flex:1;min-width:0;overflow-wrap:anywhere}
+.lk-go{opacity:.75;font-size:15px}
+.lk-sep{display:flex;align-items:center;gap:10px;margin:30px 0 14px;font-family:var(--f-display);font-size:24px;color:#f3f6ef}
+.lk-sep span{color:var(--star);width:16px;height:16px;display:inline-grid}
+.lk-sep svg{width:16px;height:16px}
+.lk-foot{margin-top:34px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:#d6e6df;font-size:13px;opacity:.85}
+.lk-foot img{width:84px;height:auto}
 </style>
 
 
@@ -1304,6 +1330,40 @@ function vAbout(){
     <p class="site-credit">${L('تصميم الموقع وتطويره:','Website design and development:')} <a href="https://www.facebook.com/ahmedadel.art/" target="_blank" rel="noopener">${L('أحمد عادل','Ahmed Adel')} ↗</a></p>
   </div></section>`;
 }
+/* link pages (for the QR codes on the business cards): #links, #eslam, #nabil */
+const LKI={
+  fb:'<svg viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M14 8h3V4h-3c-2.8 0-4.5 1.8-4.5 4.6V11H7v4h2.5v9h4v-9h3l.5-4h-3.5V8.8c0-.5.3-.8.8-.8Z"/></svg>',
+  web:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg>',
+  grid:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+  group:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.3 3-5 6-5s5.4 1.7 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14c2.6.1 4.4 1.7 5 4.5"/></svg>',
+  ig:'<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>',
+  mail:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/></svg>',
+  star:'<svg viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 2c.6 4.6 2.7 6.9 7.4 7.6-4.7.6-6.8 2.9-7.4 7.6-.6-4.7-2.7-7-7.4-7.6C9.3 8.9 11.4 6.6 12 2Z"/></svg>'
+};
+const FOUNDERS={
+  eslam:{name:['إسلام أبوشادي','Eslam Aboshady'],img:'img/founder-eslam.jpg',fb:'https://www.facebook.com/eslam.aboshady.694086'},
+  nabil:{name:['أحمد نبيل','Ahmed Nabil'],img:'img/founder-nabil.jpg',fb:'https://www.facebook.com/ahmed.nabil.547'}
+};
+function vLinks(who){
+  const f=FOUNDERS[who];
+  const btn=(href,icon,label,cls='',ext=true)=>`<a class="lk-btn ${cls}" href="${href}"${ext?' target="_blank" rel="noopener"':''}><span class="lk-ic">${LKI[icon]}</span><span class="lk-t">${label}</span><span class="lk-go">${ext?'↗':FW()}</span></a>`;
+  const arab=[
+    btn('#home','web',L('الموقع','Website'),f?'':'primary',false),
+    btn('#challenges','grid',L('أرشيف التحديات','Challenge archive'),'',false),
+    btn(GROUP,'group',L('جروب أرابيسك على فيسبوك','Arabesque Facebook group')),
+    btn('https://www.instagram.com/arabesque_artwork','ig','Instagram'),
+    btn('mailto:arabesqueartwork@gmail.com','mail',L('راسلنا بالإيميل','Email us'))
+  ].join('');
+  return `<section class="lk lattice"><div class="lk-col">
+    ${f?`<div class="lk-ava"><img src="${f.img}" alt="${esc(cx(f.name))}" width="800" height="1000"></div>`:`<img class="lk-logo" src="img/logo.png" alt="${L('أرابيسك','Arabesque')}" width="768" height="378">`}
+    ${f?`<h1 class="sticker lk-name">${esc(cx(f.name))}</h1>`:`<h1 class="sr-only">${L('أرابيسك','Arabesque')}</h1>`}
+    <p class="lk-role">${f?L('مؤسس أرابيسك','Co-founder of Arabesque'):L('تحدٍّ فني شهري يستلهم التراث العربي والإسلامي','A monthly art challenge inspired by Arab and Islamic heritage')}</p>
+    ${f?`<div class="lk-list">${btn(f.fb,'fb',L('فيسبوك','Facebook'),'primary')}</div>
+    <div class="lk-sep"><span>${LKI.star}</span>${L('أرابيسك','Arabesque')}<span>${LKI.star}</span></div>`:''}
+    <div class="lk-list">${arab}</div>
+    <a class="lk-foot" href="#home"><img src="img/logo.png" alt="" width="768" height="378"><span dir="ltr">3arabesque.art</span></a>
+  </div></section>`;
+}
 function renderChrome(){
   document.documentElement.dataset.mode=MODE;
   document.documentElement.lang=LANG; document.documentElement.dir=L('rtl','ltr');
@@ -1382,9 +1442,11 @@ function route(keepScroll){
   else if(h==='pioneers') html=vPioneers();
   else if(h.startsWith('pio/')){ html=vPioOne(decodeURIComponent(h.slice(4))); r='pioneers'; }
   else if(h==='about') html=vAbout();
+  else if(h==='links'||FOUNDERS[h]){ html=vLinks(h); r='links'; }
   else if(h==='brief'){ app.innerHTML=`<div>${vHome()}</div>`; mark('home'); document.getElementById('brief').scrollIntoView(); return;}
   else {html=vHome(); r='home';}
   app.innerHTML=`<div class="fade">${html}</div>`;
+  document.body.classList.toggle('linkmode',r==='links');
   mark(r);
   sendHit();
   if(!keepScroll) window.scrollTo(0,0);
