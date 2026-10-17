@@ -991,10 +991,10 @@ function vHome(){
 
 
 
-  <section class="sec"><div class="wrap">
+  ${cw.length?`<section class="sec"><div class="wrap">
     <div class="sec-head"><h2>${SOON?L('مشاركات آخر تحدي','Last challenge submissions'):L('المشاركات','Submissions')}</h2><a class="link" href="#c-${c.k}">${L('الكل','All')} (${A(cw.length)}) ${FW()}</a></div>
     <div class="jgal" data-trim>${cw.slice(0,30).map(w=>tile(w,'','m-'+c.k)).join('')}</div>
-  </div></section>
+  </div></section>`:''}
 
 
 
