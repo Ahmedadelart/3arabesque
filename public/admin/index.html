@@ -692,6 +692,20 @@ footer .subband h3{color:#061615}
 .lk-si svg{width:22px;height:22px;fill:currentColor}
 .lk-foot{margin-top:34px;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:#d6e6df;font-size:13px;opacity:.85}
 .lk-foot img{width:84px;height:auto}
+
+/* season block (1448: تاريخ لم يحدث) */
+.season-card{border:3px solid #000;border-radius:24px;box-shadow:0 10px 0 #000;padding:clamp(22px,4vw,48px);display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:clamp(18px,4vw,56px);align-items:start}
+.season-head h2{margin:0;font-size:clamp(38px,5vw,64px);line-height:1.15}
+.season-head .kicker{margin-bottom:14px}
+.season-body p{margin:0 0 14px;font-size:17px;line-height:1.85;color:#eaf4ef}
+.season-body ul:not(.season-notes){margin:0 0 14px;padding-inline-start:20px;line-height:1.9}
+.season-notes{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
+.season-notes li{display:flex;flex-direction:column;gap:2px;background:rgba(6,22,21,.72);border:2px solid #000;border-radius:14px;padding:12px 16px}
+.season-notes b{color:var(--mint);font-size:15px}
+.season-notes span{font-size:15px;line-height:1.7;color:#d6e6df}
+.season-tag{display:inline-block;vertical-align:middle;margin-inline-start:10px;font-family:var(--f-body);font-weight:700;font-size:15px;background:var(--ink);color:var(--mint);border-radius:10px;padding:3px 12px}
+@media (max-width:860px){.season-card{grid-template-columns:1fr}}
+@media (max-width:600px){.season-card{border-radius:18px;box-shadow:0 6px 0 #000}.season-body p{font-size:16px}}
 </style>
 
 
@@ -744,6 +758,11 @@ const MONTHS=[
  {k:'qaada',m:['شهر ذي القعدة','Dhu al-Qadah'],t:['الألعاب الشعبية','Folk Games']},
  {k:'hijja',m:['شهر ذي الحجة','Dhu al-Hijjah'],t:['مساجد ومآذن','Mosques and Minarets']}
 ];
+MONTHS.forEach((m,i)=>{m.y=1447;m.n=i+1;});
+/* 1448: new season «تاريخ لم يحدث» starts in Jumada al-Ula */
+MONTHS.slice(4).forEach(m=>MONTHS.push({k:m.k+'-48',m:m.m,y:1448,n:m.n,t:null,nob:1}));
+const SEASONS={1448:['تاريخ لم يحدث','History That Never Happened']};
+const yLabel=y=>L(Number(y).toLocaleString('ar-EG',{useGrouping:false})+' هـ',y+' AH');
 Object.entries(DATA.monthTitles||{}).forEach(([k,v])=>{const m=MONTHS.find(x=>x.k===k); if(m){if(!m.t) m.nob=1; m.t=v;}});
 Object.keys(DATA.banners||{}).forEach(k=>{const m=MONTHS.find(x=>x.k===k); if(m) m.nob=0;});
 const MI=Object.fromEntries(MONTHS.map(m=>[m.k,m]));
@@ -805,7 +824,7 @@ const pill=t=>`<span class="pill">${esc(t)}</span>`;
 const SPK='<path d="M50 4 C55 38 62 45 96 50 C62 55 55 62 50 96 C45 62 38 55 4 50 C38 45 45 38 50 4Z"/>';
 
 function heroSVG(art,label,list){
-  const c=cur(), rtl=LANG==='ar', X=x=>rtl?x:1080-x; art=art||c.art; label=label??(L('الفنان: ','Artist: ')+nm(c.artBy));
+  const c=cur(), rtl=LANG==='ar', X=x=>rtl?x:1080-x; art=art||c.art; label=label??(c.artBy?L('الفنان: ','Artist: ')+nm(c.artBy):cTitle());
   const P=pts=>pts.map(([x,y])=>`${X(x)},${y}`).join(' ');
   const clip=P([[0,98],[918,98],[918,250],[1015,338],[918,426],[918,577],[0,577]]);
   const mint=P([[690,0],[840,0],[980,98],[980,250],[1080,338],[980,426],[980,577],[840,676],[690,676],[775,577],[775,98]]);
@@ -876,7 +895,7 @@ function srcSection(k,{pad=true,cls=''}={}){
 /* ---------- views ---------- */
 function liveHero(c){ return `  <section class="hero lattice"><div class="wrap hero-grid">
     <div class="hero-text fade">
-      <div class="hero-kicker">${pill(c.custom?.month||mM(c.k))}</div>
+      <div class="hero-kicker">${pill(c.custom?.month||mM(c.k))}${MI[c.k]&&SEASONS[MI[c.k].y]?pill(cx(SEASONS[MI[c.k].y])):''}</div>
       <h1 class="sticker"><span class="t">${esc(cTitle())}<svg class="spark" style="top:-14px;inset-inline-start:-20px" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg><svg class="spark s2 inl" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg></span></h1>
       <p class="lede">${esc(c.custom?.intro||cx(c.intro))}</p>
       <div class="hero-cta">
@@ -927,6 +946,13 @@ function soonHero(c){ return `<section class="hero lattice"><div class="wrap her
     </div>
     <div class="hero-art hrot-wrap" role="button" tabindex="0" aria-label="${L('مختارات','Highlights')}">${heroSVG(null,null,heroPicks())}</div>
   </div></section>`; }
+function seasonSec(c){
+  const se=DATA.season, m=MI[c.k]; if(!se||!m||se.y!==m.y) return '';
+  return `<section class="sec season-sec" style="padding-top:0"><div class="wrap"><div class="season-card lattice">
+    <div class="season-head"><span class="kicker dark">${L('الموسم الجديد','The new season')}</span><h2 class="sticker">${esc(cx(SEASONS[m.y]||se.name))}</h2></div>
+    <div class="season-body">${paras(cx(se.about))}${(se.notes||[]).length?`<ul class="season-notes">${se.notes.map(n=>`<li><b>${esc(cx(n[0]))}</b><span>${esc(cx(n[1]))}</span></li>`).join('')}</ul>`:''}</div>
+  </div></div></section>`;
+}
 function vHome(){
   const c=cur(), cw=worksOf(c.k);
   const pick=state.works.filter(w=>w.m==='old').slice(0,36);
@@ -952,11 +978,12 @@ function vHome(){
     <aside class="ask">
       <h3>${L('المطلوب','The brief')}</h3>
       <p>${esc(c.custom?.ask||cx(c.ask))}</p>
-      <p class="foot">${L('شخصية، مكان، أو مشهد كامل. واقعي أو خيالي. ارفع النسخة النهائية مرة واحدة.','A character, a place, or a full scene. Realistic or imagined. Post the final version once.')}</p>
+      <p class="foot">${c.foot?esc(cx(c.foot)):L('شخصية، مكان، أو مشهد كامل. واقعي أو خيالي. ارفع النسخة النهائية مرة واحدة.','A character, a place, or a full scene. Realistic or imagined. Post the final version once.')}</p>
       ${SOON?'':`<a class="btn" href="${GROUP}" target="_blank" rel="noopener">${L('شارك','Submit')}</a>`}
     </aside>
   </div></section>
 
+  ${seasonSec(c)}
   ${srcSection(c.k,{pad:false,cls:'home-src'})}
 
 
@@ -990,8 +1017,8 @@ function vChallenges(){
   return `
   <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('الأرشيف','Archive')}</h1><p>${L('كل تحدي وكل المشاركات فيه، في مكان واحد.','Every challenge and every submission, in one place.')}</p></div></section>
   <section class="sec"><div class="wrap">
-    <div class="sec-head"><h2>${L('١٤٤٧ هـ','1447 AH')}</h2></div>
-    <div class="months">${MONTHS.filter(m=>m.t).reverse().map(mcard).join('')}</div>
+    ${[...new Set(MONTHS.filter(m=>m.t).map(m=>m.y))].sort((a,b)=>b-a).map((y,i)=>`<div class="sec-head"${i?' style="margin-top:44px"':''}><h2>${yLabel(y)}${SEASONS[y]?` <span class="season-tag">${esc(cx(SEASONS[y]))}</span>`:''}</h2></div>
+    <div class="months">${MONTHS.filter(m=>m.t&&m.y===y).reverse().map(mcard).join('')}</div>`).join('')}
   </div></section>
   <section class="sec" style="padding-top:0"><div class="wrap">
     <div class="sec-head"><h2>${L('المجموعة القديمة','The original group')}</h2></div>
@@ -1294,7 +1321,7 @@ function vAbout(){
         <p class="ab-body">${L('بدأت فكرة أرابيسك عام ٢٠١٦ من خلال مسابقات وتحديات مشتركة يجتمع فيها الفنانون العرب من مختلف المستويات، تدور حصرًا حول موضوعات عربية خالصة. وخلال السنوات التالية نجح أرابيسك بشكل أكبر مما أوحت به بدايته البسيطة، فتحول إلى مجتمع فني كامل على تواصل مباشر مع كثير من الفنانين العرب المحترفين، مع إعطاء المساحة والفرصة لكثير من الفنانين المبتدئين للظهور أمام جمهور أكبر مما يصل إليه جهدهم الفردي. بل وأصبح أرابيسك شاهدًا في أحيان كثيرة على بزوغ نجم فنانين بدأوا طريقهم معه، وتطوروا حتى أصبحوا من الفنانين المؤثرين في المجال الفني العربي.','Arabesque started in 2016 with shared contests and challenges that brought together Arab artists of every level, focused entirely on Arab subjects. In the years that followed it grew well beyond its humble beginnings into a full art community, in direct contact with many professional Arab artists, while giving many beginners the chance to reach a wider audience than they could on their own. Arabesque has even witnessed artists who started their journey with it grow into established names in the Arab art and media industry.')}</p>
         <div class="ab-facts">
           <div><b>${L('٢٠١٦','2016')}</b><span>${L('سنة التأسيس','Founded')}</span></div>
-          <div><b>${A(MONTHS.filter(m=>m.t).length)}</b><span>${L('تحديًا في ١٤٤٧','challenges in 1447 AH')}</span></div>
+          <div><b>${A(MONTHS.filter(m=>m.t&&m.y===1447).length)}</b><span>${L('تحديًا في ١٤٤٧','challenges in 1447 AH')}</span></div>
           <div><b>${A(artistsN)}+</b><span>${L('فنانًا شاركوا','artists took part')}</span></div>
         </div>
       </div>
@@ -1593,7 +1620,7 @@ function vAdmin(){
         <h2>${L('التحدي','Challenge')}</h2>
         <p class="hint">${L('اختار الشهر. لو شهر جديد، اكتب عنوانه وارفع صورته، وهيبقى هو التحدي الحالي في الرئيسية.','Pick the month. For a new month, write its title and upload its image; it becomes the current challenge on the home page.')}</p>
         <div class="fgrid">
-          <div class="field"><label for="f-month">${L('الشهر','Month')}</label><select id="f-month">${MONTHS.map(m=>`<option value="${m.k}" ${m.k===c.k?'selected':''}>${esc(mM(m.k))}${m.t?' · '+esc(mT(m.k)):''}</option>`).join('')}</select></div>
+          <div class="field"><label for="f-month">${L('الشهر','Month')}</label><select id="f-month">${MONTHS.map(m=>`<option value="${m.k}" ${m.k===c.k?'selected':''}>${esc(mM(m.k))} ${m.y}${m.t?' · '+esc(mT(m.k)):''}</option>`).join('')}</select></div>
           <div class="field"><label class="chk" style="margin-top:30px"><input type="checkbox" id="f-cur" checked style="width:auto"> ${L('خليه التحدي الحالي','Make it the current challenge')}</label></div>
           <div class="field"><label for="f-title">${L('العنوان','Title')}</label><input id="f-title"></div>
           <div class="field"><label for="f-title-en">${L('العنوان بالإنجليزي','Title in English')}</label><input id="f-title-en" dir="ltr"></div>
@@ -1912,7 +1939,7 @@ function bindAdmin(){
     if(!d) return '';
     try{ const p=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{year:'numeric',month:'numeric'}).formatToParts(d);
       const y=+(p.find(x=>x.type==='year')||{}).value.replace(/\D/g,''), mo=+(p.find(x=>x.type==='month')||{}).value;
-      return y===1447&&MONTHS[mo-1]?MONTHS[mo-1].k:''; }catch(_){ return ''; }
+      const f=MONTHS.find(x=>x.y===y&&x.n===mo); return f?f.k:''; }catch(_){ return ''; }
   }
   const hijriLabel=d=>{ try{ return new Intl.DateTimeFormat('ar-EG-u-ca-islamic-umalqura',{month:'long',year:'numeric'}).format(d);}catch(_){return '';} };
   let IM=[]; // import candidates
