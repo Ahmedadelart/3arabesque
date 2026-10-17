@@ -710,6 +710,9 @@ footer .subband h3{color:#061615}
 .season-tag{display:inline-block;vertical-align:middle;margin-inline-start:10px;font-family:var(--f-body);font-weight:700;font-size:15px;background:var(--ink);color:var(--mint);border-radius:10px;padding:3px 12px}
 @media (max-width:860px){.season-card{grid-template-columns:1fr}}
 @media (max-width:600px){.season-card{border-radius:18px;box-shadow:0 6px 0 #000}.season-body p{font-size:16px}.season-notes li{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:2px;padding:14px}.season-notes .sn-ic{grid-row:span 2;margin:0}}
+
+.empty-sub{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;border:2px dashed var(--line);border-radius:18px;background:var(--s1)}
+.empty-sub p{margin:0;font-size:16px;color:var(--mute)}
 </style>
 
 
@@ -950,6 +953,20 @@ function soonHero(c){ return `<section class="hero lattice"><div class="wrap her
     <div class="hero-art hrot-wrap" role="button" tabindex="0" aria-label="${L('مختارات','Highlights')}">${heroSVG(null,null,heroPicks())}</div>
   </div></section>`; }
 const SNI={"pen": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 20h4L19 9l-4-4L4 16v4Z\"/><path d=\"M13.5 6.5l4 4\"/></svg>", "eye": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>", "discord": "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z\"/></svg>"};
+function briefSec(c){ return `
+  <section class="sec" id="brief"><div class="wrap brief">
+    <div>
+      <div class="sec-head"><h2>${SOON?L('آخر تحدي: ','Last challenge: ')+esc(cTitle()):L('عن التحدي','The challenge')}</h2></div>
+      <p class="prose big">${esc(c.custom?cx(c.about):cx(c.about))}</p>
+      <div class="styles" style="margin-top:22px">${(c.styles||[]).map((s,i)=>`<div class="style"><i>${A(i+1)}</i><div><h4>${esc(cx(s[0]))}</h4><p>${esc(cx(s[1]))}</p></div></div>`).join('')}</div>
+    </div>
+    <aside class="ask">
+      <h3>${L('المطلوب','The brief')}</h3>
+      <p>${esc(c.custom?.ask||cx(c.ask))}</p>
+      <p class="foot">${c.foot?esc(cx(c.foot)):L('شخصية، مكان، أو مشهد كامل. واقعي أو خيالي. ارفع النسخة النهائية مرة واحدة.','A character, a place, or a full scene. Realistic or imagined. Post the final version once.')}</p>
+      ${SOON?'':`<a class="btn" href="${GROUP}" target="_blank" rel="noopener">${L('شارك','Submit')}</a>`}
+    </aside>
+  </div></section>`; }
 function seasonSec(c){
   const se=DATA.season, m=MI[c.k]; if(!se||!m||se.y!==m.y) return '';
   return `<section class="sec season-sec" style="padding-top:0"><div class="wrap"><div class="season-card lattice">
@@ -973,19 +990,7 @@ function vHome(){
     <div class="stat"><b>${A(17000)}+</b><span>${L('عضو','members')}</span></div>
   </div></div>
 
-  <section class="sec" id="brief"><div class="wrap brief">
-    <div>
-      <div class="sec-head"><h2>${SOON?L('آخر تحدي: ','Last challenge: ')+esc(cTitle()):L('عن التحدي','The challenge')}</h2></div>
-      <p class="prose big">${esc(c.custom?cx(c.about):cx(c.about))}</p>
-      <div class="styles" style="margin-top:22px">${(c.styles||[]).map((s,i)=>`<div class="style"><i>${A(i+1)}</i><div><h4>${esc(cx(s[0]))}</h4><p>${esc(cx(s[1]))}</p></div></div>`).join('')}</div>
-    </div>
-    <aside class="ask">
-      <h3>${L('المطلوب','The brief')}</h3>
-      <p>${esc(c.custom?.ask||cx(c.ask))}</p>
-      <p class="foot">${c.foot?esc(cx(c.foot)):L('شخصية، مكان، أو مشهد كامل. واقعي أو خيالي. ارفع النسخة النهائية مرة واحدة.','A character, a place, or a full scene. Realistic or imagined. Post the final version once.')}</p>
-      ${SOON?'':`<a class="btn" href="${GROUP}" target="_blank" rel="noopener">${L('شارك','Submit')}</a>`}
-    </aside>
-  </div></section>
+  ${briefSec(c)}
 
   ${seasonSec(c)}
   ${srcSection(c.k,{pad:false,cls:'home-src'})}
@@ -1008,7 +1013,7 @@ function vHome(){
   ${state.pioneers.length?homePio():''}
 
   <section class="sec home-past"><div class="wrap">
-    <div class="sec-head"><h2>${L('التحديات السابقة','Past challenges')}</h2><a class="link" href="#challenges">${L('الأرشيف','Archive')} ${FW()}</a></div>
+    <div class="sec-head"><h2>${L('التحديات السابقة','Past challenges')}</h2><a class="link" href="#challenges">${L('كل التحديات','All challenges')} ${FW()}</a></div>
     <div class="months">${MONTHS.filter(m=>m.t&&m.k!==c.k).slice().reverse().slice(0,8).map(mcard).join('')}</div>
   </div></section>`;
 }
@@ -1019,7 +1024,7 @@ function mcard(m){
 }
 function vChallenges(){
   return `
-  <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('الأرشيف','Archive')}</h1><p>${L('كل تحدي وكل المشاركات فيه، في مكان واحد.','Every challenge and every submission, in one place.')}</p></div></section>
+  <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('التحديات','Challenges')}</h1><p>${L('كل تحدي وكل المشاركات فيه، في مكان واحد.','Every challenge and every submission, in one place.')}</p></div></section>
   <section class="sec"><div class="wrap">
     ${[...new Set(MONTHS.filter(m=>m.t).map(m=>m.y))].sort((a,b)=>b-a).map((y,i)=>`<div class="sec-head"${i?' style="margin-top:44px"':''}><h2>${yLabel(y)}${SEASONS[y]?` <span class="season-tag">${esc(cx(SEASONS[y]))}</span>`:''}</h2></div>
     <div class="months">${MONTHS.filter(m=>m.t&&m.y===y).reverse().map(mcard).join('')}</div>`).join('')}
@@ -1047,13 +1052,15 @@ function vChallenge(k){
   const nav=k!=='old';
   return `
   <section class="sec" style="padding-bottom:0"><div class="wrap" style="display:grid;gap:22px">
-    <div class="crumbs"><a href="#challenges">${L('الأرشيف','Archive')}</a> / ${esc(mT(k))}</div>
+    <div class="crumbs"><a href="#challenges">${L('التحديات','Challenges')}</a> / ${esc(mT(k))}</div>
     ${banner?`<div class="bigbanner"><img src="${esc(banner)}" alt="${esc(mT(k))}"></div>`:`<div class="bigbanner svgb">${heroSVG('img/c-'+k+'.jpg',(k==='old'?L('المجموعة القديمة','The original group'):mM(k))+' · '+mT(k))}</div>`}
-    ${isCur?`<p class="prose"><b>${L('المطلوب:','The brief:')}</b> ${esc(c.custom?.ask||cx(c.ask))}</p>`:''}
+    ${isCur&&SOON?`<p class="prose"><b>${L('المطلوب:','The brief:')}</b> ${esc(c.custom?.ask||cx(c.ask))}</p>`:''}
   </div></section>
+  ${isCur&&!SOON?briefSec(c)+seasonSec(c):''}
   ${srcSection(k)}
   <section class="sec"><div class="wrap">
-    <div class="sec-head"><h2>${ws.length?A(ws.length)+' '+PW(ws.length):L('قريبًا','Coming soon')}</h2></div>
+    <div class="sec-head"><h2>${ws.length?A(ws.length)+' '+PW(ws.length):isCur&&!SOON?L('المشاركات','Submissions'):L('قريبًا','Coming soon')}</h2></div>
+    ${!ws.length&&isCur&&!SOON?`<div class="empty-sub"><p>${L('لسه مفيش مشاركات. كن أول من يشارك برسمته في الجروب.','No entries yet. Be the first to post your work in the group.')}</p><a class="btn btn-mint" href="${GROUP}" target="_blank" rel="noopener">${L('شارك برسمتك','Submit your work')}</a></div>`:''}
     ${ws.length?`<div class="masonry">${ws.map(w=>tile(w,'','m-'+k)).join('')}</div>`:''}
     <div class="pager">
       ${nav&&prev?`<a class="btn btn-ghost" href="#c-${prev.k}">${BK()} ${esc(mT(prev.k))}</a>`:'<span></span>'}
@@ -1416,7 +1423,7 @@ function renderChrome(){
   {const bg=document.getElementById('burger'); bg.setAttribute('aria-label',L('القائمة','Menu')); bg.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path class="l1" d="M4 7h16"/><path class="l2" d="M4 12h16"/><path class="l3" d="M4 17h16"/></svg>';}
   document.getElementById('nav').innerHTML=`
     <a href="#home" data-r="home">${L('الرئيسية','Home')}</a>
-    <a href="#challenges" data-r="challenges">${L('الأرشيف','Archive')}</a>
+    <a href="#challenges" data-r="challenges">${L('التحديات','Challenges')}</a>
     <a href="#artists" data-r="artists">${L('الفنانين','Artists')}</a>${state.pioneers.length?`\n    <a href="#pioneers" data-r="pioneers">${L('الرواد','Pioneers')}</a>`:''}
     <a href="#about" data-r="about">${L('عن أرابيسك','About')}</a>${ADMIN||IS_ADMIN?`\n    <a href="admin/" data-r="admin">${L('لوحة التحكم','Dashboard')}</a>`:''}`;
   const ml=MODE==='dark'?L('الوضع الفاتح','Light mode'):L('الوضع الغامق','Dark mode');
@@ -1436,7 +1443,7 @@ function renderChrome(){
     </div>`}
     <div class="foot-grid">
       <div><img src="img/logo.png" alt="Arabesque" width="768" height="378"><p>${L('تحدي شهري للتصميم النابع من التراث العربي والإسلامي.','A monthly design challenge rooted in Arab and Islamic heritage.')}</p></div>
-      <div><h4>${L('الموقع','Site')}</h4><ul><li><a class="link" href="#challenges">${L('الأرشيف','Archive')}</a></li><li><a class="link" href="#artists">${L('الفنانين','Artists')}</a></li><li><a class="link" href="#about">${L('القواعد','Rules')}</a></li></ul></div>
+      <div><h4>${L('الموقع','Site')}</h4><ul><li><a class="link" href="#challenges">${L('التحديات','Challenges')}</a></li><li><a class="link" href="#artists">${L('الفنانين','Artists')}</a></li><li><a class="link" href="#about">${L('القواعد','Rules')}</a></li></ul></div>
       <div><h4>${L('تواصل','Contact')}</h4><ul>
         <li><a class="link" href="${GROUP}" target="_blank" rel="noopener">${L('الجروب على فيسبوك','Facebook group')}</a></li>
         <li><a class="link" href="https://www.instagram.com/arabesque_artwork" target="_blank" rel="noopener" dir="ltr">@arabesque_artwork</a></li>
@@ -1769,7 +1776,7 @@ function bindAdmin(){
   const pv=(el,arr)=>{el.innerHTML=arr.map(x=>`<img src="${x.src}" alt="">`).join('')};
 
   /* t6: stats and subscribers */
-  const PAGE={'#home':L('الرئيسية','Home'),'#challenges':L('الأرشيف','Archive'),'#artists':L('الفنانين','Artists'),'#aow':L('فنان الأسبوع','Artist of the week'),'#aow/…':L('صفحات فناني الأسبوع','Artist-of-the-week pages'),'#pioneers':L('الرواد','Pioneers'),'#pio/…':L('صفحات الرواد','Pioneer pages'),'#about':L('عن أرابيسك','About'),'#brief':L('الرئيسية: المطلوب','Home: brief')};
+  const PAGE={'#home':L('الرئيسية','Home'),'#challenges':L('التحديات','Challenges'),'#artists':L('الفنانين','Artists'),'#aow':L('فنان الأسبوع','Artist of the week'),'#aow/…':L('صفحات فناني الأسبوع','Artist-of-the-week pages'),'#pioneers':L('الرواد','Pioneers'),'#pio/…':L('صفحات الرواد','Pioneer pages'),'#about':L('عن أرابيسك','About'),'#brief':L('الرئيسية: المطلوب','Home: brief')};
   const pname=k=>PAGE[k]||(k.startsWith('#c-')?(MI[k.slice(3)]?(k==='#c-old'?L('مختارات','Highlights'):mT(k.slice(3))):k):k);
   let cname=c=>c; try{ const dn=new Intl.DisplayNames([LANG],{type:'region'}); cname=c=>{try{return c==='??'?L('غير معروف','Unknown'):dn.of(c)}catch(_){return c}}; }catch(_){}
   const SRCN={direct:L('مباشر / تطبيق','Direct / app'),'facebook.com':'Facebook','instagram.com':'Instagram','google.com':'Google','t.co':'X / Twitter'};
