@@ -137,7 +137,8 @@ nav.main a.adm{border:1px dashed var(--warn);color:var(--warn)}
 .brief{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:start}
 .prose{font-size:17px;max-width:64ch;display:grid;gap:18px;color:var(--fg)}
 .prose.big,.prose .big{font-size:clamp(20px,2.2vw,25px);line-height:1.6;color:var(--fg);font-weight:500}
-.styles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.styles{display:flex;flex-wrap:wrap;gap:10px}
+.styles>.style{flex:1 1 calc(33.333% - 10px);min-width:220px}
 .style{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:14px 16px;background:var(--s1);border:1px solid var(--line);border-radius:14px}
 .style i{font-style:normal;font-family:var(--f-display);font-size:22px;color:var(--ink);background:var(--mint);width:40px;height:40px;display:grid;place-items:center;border-radius:10px}
 .style h4{margin:0;font-size:16px}
@@ -702,13 +703,15 @@ footer .subband h3{color:#061615}
 .season-head .kicker{margin-bottom:14px}
 .season-body p{margin:0 0 14px;font-size:17px;line-height:1.85;color:#eaf4ef}
 .season-body ul:not(.season-notes){margin:0 0 14px;padding-inline-start:20px;line-height:1.9}
-.season-notes{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
-.season-notes li{display:flex;flex-direction:column;gap:2px;background:rgba(6,22,21,.72);border:2px solid #000;border-radius:14px;padding:12px 16px}
-.season-notes b{color:var(--mint);font-size:15px}
-.season-notes span{font-size:15px;line-height:1.7;color:#d6e6df}
+.season-notes{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.season-notes li{display:flex;flex-direction:column;align-items:flex-start;gap:6px;background:rgba(6,22,21,.78);border:2px solid #000;border-radius:16px;box-shadow:0 5px 0 #000;padding:16px}
+.season-notes .sn-ic{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:var(--mint);color:var(--ink);border:2px solid #000;margin-bottom:4px}
+.season-notes .sn-ic svg{width:24px;height:24px}
+.season-notes b{color:#f3f6ef;font-family:var(--f-display);font-weight:400;font-size:21px;line-height:1.3}
+.season-notes span{font-size:14px;line-height:1.65;color:#cfe2da}
 .season-tag{display:inline-block;vertical-align:middle;margin-inline-start:10px;font-family:var(--f-body);font-weight:700;font-size:15px;background:var(--ink);color:var(--mint);border-radius:10px;padding:3px 12px}
 @media (max-width:860px){.season-card{grid-template-columns:1fr}}
-@media (max-width:600px){.season-card{border-radius:18px;box-shadow:0 6px 0 #000}.season-body p{font-size:16px}}
+@media (max-width:600px){.season-card{border-radius:18px;box-shadow:0 6px 0 #000}.season-body p{font-size:16px}.season-notes li{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:2px;padding:14px}.season-notes .sn-ic{grid-row:span 2;margin:0}}
 </style>
 
 
@@ -949,11 +952,12 @@ function soonHero(c){ return `<section class="hero lattice"><div class="wrap her
     </div>
     <div class="hero-art hrot-wrap" role="button" tabindex="0" aria-label="${L('مختارات','Highlights')}">${heroSVG(null,null,heroPicks())}</div>
   </div></section>`; }
+const SNI={"pen": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 20h4L19 9l-4-4L4 16v4Z\"/><path d=\"M13.5 6.5l4 4\"/></svg>", "eye": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>", "discord": "<svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z\"/></svg>"};
 function seasonSec(c){
   const se=DATA.season, m=MI[c.k]; if(!se||!m||se.y!==m.y) return '';
   return `<section class="sec season-sec" style="padding-top:0"><div class="wrap"><div class="season-card lattice">
     <div class="season-head"><span class="kicker dark">${L('الموسم الجديد','The new season')}</span><h2 class="sticker">${esc(cx(SEASONS[m.y]||se.name))}</h2></div>
-    <div class="season-body">${paras(cx(se.about))}${(se.notes||[]).length?`<ul class="season-notes">${se.notes.map(n=>`<li><b>${esc(cx(n[0]))}</b><span>${esc(cx(n[1]))}</span></li>`).join('')}</ul>`:''}</div>
+    <div class="season-body">${paras(cx(se.about))}${(se.notes||[]).length?`<ul class="season-notes">${se.notes.map(n=>`<li>${n[2]&&SNI[n[2]]?`<span class="sn-ic" aria-hidden="true">${SNI[n[2]]}</span>`:''}<b>${esc(cx(n[0]))}</b><span>${esc(cx(n[1]))}</span></li>`).join('')}</ul>`:''}</div>
   </div></div></section>`;
 }
 function vHome(){
