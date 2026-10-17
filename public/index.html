@@ -832,13 +832,13 @@ const SPK='<path d="M50 4 C55 38 62 45 96 50 C62 55 55 62 50 96 C45 62 38 55 4 5
 function heroSVG(art,label,list){
   const c=cur(), rtl=LANG==='ar', X=x=>rtl?x:1080-x; art=art||c.art; label=label??(c.artBy?L('الفنان: ','Artist: ')+nm(c.artBy):cTitle());
   const P=pts=>pts.map(([x,y])=>`${X(x)},${y}`).join(' ');
-  const clip=P([[0,98],[918,98],[918,250],[1015,338],[918,426],[918,577],[0,577]]);
+  const clip=P([[0,98],[918,98],[918,250],[1015,338],[918,426],[918,577],[770,676],[0,676]]);
   const mint=P([[690,0],[840,0],[980,98],[980,250],[1080,338],[980,426],[980,577],[840,676],[690,676],[775,577],[775,98]]);
   const bar=P([[0,0],[690,0],[775,98],[0,98]]);
   return `<svg viewBox="0 0 1080 676" role="img" aria-label="${esc(cTitle())}">
     <defs><clipPath id="artclip"><polygon points="${clip}"/></clipPath></defs>
     <polygon style="fill:var(--mint)" points="${mint}"/>
-    ${list?`<g clip-path="url(#artclip)">${list.map((w,i)=>`<image class="hrot${i?'':' on'}" data-label="${esc(w.label)}" data-w="${esc(w.id)}" ${i?`data-href="${esc(w.src)}"`:`href="${esc(w.src)}"`} x="${rtl?0:65}" y="98" width="1015" height="479" preserveAspectRatio="${w.wh&&w.wh[0]/w.wh[1]<1.7?'xMidYMin':'xMidYMid'} slice"/>`).join('')}</g>`:`<image href="${esc(art)}" x="${rtl?0:65}" y="98" width="1015" height="479" preserveAspectRatio="xMidYMid slice" clip-path="url(#artclip)"/>`}
+    ${list?`<g clip-path="url(#artclip)">${list.map((w,i)=>`<image class="hrot${i?'':' on'}" data-label="${esc(w.label)}" data-w="${esc(w.id)}" ${i?`data-href="${esc(w.src)}"`:`href="${esc(w.src)}"`} x="${rtl?0:65}" y="98" width="1015" height="578" preserveAspectRatio="${w.wh&&w.wh[0]/w.wh[1]<1.7?'xMidYMin':'xMidYMid'} slice"/>`).join('')}</g>`:`<image href="${esc(art)}" x="${rtl?0:65}" y="98" width="1015" height="578" preserveAspectRatio="xMidYMid slice" clip-path="url(#artclip)"/>`}
     <polygon style="fill:#000" points="${bar}"/>
     <text x="${X(370)}" y="62" text-anchor="middle" direction="${rtl?'rtl':'ltr'}" style="fill:#f3f6ef;font-family:var(--f-body);font-weight:500;font-size:30px" ${list?'id="hrot-label"':''}>${esc(list?list[0].label:label)}</text>
   </svg>`;
