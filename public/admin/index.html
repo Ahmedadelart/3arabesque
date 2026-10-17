@@ -119,6 +119,9 @@ nav.main a.adm{border:1px dashed var(--warn);color:var(--warn)}
 
 [dir=ltr] .hero h1{font-size:clamp(44px,5.4vw,82px)}
 .hero h1 .t{position:relative;display:inline}
+@media (min-width:861px){.hero h1.long{font-size:clamp(40px,3.9vw,78px);white-space:nowrap}[dir=ltr] .hero h1.long{font-size:clamp(30px,3.1vw,58px)}}
+.pill.season{background:var(--ink);color:var(--star);border-color:#000;box-shadow:0 5px 0 #000;font-family:var(--f-display);font-weight:400;font-size:17px;padding:3px 16px 4px;transform:rotate(-2deg)}
+.pill.season::before,.pill.season::after{background:var(--star)}
 .spark.inl{position:relative;display:inline-block;width:.42em;height:.42em;vertical-align:-.05em;margin-inline-start:.08em;filter:none}
 @media (prefers-reduced-motion:no-preference){.spark.s2{animation-delay:1.6s}}
 /* countdown strip */
@@ -895,8 +898,8 @@ function srcSection(k,{pad=true,cls=''}={}){
 /* ---------- views ---------- */
 function liveHero(c){ return `  <section class="hero lattice"><div class="wrap hero-grid">
     <div class="hero-text fade">
-      <div class="hero-kicker">${pill(c.custom?.month||mM(c.k))}${MI[c.k]&&SEASONS[MI[c.k].y]?pill(cx(SEASONS[MI[c.k].y])):''}</div>
-      <h1 class="sticker"><span class="t">${esc(cTitle())}<svg class="spark" style="top:-14px;inset-inline-start:-20px" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg><svg class="spark s2 inl" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg></span></h1>
+      <div class="hero-kicker">${pill(c.custom?.month||mM(c.k))}${MI[c.k]&&SEASONS[MI[c.k].y]?`<span class="pill season">${esc(cx(SEASONS[MI[c.k].y]))}</span>`:''}</div>
+      <h1 class="sticker${cTitle().length>14?' long':''}"><span class="t">${esc(cTitle())}<svg class="spark" style="top:-14px;inset-inline-start:-20px" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg><svg class="spark s2 inl" viewBox="0 0 100 100" aria-hidden="true">${SPK}</svg></span></h1>
       <p class="lede">${esc(c.custom?.intro||cx(c.intro))}</p>
       <div class="hero-cta">
         <a class="btn btn-mint" href="${GROUP}" target="_blank" rel="noopener">${L('شارك برسمتك','Submit your work')}</a>
