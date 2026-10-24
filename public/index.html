@@ -750,6 +750,10 @@ footer .subband h3{color:#061615}
 <script>
 (async()=>{
 const ADMIN=!!window.ADMIN;
+/* images uploaded from this browser in the last few minutes: the site may not have redeployed yet,
+   so load them with a one-off query string instead of caching a "not found" for the real URL */
+const T0=Date.now(); let PEND={}; try{ PEND=JSON.parse(localStorage.getItem('arabesque-pending')||'{}'); for(const k in PEND) if(T0-PEND[k]>15*60e3) delete PEND[k]; }catch(_){ PEND={}; }
+const ISRC=id=>'img/'+id+'.jpg'+(PEND[id]?'?p='+T0:'');
 let IS_ADMIN=false; try{ IS_ADMIN=localStorage.getItem('arabesque-admin')==='1'; }catch(_){}
 const DATA = await fetch('data.json',{cache:'no-store'}).then(r=>r.json());
 let LANG='ar', MODE='dark';
@@ -791,9 +795,9 @@ MI.old={k:'old',m:['المجموعة القديمة','The original group'],t:['�
 const mT=k=>{const m=MI[k];return m&&m.t?L(m.t[0],m.t[1]):''};
 const mM=k=>{const m=MI[k];return m?L(m.m[0],m.m[1]):''};
 
-function featMap(a){ return {...a,works:(a.works||[]).map(id=>{const f=DATA.works.find(w=>w.id===id)||(DATA.feat||[]).find(w=>w.id===id)||{id};return {...f,src:'img/'+id+'.jpg',by:a.name,m:null,t:f.t||'',fe:1}})}; }
+function featMap(a){ return {...a,works:(a.works||[]).map(id=>{const f=DATA.works.find(w=>w.id===id)||(DATA.feat||[]).find(w=>w.id===id)||{id};return {...f,src:ISRC(id),by:a.name,m:null,t:f.t||'',fe:1}})}; }
 const state={
-  works:DATA.works.map(w=>({...w,src:'img/'+w.id+'.jpg'})),
+  works:DATA.works.map(w=>({...w,src:ISRC(w.id)})),
   refs:(DATA.refs||[]).map(r=>({...r,src:'img/'+r.id+'.jpg',ref:1})),
   current:DATA.current||{
     k:'hijja', art:'img/c-hijja.jpg', artBy:'محمد حنوره', custom:null,
@@ -834,7 +838,7 @@ function worksOf(k){return state.works.filter(w=>w.m===k).sort((a,b)=>(b.hl||0)-
 const wT=w=>LANG==='en'?(w.te||w.t||(w.m?mT(w.m):'From the archive')):(w.t||(w.m?mT(w.m):'من أرشيف أرابيسك'));
 const wB=w=>LANG==='en'?(w.be||nm(w.by)):w.by;
 const AR0=v=>Array.isArray(v)?v[0]:(v||'');
-const thumb=w=>/^img\/[^/]+\.jpg$/.test(w.src||'')?w.src.replace(/^img\//,'img/t/'):w.src;
+const thumb=w=>/^img\/[^/]+\.jpg(\?p=\d+)?$/.test(w.src||'')?w.src.replace(/^img\//,'img/t/'):w.src;
 function tile(w,cls='',ctx='all'){
   const [ww,hh]=w.wh||[4,3]; const t=wT(w); const by=wB(w);
   const extra=w.ref?`<small>${esc(w.by)} · ${esc(w.lic)}</small>`:(by?`<span dir="auto">${esc(by)}</span>`:'');
@@ -1770,7 +1774,7 @@ async function saveData(message,files=[],del=[]){
   try{
     const r=await fetch('api/save',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({message,data:DATA,files,del})});
     let j=null; try{ j=await r.json(); }catch(_){}
-    if(j&&j.ok){ if(j.rev) DATA.rev=j.rev; toast(L('اتحفظ. هيظهر على الموقع خلال دقيقة أو اتنين.','Saved. It will be live in a minute or two.')); return true; }
+    if(j&&j.ok){ if(j.rev) DATA.rev=j.rev; try{ files.forEach(f=>{const m=/^img\/(?:t\/)?([^/]+)\.jpg$/.exec(f.path); if(m) PEND[m[1]]=Date.now();}); localStorage.setItem('arabesque-pending',JSON.stringify(PEND)); }catch(_){} toast(L('اتحفظ. هيظهر على الموقع خلال دقيقة أو اتنين.','Saved. It will be live in a minute or two.')); return true; }
     if(j&&j.error){ toast(L('حصلت مشكلة: ','Error: ')+String(j.error).slice(0,160)); document.querySelectorAll('.authwarn').forEach(x=>x.remove()); const d=document.createElement('div'); d.className='authwarn'; d.dir='auto'; d.textContent=j.error+(j.tokenAud?' (token AUD: '+j.tokenAud+')':'')+(j.email?' ('+j.email+')':''); document.querySelector('.admin > div:last-child').prepend(d); return false; }
     toast(L('نسخة المعاينة: التعديل متحفظش. الحفظ بيشتغل على 3arabesque.art/admin','Preview copy: not saved. Saving works on 3arabesque.art/admin')); return false;
   }catch(e){ toast(L('حصلت مشكلة في الاتصال','Connection problem')); return false; }
