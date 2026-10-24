@@ -715,6 +715,21 @@ footer .subband h3{color:#061615}
 
 .empty-sub{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;border:2px dashed var(--line);border-radius:18px;background:var(--s1)}
 .empty-sub p{margin:0;font-size:16px;color:var(--mute)}
+
+.flist-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.flist-head h3{margin:0}.flist-head input{max-width:240px}
+.frow.on{background:var(--s2);border-radius:10px;padding-inline:8px}
+.fthumb{width:44px;height:44px;object-fit:cover;border-radius:8px;background:var(--s2);flex:0 0 44px}
+.h-editing{display:flex;gap:8px;align-items:center;background:var(--mint);color:var(--ink);border:2px solid #000;border-radius:12px;padding:8px 14px;margin:0 0 14px;font-size:15px}
+.h-cur{margin-top:12px}
+.h-cur-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:8px}
+.h-w{position:relative;border-radius:10px;overflow:hidden;border:2px solid var(--line);aspect-ratio:1;background:var(--s2)}
+.h-w.first{border-color:var(--mint)}
+.h-w img{width:100%;height:100%;object-fit:cover;display:block}
+.h-w span{position:absolute;inset:auto 0 0 0;display:flex;justify-content:space-between;align-items:center;gap:4px;padding:4px;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+.h-w button{width:26px;height:26px;border-radius:8px;border:0;background:rgba(6,22,21,.85);color:#fff;font-size:13px;cursor:pointer}
+.h-w button:hover{background:var(--mint);color:var(--ink)}
+.h-w em{font-style:normal;font-size:11px;font-weight:700;color:var(--ink);background:var(--mint);border-radius:6px;padding:1px 6px}
 </style>
 
 
@@ -1623,7 +1638,7 @@ function vAdmin(){
       <button class="on" data-tab="t1">${L('التحدي','Challenge')}</button>
       <button data-tab="t2">${L('إضافة مشاركات','Add submissions')}</button>
       <button data-tab="t4">${L('تعديل الرسومات','Edit artworks')}</button>
-      <button data-tab="t3">${L('فنان الأسبوع','Artist of the week')}</button>
+      <button data-tab="t3">${L('فنان الأسبوع والرواد','Artist of the week & pioneers')}</button>
       <button data-tab="t5">${L('استيراد من فيسبوك','Import from Facebook')}</button>
       <button data-tab="t6">${L('الإحصائيات والمشتركين','Stats and subscribers')}</button>
       <div class="who"><span id="whoami">${L('بيتأكد…','Checking…')}</span><br><a class="link" href="/cdn-cgi/access/logout" onclick="try{localStorage.removeItem('arabesque-admin')}catch(_){}">${L('خروج','Sign out')}</a></div>
@@ -1709,20 +1724,22 @@ function vAdmin(){
       </form>
       <form class="panel" id="t3" hidden novalidate>
         <h2>${L('فنان الأسبوع والرواد','Artist of the week & pioneers')}</h2>
+        <div class="h-editing" id="h-editing" hidden></div>
         <p class="hint">${L('عندك منشورات كتير على فيسبوك؟ استخدم «استيراد من فيسبوك»، أداة الجمع فيها زرار «اجمع المنشور ده».','Lots of posts on Facebook? Use “Import from Facebook”: the collector has a “Collect this post” button.')}</p>
         <div class="fgrid">
           <div class="field"><label for="h-kind">${L('النوع','Type')}</label><select id="h-kind"><option value="aow">${L('فنان الأسبوع','Artist of the week')}</option><option value="pio">${L('الرواد','Pioneers')}</option></select></div>
           <div class="field"><label for="h-name">${L('اسم الفنان','Artist name')}</label><input id="h-name" list="artist-list"></div>
           <div class="field"><label for="h-ne">${L('الاسم بالإنجليزي (اختياري)','Name in English (optional)')}</label><input id="h-ne" dir="ltr"></div>
           <div class="field"><label for="h-years">${L('السنين (للرواد، مثلًا ١٩٣٠ – ٢٠١٦)','Years (pioneers, e.g. 1930 – 2016)')}</label><input id="h-years"></div>
-          <div class="field"><label for="h-link">${L('لينك أعماله (Behance وغيره)','Portfolio link (Behance etc.)')}</label><input id="h-link" dir="ltr" placeholder="https://"></div>
+          <div class="field"><label for="h-link">${L('لينكات أعماله (Behance وغيره، افصل بينهم بمسافة)','Portfolio links (Behance etc., separated by spaces)')}</label><input id="h-link" dir="ltr" placeholder="https://"></div>
           <div class="field"><label for="h-date">${L('التاريخ','Date')}</label><input id="h-date" placeholder="${L('مثلًا: ٢ أكتوبر','e.g. 2 October')}"></div>
           <div class="field full"><label for="h-about">${L('نبذة','About')}</label><textarea id="h-about" style="min-height:100px"></textarea></div>
           <div class="field full"><label for="h-about-en">${L('النبذة بالإنجليزي (اختياري)','About in English (optional)')}</label><textarea id="h-about-en" dir="ltr" style="min-height:100px"></textarea></div>
-          <div class="field full"><label>${L('الأعمال','Works')}</label><label class="drop" for="h-files"><input type="file" id="h-files" accept="image/*" multiple><b>${L('اختار الصور','Choose images')}</b><small>${L('لو سبتها فاضية، هناخد رسوماته اللي على الموقع','Leave empty to use their artworks already on the site')}</small></label><div class="prev-row" id="h-prev"></div></div>
+          <div class="field full"><label>${L('الأعمال','Works')}</label><label class="drop" for="h-files"><input type="file" id="h-files" accept="image/*" multiple><b>${L('اختار الصور','Choose images')}</b><small>${L('لو سبتها فاضية، هناخد رسوماته اللي على الموقع','Leave empty to use their artworks already on the site')}</small></label><div class="prev-row" id="h-prev"></div><div class="h-cur" id="h-cur" hidden></div></div>
+          <div class="field full" id="h-post-f" hidden><label for="h-post">${L('لينك البوست على فيسبوك','Facebook post link')}</label><input id="h-post" dir="ltr" placeholder="https://"></div>
         </div>
-        <div class="row-end"><button class="btn btn-mint" type="submit">${L('انشر','Publish')}</button></div>
-        <div id="h-list" class="flist"></div>
+        <div class="row-end"><button class="btn btn-ghost" type="button" id="h-cancel" hidden>${L('إلغاء التعديل','Cancel editing')}</button><button class="btn btn-mint" type="submit" id="h-go">${L('انشر','Publish')}</button></div>
+        <div class="flist"><div class="flist-head"><h3>${L('المنشور على الموقع','On the site')}</h3><input id="h-q" type="search" placeholder="${L('دوّر بالاسم','Search by name')}"></div><div id="h-list"></div></div>
       </form>
     </div>
   </div></section>`;
@@ -2121,24 +2138,67 @@ function bindAdmin(){
   /* t3: artist of the week */
   let hF=[];
   $('h-files').addEventListener('change',async e=>{hF=await prepAll(e.target.files);pv($('h-prev'),hF);});
+  let hEd=null, hW=[]; // editing {k,i} and its current works
+  const hArr=k=>k==='pio'?(DATA.pioneers=DATA.pioneers||[]):(DATA.aow=DATA.aow||[]);
+  const hThumb=id=>`img/t/${id}.jpg`;
+  function hCur(){
+    const el=$('h-cur'); el.hidden=!hEd;
+    if(!hEd) { el.innerHTML=''; return; }
+    el.innerHTML=`<p class="hint">${L('الصور الحالية: ★ تخليها الأولى (الغلاف)، ✕ تشيلها. الصور الجديدة اللي هتختارها فوق هتتضاف بعدهم.','Current images: ★ makes it first (the cover), ✕ removes it. New images you choose above are added after them.')}</p><div class="h-cur-grid">${hW.map((id,j)=>`<div class="h-w${j?'':' first'}"><img src="${hThumb(id)}" onerror="this.src='img/${id}.jpg'" alt=""><span>${j?`<button type="button" data-hw="top:${j}" title="${L('الغلاف','Cover')}">★</button>`:`<em>${L('الغلاف','Cover')}</em>`}<button type="button" data-hw="del:${j}" title="${L('شيل','Remove')}">✕</button></span></div>`).join('')}</div>`;
+  }
+  $('h-cur').addEventListener('click',e=>{ const x=e.target.closest('[data-hw]'); if(!x) return; const [op,j]=x.dataset.hw.split(':'); const id=hW[+j];
+    hW.splice(+j,1); if(op==='top') hW.unshift(id); hCur(); });
+  function hReset(){ hEd=null; hW=[]; hF=[]; $('h-prev').innerHTML=''; $('t3').reset(); $('h-editing').hidden=true; $('h-cancel').hidden=true; $('h-post-f').hidden=true; $('h-go').textContent=L('انشر','Publish'); hCur(); renderFList(); }
+  function hEdit(k,i){
+    const a=hArr(k)[i]; if(!a) return; hEd={k,i}; hW=[...(a.works||[])]; hF=[]; $('h-prev').innerHTML='';
+    $('h-kind').value=k; $('h-name').value=a.name||''; $('h-ne').value=(DATA.names||{})[a.name]||''; $('h-years').value=a.years||'';
+    $('h-link').value=(a.links&&a.links.length?a.links:(a.link?[a.link]:[])).join(' '); $('h-date').value=cx(a.date)||a.d||'';
+    $('h-about').value=a.about?a.about[0]:''; $('h-about-en').value=a.about&&a.about[1]!==a.about[0]?a.about[1]:''; $('h-post').value=a.post||'';
+    $('h-post-f').hidden=false; $('h-cancel').hidden=false; $('h-go').textContent=L('احفظ التعديل','Save changes');
+    $('h-editing').hidden=false; $('h-editing').innerHTML=`<b>${L('بتعدّل: ','Editing: ')}</b><span dir="auto">${esc(a.name)}</span>`;
+    hCur(); renderFList(); $('t3').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  $('h-cancel').addEventListener('click',hReset);
+  const hCleanup=ids=>{ const used=new Set(DATA.works.map(w=>w.id).concat(...(DATA.aow||[]).map(x=>x.works||[]),...(DATA.pioneers||[]).map(x=>x.works||[])));
+    const gone=ids.filter(id=>!used.has(id)&&(DATA.feat||[]).some(f=>f.id===id)); DATA.feat=(DATA.feat||[]).filter(f=>!gone.includes(f.id)); return gone.flatMap(id=>[`img/${id}.jpg`,`img/t/${id}.jpg`]); };
   $('t3').addEventListener('submit',async e=>{
     e.preventDefault(); const name=$('h-name').value.trim(); if(!name){toast(L('اكتب اسم الفنان','Enter the artist name'));return;}
-    const d=$('h-date').value.trim(), ab=$('h-about').value.trim(), abe=$('h-about-en').value.trim(), files=[]; let ids;
-    if(hF.length){ DATA.feat=DATA.feat||[]; ids=hF.map(f=>{const id='h'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.feat.push({id,wh:f.wh,t:''}); return id;}); }
-    else { ids=DATA.works.filter(w=>w.by===name).slice(0,8).map(w=>w.id); if(!ids.length){toast(L('مفيش رسومات باسمه على الموقع، ارفع صور','No artworks under that name yet; upload some'));return;} }
-    const kind=$('h-kind').value, ne=$('h-ne').value.trim(), link=$('h-link').value.trim(), years=$('h-years').value.trim();
-    const entry={name,date:[d,d],about:ab?[ab,abe||ab]:null,works:ids,link:link||undefined,at:new Date().toISOString()};
+    const d=$('h-date').value.trim(), ab=$('h-about').value.trim(), abe=$('h-about-en').value.trim(), files=[];
+    const kind=$('h-kind').value, ne=$('h-ne').value.trim(), years=$('h-years').value.trim();
+    const links=$('h-link').value.split(/[\s,،]+/).map(x=>x.trim()).filter(x=>/^https?:\/\//i.test(x));
+    const up=()=>{ DATA.feat=DATA.feat||[]; return hF.map(f=>{const id='h'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.feat.push({id,wh:f.wh,t:''}); return id;}); };
     if(ne){ DATA.names=DATA.names||{}; DATA.names[name]=ne; }
+    if(hEd){
+      const snap=JSON.stringify(DATA), src=hArr(hEd.k), old=src[hEd.i], ids=[...hW,...up()];
+      if(!ids.length){ toast(L('لازم صورة واحدة على الأقل','Keep at least one image')); return; }
+      const oldD=cx(old.date)||old.d||'';
+      const entry={...old,name,about:ab?[ab,abe||ab]:null,works:ids,link:links[0]||undefined,links:links.length?links:undefined,post:$('h-post').value.trim()||undefined};
+      if(d!==oldD){ entry.date=[d,d]; delete entry.d; }
+      if(kind==='pio') entry.years=years||undefined; else delete entry.years;
+      if(kind===hEd.k) src[hEd.i]=entry; else { src.splice(hEd.i,1); hArr(kind).unshift(entry); }
+      const del=hCleanup((old.works||[]).filter(id=>!ids.includes(id)));
+      if(await saveData(`Edit ${kind==='pio'?'pioneer':'artist of the week'}: ${name}`,files,del)) hReset();
+      else { Object.keys(DATA).forEach(x=>delete DATA[x]); Object.assign(DATA,JSON.parse(snap)); }
+      return;
+    }
+    let ids;
+    if(hF.length) ids=up();
+    else { ids=DATA.works.filter(w=>w.by===name).slice(0,8).map(w=>w.id); if(!ids.length){toast(L('مفيش رسومات باسمه على الموقع، ارفع صور','No artworks under that name yet; upload some'));return;} }
+    const entry={name,date:[d,d],about:ab?[ab,abe||ab]:null,works:ids,link:links[0]||undefined,links:links.length?links:undefined,at:new Date().toISOString()};
     if(kind==='pio'){ entry.years=years||undefined; DATA.pioneers=[entry,...(DATA.pioneers||[])]; }
     else DATA.aow=[entry,...(DATA.aow||[])];
-    if(await saveData(`${kind==='pio'?'Pioneer':'Artist of the week'}: ${name}`,files)){ hF=[]; $('h-prev').innerHTML=''; e.target.reset(); renderFList(); }
+    if(await saveData(`${kind==='pio'?'Pioneer':'Artist of the week'}: ${name}`,files)) hReset();
   });
   function renderFList(){
-    const row=(a,i,k)=>`<div class="frow"><span class="fk">${k==='pio'?L('الرواد','Pioneer'):L('فنان الأسبوع','AOW')}</span><b dir="auto">${esc(a.name)}</b><span class="hint">${esc(cx(a.date)||'')} · ${A((a.works||[]).length)} ${L('صورة','images')}</span><button type="button" class="btn btn-ghost" data-fdel="${k}:${i}">${L('امسح','Delete')}</button></div>`;
-    $('h-list').innerHTML=`<h3>${L('المنشور على الموقع','On the site')}</h3>`+(DATA.pioneers||[]).map((a,i)=>row(a,i,'pio')).join('')+(DATA.aow||[]).map((a,i)=>row(a,i,'aow')).join('');
+    const q=($('h-q').value||'').trim().toLowerCase();
+    const row=(a,i,k)=>{ if(q&&!(a.name+' '+((DATA.names||{})[a.name]||'')).toLowerCase().includes(q)) return ''; const on=hEd&&hEd.k===k&&hEd.i===i;
+      return `<div class="frow${on?' on':''}"><img class="fthumb" src="${a.works&&a.works[0]?hThumb(a.works[0]):''}" onerror="this.style.visibility='hidden'" alt=""><span class="fk">${k==='pio'?L('الرواد','Pioneer'):L('فنان الأسبوع','AOW')}</span><b dir="auto">${esc(a.name)}</b><span class="hint">${esc(cx(a.date)||'')} · ${A((a.works||[]).length)} ${L('صورة','images')}</span><button type="button" class="btn btn-mint" data-fed="${k}:${i}">${L('عدّل','Edit')}</button><button type="button" class="btn btn-ghost" data-fdel="${k}:${i}">${L('امسح','Delete')}</button></div>`; };
+    $('h-list').innerHTML=(DATA.pioneers||[]).map((a,i)=>row(a,i,'pio')).join('')+(DATA.aow||[]).map((a,i)=>row(a,i,'aow')).join('');
   }
+  $('h-q').addEventListener('input',renderFList);
   renderFList();
-  $('h-list').addEventListener('click',async e=>{ const b=e.target.closest('[data-fdel]'); if(!b) return; const [k,i]=b.dataset.fdel.split(':'); const arr=k==='pio'?DATA.pioneers:DATA.aow; const a=arr[+i];
+  $('h-list').addEventListener('click',async e=>{ const ed=e.target.closest('[data-fed]'); if(ed){ const [k,i]=ed.dataset.fed.split(':'); hEdit(k,+i); return; }
+    const b=e.target.closest('[data-fdel]'); if(!b) return; if(hEd) hReset(); const [k,i]=b.dataset.fdel.split(':'); const arr=k==='pio'?DATA.pioneers:DATA.aow; const a=arr[+i];
     if(!confirm(L('تمسح ','Delete ')+a.name+'?')) return;
     const snap=JSON.stringify(DATA); arr.splice(+i,1);
     const used=new Set(DATA.works.map(w=>w.id).concat(...(DATA.aow||[]).map(x=>x.works||[]),...(DATA.pioneers||[]).map(x=>x.works||[])));
