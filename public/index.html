@@ -2137,7 +2137,8 @@ function bindAdmin(){
   $('h-files').addEventListener('change',async e=>{hF=await prepAll(e.target.files);pv($('h-prev'),hF);});
   let hEd=null, hW=[]; // editing {k,i} and its current works
   const hArr=k=>k==='pio'?(DATA.pioneers=DATA.pioneers||[]):(DATA.aow=DATA.aow||[]);
-  const hThumb=id=>`img/t/${id}.jpg`;
+  const hLocal={}; // images saved this session, shown locally until the site redeploys
+  const hThumb=id=>hLocal[id]||`img/t/${id}.jpg`;
   function hCur(){
     const el=$('h-cur'); el.hidden=!hEd;
     if(!hEd) { el.innerHTML=''; return; }
@@ -2163,7 +2164,7 @@ function bindAdmin(){
     const d=$('h-date').value.trim(), ab=$('h-about').value.trim(), abe=$('h-about-en').value.trim(), files=[];
     const kind=$('h-kind').value, ne=$('h-ne').value.trim(), years=$('h-years').value.trim();
     const links=$('h-link').value.split(/[\s,،]+/).map(x=>x.trim()).filter(x=>/^https?:\/\//i.test(x));
-    const up=()=>{ DATA.feat=DATA.feat||[]; return hF.map(f=>{const id='h'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.feat.push({id,wh:f.wh,t:''}); return id;}); };
+    const up=()=>{ DATA.feat=DATA.feat||[]; return hF.map(f=>{const id='h'+uid(); hLocal[id]=f.src; files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.feat.push({id,wh:f.wh,t:''}); return id;}); };
     if(ne){ DATA.names=DATA.names||{}; DATA.names[name]=ne; }
     if(hEd){
       const snap=JSON.stringify(DATA), src=hArr(hEd.k), old=src[hEd.i], ids=[...hW,...up()];
