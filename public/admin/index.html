@@ -771,6 +771,9 @@ footer .subband h3{color:#061615}
 .news-tags{display:flex;flex-wrap:wrap;gap:8px}
 .news-tags span{font-size:13px;font-weight:700;color:var(--acc);border:1px solid var(--chipb);border-radius:999px;padding:3px 12px}
 @media (max-width:860px){.ngrid,.news-body,.solo .ncard{grid-template-columns:1fr}.ngrid .ncard.big{grid-row:auto}.solo .ncard-img{min-height:0;aspect-ratio:16/10}}
+
+/* text for search engines; the app replaces it as soon as it starts, so keep it invisible */
+.seo-fallback{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 </style>
 
 
@@ -786,7 +789,7 @@ footer .subband h3{color:#061615}
     <button class="burger" id="burger" aria-expanded="false" aria-controls="nav"></button>
   </div>
 </header>
-<main id="app"><section class="sec"><div class="wrap seo-fallback">
+<main id="app"><section class="seo-fallback"><div>
 <h1>أرابيسك (Arabesque)</h1>
 <p>أرابيسك مجتمع فني عربي غير ربحي بدأ عام 2016، ينظم كل شهر تحدي رسم يستلهم موضوعه من التاريخ والتراث العربي والإسلامي، الواقعي والأدبي والخيالي. أسسه الفنانان إسلام أبوشادي وأحمد نبيل.</p>
 <p>على الموقع: التحدي الحالي ومصادره، أرشيف كل التحديات السابقة ومشاركات الفنانين فيها، دليل الفنانين، فنان الأسبوع، وقاعة الرواد التي تحتفي بفناني العالم العربي الرواد.</p>
