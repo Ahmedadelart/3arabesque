@@ -76,28 +76,34 @@ export async function onRequestPost({ request, env }) {
 
   const repo = env.GITHUB_REPO, branch = env.GITHUB_BRANCH || 'main', dir = (env.SITE_DIR ?? 'public').replace(/\/$/, '');
   const P = p => (dir ? dir + '/' : '') + p;
-  const gh = async (path, init = {}) => {
-    const r = await fetch(`https://api.github.com/repos/${repo}${path}`, {
-      ...init,
-      headers: {
-        authorization: `Bearer ${env.GITHUB_TOKEN}`,
-        accept: 'application/vnd.github+json',
-        'user-agent': 'arabesque-admin',
-        'x-github-api-version': '2022-11-28',
-        ...(init.body ? { 'content-type': 'application/json' } : {}),
-      },
-    });
-    const t = await r.text();
-    if (!r.ok) throw new Error(`GitHub ${r.status}: ${t.slice(0, 200)}`);
-    return t ? JSON.parse(t) : {};
+  // GitHub's API sometimes answers 500/502/503 for a moment: try the same call again a few times
+  // (every call here is safe to repeat) before giving up.
+  const gh = async (path, init = {}, raw = false) => {
+    for (let attempt = 0; ; attempt++) {
+      const r = await fetch(`https://api.github.com/repos/${repo}${path}`, {
+        ...init,
+        headers: {
+          authorization: `Bearer ${env.GITHUB_TOKEN}`,
+          accept: raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json',
+          'user-agent': 'arabesque-admin',
+          'x-github-api-version': '2022-11-28',
+          ...(init.body ? { 'content-type': 'application/json' } : {}),
+        },
+      });
+      const t = await r.text();
+      if (r.ok) return raw ? t : (t ? JSON.parse(t) : {});
+      if ((r.status >= 500 || r.status === 429) && attempt < 3) { await new Promise(res => setTimeout(res, 700 * (attempt + 1))); continue; }
+      throw new Error(`GitHub ${r.status}: ${t.slice(0, 200)}`);
+    }
   };
+  // data.json as stored at a commit (raw, so it keeps working past GitHub's 1 MB limit for inline content)
+  const readData = async sha => JSON.parse(await gh(`/contents/${P('data.json')}?ref=${sha}`, {}, true));
 
   try {
     // 2) Guard against two admins overwriting each other.
     const ref = await gh(`/git/ref/heads/${branch}`);
     const head = ref.object.sha;
-    const curFile = await gh(`/contents/${P('data.json')}?ref=${head}`);
-    const current = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(curFile.content.replace(/\n/g, '')), c => c.charCodeAt(0))));
+    const current = await readData(head);
     if ((current.rev || 0) !== (data.rev || 0))
       return json({ error: 'Someone else saved changes a moment ago. Reload the page and try again.' }, 409);
     data.rev = (data.rev || 0) + 1;
@@ -124,8 +130,7 @@ export async function onRequestPost({ request, env }) {
       catch (err) {
         if (attempt === 2) throw err;
         const now = (await gh(`/git/ref/heads/${branch}`)).object.sha;
-        const f2 = await gh(`/contents/${P('data.json')}?ref=${now}`);
-        const cur2 = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(f2.content.replace(/\n/g, '')), ch => ch.charCodeAt(0))));
+        const cur2 = await readData(now);
         if ((cur2.rev || 0) !== (current.rev || 0)) return json({ error: 'Someone else saved changes a moment ago. Reload the page and try again.' }, 409);
         parent = now;
       }
