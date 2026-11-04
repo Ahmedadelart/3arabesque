@@ -772,6 +772,23 @@ footer .subband h3{color:#061615}
 
 /* text for search engines; the app replaces it as soon as it starts, so keep it invisible */
 .seo-fallback{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+
+.nfeat{display:grid;grid-template-columns:minmax(260px,.75fr) minmax(0,2fr);background:var(--s1);border:2px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:0 6px 0 var(--hard)}
+.nfeat-text{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:clamp(20px,2.6vw,36px);text-decoration:none;color:var(--fg)}
+.nfeat-text b{font-family:var(--f-display);font-weight:400;font-size:clamp(24px,2.4vw,34px);line-height:1.35}
+.nfeat-text .link{margin-top:auto}
+.nfeat-text:hover b{color:var(--acc)}
+.nstrip{display:flex;gap:10px;padding:12px;overflow-x:auto;scroll-snap-type:x proximity;height:clamp(300px,30vw,440px);align-items:stretch;scrollbar-width:thin;scrollbar-color:var(--acc) transparent}
+.nstrip .nst{flex:0 0 auto;height:100%;width:auto;aspect-ratio:var(--r);margin:0;border-radius:12px;scroll-snap-align:start;background:var(--s2)}
+.nstrip .nst img{width:100%;height:100%;object-fit:contain;display:block}
+.nst-more{flex:0 0 auto;display:grid;place-items:center;min-width:120px;border-radius:12px;background:var(--s2);color:var(--acc);font-family:var(--f-display);font-size:30px;text-decoration:none}
+@media (max-width:860px){.nfeat{grid-template-columns:1fr}.nstrip{height:260px;padding-top:0}}
+
+.nstrip-wrap{position:relative;min-width:0}
+.nsl{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:44px;height:44px;border-radius:50%;border:2px solid #000;background:var(--mint);color:var(--ink);font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 4px 0 #000;display:grid;place-items:center}
+.nsl:hover{background:var(--star)}
+.nsl.prev{inset-inline-start:18px}.nsl.next{inset-inline-end:18px}
+@media (hover:none){.nsl{display:none}}
 </style>
 
 
@@ -1288,10 +1305,16 @@ function vAowOne(key){
 }
 function ncard(a,big){ const w=a.works[0];
   return `<a class="ncard${big?' big':''}" href="#news/${esc(fkey(a))}"><span class="ncard-img">${cover(w)}${a.works.length>1?`<em>${A(a.works.length)} ${L('صورة','photos')}</em>`:''}</span><span class="ncard-body"><span class="tag-now">${esc(fdate(a))}</span><b dir="auto">${esc(nm(a.name))}</b>${a.about?`<span class="ncard-ex" dir="auto">${esc(clip(cx(a.about).replace(/#\S+/g,''),big?260:130))}</span>`:''}<span class="link">${L('اقرأ الخبر','Read more')} ${FW()}</span></span></a>`; }
-function homeNews(){ const [n0,...rest]=state.news;
+function homeNews(){ const [n0,...rest]=state.news, key=esc(fkey(n0));
+  const ph=n0.works.slice(0,12).map(w=>{ const r=w.wh&&w.wh[1]?w.wh[0]/w.wh[1]:1.33;
+    return `<button class="tile nst" data-w="${esc(w.id)}" data-ctx="news0" style="--r:${r.toFixed(3)}" aria-label="${esc(nm(n0.name))}"><img loading="lazy" decoding="async" src="${esc(w.src)}" alt=""></button>`; }).join('');
   return `<section class="sec news-home"><div class="wrap">
     <div class="sec-head"><h2>${L('أخبار أرابيسك','Arabesque news')}</h2>${state.news.length>1?`<a class="link" href="#news">${L('كل الأخبار','All news')} (${A(state.news.length)}) ${FW()}</a>`:''}</div>
-    <div class="ngrid${rest.length?'':' solo'}">${ncard(n0,1)}${rest.slice(0,2).map(x=>ncard(x)).join('')}</div>
+    <div class="nfeat">
+      <a class="nfeat-text" href="#news/${key}"><span class="tag-now">${esc(fdate(n0))}</span><b dir="auto">${esc(nm(n0.name))}</b>${n0.about?`<span class="ncard-ex" dir="auto">${esc(clip(cx(n0.about).replace(/#\S+/g,''),300))}</span>`:''}<span class="link">${L('اقرأ الخبر','Read more')}${n0.works.length>1?` · ${A(n0.works.length)} ${L('صورة','photos')}`:''} ${FW()}</span></a>
+      <div class="nstrip-wrap">${n0.works.length>2?`<button type="button" class="nsl prev" data-nsl="-1" aria-label="${L('السابق','Previous')}">${BK()}</button><button type="button" class="nsl next" data-nsl="1" aria-label="${L('التالي','Next')}">${FW()}</button>`:''}<div class="nstrip" tabindex="0" aria-label="${L('صور الخبر','News photos')}">${ph}${n0.works.length>12?`<a class="nst-more" href="#news/${key}">+${A(n0.works.length-12)}</a>`:''}</div></div>
+    </div>
+    ${rest.length?`<div class="ngrid list" style="margin-top:22px">${rest.slice(0,3).map(x=>ncard(x)).join('')}</div>`:''}
   </div></section>`; }
 function vNews(){
   return `
@@ -1664,6 +1687,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('#burger')){const n=document.getElementById('nav');n.classList.toggle('open');e.target.closest('#burger').setAttribute('aria-expanded',n.classList.contains('open'));return;}
   const hr=e.target.closest('.hrot-wrap');
   if(hr){ const on=hr.querySelector('.hrot.on'); lbList=HP.slice(); lbI=Math.max(0,lbList.findIndex(w=>w.id===on?.dataset.w)); openLB(); return; }
+  const ns=e.target.closest('[data-nsl]'); if(ns){ const s=ns.parentElement.querySelector('.nstrip'); const dir=(+ns.dataset.nsl)*(document.dir==='rtl'?-1:1); s.scrollBy({left:dir*s.clientWidth*.8,behavior:'smooth'}); return; }
   const t=e.target.closest('.tile');
   if(t){ lbList=ctxList(t.dataset.ctx).filter(Boolean); lbI=Math.max(0,lbList.findIndex(w=>w.id===t.dataset.w)); openLB(); return;}
   const f=e.target.closest('#filters button');
