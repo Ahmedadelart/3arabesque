@@ -738,6 +738,37 @@ footer .subband h3{color:#061615}
 .h-w button{width:26px;height:26px;border-radius:8px;border:0;background:rgba(6,22,21,.85);color:#fff;font-size:13px;cursor:pointer}
 .h-w button:hover{background:var(--mint);color:var(--ink)}
 .h-w em{font-style:normal;font-size:11px;font-weight:700;color:var(--ink);background:var(--mint);border-radius:6px;padding:1px 6px}
+
+/* news */
+.ngrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);grid-template-rows:auto auto;gap:18px}
+.ngrid.solo{grid-template-columns:1fr}
+.ngrid .ncard.big{grid-row:span 2}
+.ngrid.list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.ncard{display:flex;flex-direction:column;text-decoration:none;color:var(--fg);background:var(--s1);border:2px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:0 6px 0 var(--hard);transition:transform .15s,box-shadow .15s}
+.ncard:hover{transform:translateY(-3px);box-shadow:0 9px 0 var(--hard)}
+.ncard-img{position:relative;display:block;aspect-ratio:16/9;background:var(--s2);overflow:hidden}
+.ncard.big .ncard-img{aspect-ratio:16/10}
+.ncard-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+.ncard:hover .ncard-img img{transform:scale(1.03)}
+.ncard-img em{position:absolute;inset-inline-start:12px;bottom:12px;font-style:normal;font-size:12px;font-weight:700;background:rgba(6,22,21,.85);color:#f3f6ef;border-radius:8px;padding:3px 9px}
+.ncard-body{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:18px 20px 20px;flex:1}
+.ncard-body b{font-family:var(--f-display);font-weight:400;font-size:clamp(22px,2vw,28px);line-height:1.3}
+.ncard.big .ncard-body b{font-size:clamp(26px,2.8vw,40px)}
+.ncard-ex{font-size:15px;line-height:1.75;color:var(--mute)}
+.ncard-body .link{margin-top:auto}
+.solo .ncard{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+.solo .ncard-img{aspect-ratio:auto;min-height:320px;height:100%}
+.solo .ncard-body{justify-content:center;padding:clamp(22px,3vw,44px)}
+.news-head{display:grid;gap:14px;justify-items:start}
+.news-head h1{font-size:clamp(36px,5vw,72px);line-height:1.2}
+.news-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(22px,4vw,56px);align-items:start}
+.news-cover{display:block;padding:0;border:3px solid #000;border-radius:20px;overflow:hidden;box-shadow:0 8px 0 #000;background:var(--s2);cursor:zoom-in}
+.news-cover img{width:100%;height:auto;display:block}
+.news-text{display:grid;gap:22px}
+.news-text .prose p{margin:0 0 14px}
+.news-tags{display:flex;flex-wrap:wrap;gap:8px}
+.news-tags span{font-size:13px;font-weight:700;color:var(--acc);border:1px solid var(--chipb);border-radius:999px;padding:3px 12px}
+@media (max-width:860px){.ngrid,.news-body,.solo .ncard{grid-template-columns:1fr}.ngrid .ncard.big{grid-row:auto}.solo .ncard-img{min-height:0;aspect-ratio:16/10}}
 </style>
 
 
@@ -840,6 +871,7 @@ const state={
     chips:[['مقرنصات','Muqarnas'],['مئذنة مملوكية','Mamluk minaret'],['مسجد السلطان حسن','Sultan Hassan Mosque'],['الجامع الأموي','Umayyad Mosque'],['إيوان','Iwan'],['مسجد السلطان أحمد','Sultan Ahmed Mosque'],['قبة بصلية','Mughal dome'],['مشربية','Mashrabiya'],['الجامع الأزهر','Al-Azhar Mosque']]
   },
   pioneers:(DATA.pioneers||[]).map(featMap),
+  news:(DATA.news||[]).map(a=>{const x=featMap(a); x.works=x.works.map(w=>({...w,by:(DATA.works.find(v=>v.id===w.id)||{}).by||''})); return x;}),
   aow:DATA.aow?DATA.aow.map(featMap):[
     {name:'جهاد الخولى',date:['سبتمبر','September'],about:['لقطات سينمائية بالنار والضوء، والإضاءة فيها بتحكي القصة لوحدها.','Cinematic frames of fire and light, where the lighting tells the story on its own.'],works:DATA.feat.map(f=>({...f,src:'img/'+f.id+'.jpg',t:'',by:'جهاد الخولى',m:null}))},
     {name:'عبد الله وجيه',date:['١٨ سبتمبر','18 September'],about:null,works:[]}
@@ -1044,6 +1076,7 @@ function vHome(){
     <div class="jgal" data-trim data-rows="3">${pick.map(w=>tile(w,'','hl')).join('')}</div>
   </div></section>
 
+  ${state.news.length?homeNews():''}
   ${a?homeAow(a):''}
   ${state.pioneers.length?homePio():''}
 
@@ -1249,6 +1282,42 @@ function vAowOne(key){
     <div class="masonry">${a.works.map(w=>tile(w,'','aow'+i)).join('')}</div>
     <div class="pager">${prev?`<a class="btn btn-ghost" href="#aow/${esc(fkey(prev))}">${BK()} ${esc(nm(prev.name))}</a>`:'<span></span>'}${next?`<a class="btn btn-ghost" href="#aow/${esc(fkey(next))}">${esc(nm(next.name))} ${FW()}</a>`:'<span></span>'}</div>
   </div></section>`;
+}
+function ncard(a,big){ const w=a.works[0];
+  return `<a class="ncard${big?' big':''}" href="#news/${esc(fkey(a))}"><span class="ncard-img">${cover(w)}${a.works.length>1?`<em>${A(a.works.length)} ${L('صورة','photos')}</em>`:''}</span><span class="ncard-body"><span class="tag-now">${esc(fdate(a))}</span><b dir="auto">${esc(nm(a.name))}</b>${a.about?`<span class="ncard-ex" dir="auto">${esc(clip(cx(a.about).replace(/#\S+/g,''),big?260:130))}</span>`:''}<span class="link">${L('اقرأ الخبر','Read more')} ${FW()}</span></span></a>`; }
+function homeNews(){ const [n0,...rest]=state.news;
+  return `<section class="sec news-home"><div class="wrap">
+    <div class="sec-head"><h2>${L('أخبار أرابيسك','Arabesque news')}</h2>${state.news.length>1?`<a class="link" href="#news">${L('كل الأخبار','All news')} (${A(state.news.length)}) ${FW()}</a>`:''}</div>
+    <div class="ngrid${rest.length?'':' solo'}">${ncard(n0,1)}${rest.slice(0,2).map(x=>ncard(x)).join('')}</div>
+  </div></section>`; }
+function vNews(){
+  return `
+  <section class="phead lattice"><div class="wrap"><h1 class="sticker">${L('الأخبار','News')}</h1><p>${L('آخر أخبار أرابيسك ومشاركاته وفعالياته.','The latest Arabesque news, appearances and events.')}</p></div></section>
+  <section class="sec"><div class="wrap"><div class="ngrid list">${state.news.map(x=>ncard(x)).join('')||`<p class="hint">${L('قريبًا','Coming soon')}</p>`}</div></div></section>`;
+}
+function vNewsOne(key){
+  const i=state.news.findIndex(a=>fkey(a)===key); if(i<0) return vNews();
+  const a=state.news[i], prev=state.news[i+1], next=state.news[i-1];
+  const tags=(cx(a.about)||'').match(/#[\w\u0600-\u06FF]+/g)||[];
+  return `
+  <section class="phead lattice"><div class="wrap news-head">
+    <div class="crumbs"><a href="#news">${L('الأخبار','News')}</a> / ${esc(nm(a.name))}</div>
+    <span class="tag-now">${esc(fdate(a))}</span>
+    <h1 class="sticker">${esc(nm(a.name))}</h1>
+  </div></section>
+  <section class="sec"><div class="wrap news-body">
+    ${a.works[0]?`<button class="news-cover tile" data-w="${esc(a.works[0].id)}" data-ctx="news${i}" aria-label="${esc(nm(a.name))}"><img src="${esc(a.works[0].src)}" alt=""></button>`:''}
+    <div class="news-text">
+      ${a.about?`<div class="prose big">${paras(cx(a.about).replace(/#[\w\u0600-\u06FF]+/g,'').trim())}</div>`:''}
+      ${tags.length?`<div class="news-tags">${tags.map(t=>`<span dir="ltr">${esc(t)}</span>`).join('')}</div>`:''}
+      <div class="btnrow">${linkBtns(a,'btn-mint')}${a.post?`<a class="btn btn-ghost" href="${esc(a.post)}" target="_blank" rel="noopener">${L('المنشور على فيسبوك','The post on Facebook')} ↗</a>`:''}</div>
+    </div>
+  </div></section>
+  ${a.works.length>1?`<section class="sec" style="padding-top:0"><div class="wrap">
+    <div class="sec-head"><h2>${L('الصور','Photos')} (${A(a.works.length)})</h2></div>
+    <div class="masonry">${a.works.map(w=>tile(w,'','news'+i)).join('')}</div>
+  </div></section>`:''}
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="pager">${prev?`<a class="btn btn-ghost" href="#news/${esc(fkey(prev))}">${BK()} ${esc(nm(prev.name))}</a>`:'<span></span>'}${next?`<a class="btn btn-ghost" href="#news/${esc(fkey(next))}">${esc(nm(next.name))} ${FW()}</a>`:'<span></span>'}</div></div></section>`;
 }
 function vPioneers(){
   return `
@@ -1459,7 +1528,7 @@ function renderChrome(){
   document.getElementById('nav').innerHTML=`
     <a href="#home" data-r="home">${L('الرئيسية','Home')}</a>
     <a href="#challenges" data-r="challenges">${L('التحديات','Challenges')}</a>
-    <a href="#artists" data-r="artists">${L('الفنانين','Artists')}</a>${state.pioneers.length?`\n    <a href="#pioneers" data-r="pioneers">${L('الرواد','Pioneers')}</a>`:''}
+    <a href="#artists" data-r="artists">${L('الفنانين','Artists')}</a>${state.pioneers.length?`\n    <a href="#pioneers" data-r="pioneers">${L('الرواد','Pioneers')}</a>`:''}${state.news.length?`\n    <a href="#news" data-r="news">${L('الأخبار','News')}</a>`:''}
     <a href="#about" data-r="about">${L('عن أرابيسك','About')}</a>${ADMIN||IS_ADMIN?`\n    <a href="admin/" data-r="admin">${L('لوحة التحكم','Dashboard')}</a>`:''}`;
   const ml=MODE==='dark'?L('الوضع الفاتح','Light mode'):L('الوضع الغامق','Dark mode');
   document.getElementById('utils').innerHTML=`
@@ -1526,6 +1595,8 @@ function route(keepScroll){
   else if(h.startsWith('aow/')){ html=vAowOne(decodeURIComponent(h.slice(4))); r='artists'; }
   else if(h==='pioneers') html=vPioneers();
   else if(h.startsWith('pio/')){ html=vPioOne(decodeURIComponent(h.slice(4))); r='pioneers'; }
+  else if(h==='news') html=vNews();
+  else if(h.startsWith('news/')){ html=vNewsOne(decodeURIComponent(h.slice(5))); r='news'; }
   else if(h==='about') html=vAbout();
   else if(h==='links'||FOUNDERS[h]){ html=vLinks(h); r='links'; }
   else if(h==='brief'){ app.innerHTML=`<div>${vHome()}</div>`; mark('home'); document.getElementById('brief').scrollIntoView(); return;}
@@ -1569,12 +1640,13 @@ function startReels(){
   });
 }
 /* ---------- interactions ---------- */
-function findW(id){return state.works.find(w=>w.id===id)||state.refs.find(w=>w.id===id)||state.aow.flatMap(a=>a.works).find(w=>w.id===id)||state.pioneers.flatMap(a=>a.works).find(w=>w.id===id)}
+function findW(id){return state.works.find(w=>w.id===id)||state.refs.find(w=>w.id===id)||state.aow.flatMap(a=>a.works).find(w=>w.id===id)||state.pioneers.flatMap(a=>a.works).find(w=>w.id===id)||state.news.flatMap(a=>a.works).find(w=>w.id===id)}
 function ctxList(ctx){
   if(ctx.startsWith('refs')) return ctx==='refs'?state.refs:state.refs.filter(r=>r.m===ctx.slice(5));
   if(ctx.startsWith('m-')) return worksOf(ctx.slice(2));
   if(ctx.startsWith('aow')) return state.aow[+ctx.slice(3)].works;
   if(ctx.startsWith('pio')) return state.pioneers[+ctx.slice(3)].works;
+  if(ctx.startsWith('news')) return state.news[+ctx.slice(4)].works;
   if(ctx.startsWith('by-')) return state.works.filter(w=>aKey(w)===ctx.slice(3));
   if(ctx==='hl') return [...document.querySelectorAll('.tile[data-ctx="hl"]')].filter(b=>!b.hidden).map(b=>findW(b.dataset.w));
   if(ctx==='all') return [...document.querySelectorAll('#allgrid .tile')].filter(b=>!b.hidden).map(b=>findW(b.dataset.w));
@@ -1655,7 +1727,7 @@ function vAdmin(){
       <button class="on" data-tab="t1">${L('التحدي','Challenge')}</button>
       <button data-tab="t2">${L('إضافة مشاركات','Add submissions')}</button>
       <button data-tab="t4">${L('تعديل الرسومات','Edit artworks')}</button>
-      <button data-tab="t3">${L('فنان الأسبوع والرواد','Artist of the week & pioneers')}</button>
+      <button data-tab="t3">${L('فنان الأسبوع والرواد والأخبار','Artist of the week, pioneers & news')}</button>
       <button data-tab="t5">${L('استيراد من فيسبوك','Import from Facebook')}</button>
       <button data-tab="t6">${L('الإحصائيات والمشتركين','Stats and subscribers')}</button>
       <div class="who"><span id="whoami">${L('بيتأكد…','Checking…')}</span><br><a class="link" href="/cdn-cgi/access/logout" onclick="try{localStorage.removeItem('arabesque-admin')}catch(_){}">${L('خروج','Sign out')}</a></div>
@@ -1740,17 +1812,17 @@ function vAdmin(){
         <div class="row-end"><span class="hint" id="i-count"></span><button class="btn btn-mint" type="submit" id="i-go" disabled>${L('استورد المختارين','Import selected')}</button></div>
       </form>
       <form class="panel" id="t3" hidden novalidate>
-        <h2>${L('فنان الأسبوع والرواد','Artist of the week & pioneers')}</h2>
+        <h2>${L('فنان الأسبوع والرواد والأخبار','Artist of the week, pioneers & news')}</h2>
         <div class="h-editing" id="h-editing" hidden></div>
         <p class="hint">${L('عندك منشورات كتير على فيسبوك؟ استخدم «استيراد من فيسبوك»، أداة الجمع فيها زرار «اجمع المنشور ده».','Lots of posts on Facebook? Use “Import from Facebook”: the collector has a “Collect this post” button.')}</p>
         <div class="fgrid">
-          <div class="field"><label for="h-kind">${L('النوع','Type')}</label><select id="h-kind"><option value="aow">${L('فنان الأسبوع','Artist of the week')}</option><option value="pio">${L('الرواد','Pioneers')}</option></select></div>
-          <div class="field"><label for="h-name">${L('اسم الفنان','Artist name')}</label><input id="h-name" list="artist-list"></div>
-          <div class="field"><label for="h-ne">${L('الاسم بالإنجليزي (اختياري)','Name in English (optional)')}</label><input id="h-ne" dir="ltr"></div>
+          <div class="field"><label for="h-kind">${L('النوع','Type')}</label><select id="h-kind"><option value="aow">${L('فنان الأسبوع','Artist of the week')}</option><option value="pio">${L('الرواد','Pioneers')}</option><option value="news">${L('خبر','News')}</option></select></div>
+          <div class="field"><label for="h-name" id="h-name-l">${L('اسم الفنان','Artist name')}</label><input id="h-name" list="artist-list"></div>
+          <div class="field"><label for="h-ne" id="h-ne-l">${L('الاسم بالإنجليزي (اختياري)','Name in English (optional)')}</label><input id="h-ne" dir="ltr"></div>
           <div class="field"><label for="h-years">${L('السنين (للرواد، مثلًا ١٩٣٠ – ٢٠١٦)','Years (pioneers, e.g. 1930 – 2016)')}</label><input id="h-years"></div>
           <div class="field"><label for="h-link">${L('لينكات أعماله (Behance وغيره، افصل بينهم بمسافة)','Portfolio links (Behance etc., separated by spaces)')}</label><input id="h-link" dir="ltr" placeholder="https://"></div>
           <div class="field"><label for="h-date">${L('التاريخ','Date')}</label><input id="h-date" placeholder="${L('مثلًا: ٢ أكتوبر','e.g. 2 October')}"></div>
-          <div class="field full"><label for="h-about">${L('نبذة','About')}</label><textarea id="h-about" style="min-height:100px"></textarea></div>
+          <div class="field full"><label for="h-about" id="h-about-l">${L('نبذة','About')}</label><textarea id="h-about" style="min-height:100px"></textarea></div>
           <div class="field full"><label for="h-about-en">${L('النبذة بالإنجليزي (اختياري)','About in English (optional)')}</label><textarea id="h-about-en" dir="ltr" style="min-height:100px"></textarea></div>
           <div class="field full"><label>${L('الأعمال','Works')}</label><label class="drop" for="h-files"><input type="file" id="h-files" accept="image/*" multiple><b>${L('اختار الصور','Choose images')}</b><small>${L('لو سبتها فاضية، هناخد رسوماته اللي على الموقع','Leave empty to use their artworks already on the site')}</small></label><div class="prev-row" id="h-prev"></div><div class="h-cur" id="h-cur" hidden></div></div>
           <div class="field full" id="h-post-f" hidden><label for="h-post">${L('لينك البوست على فيسبوك','Facebook post link')}</label><input id="h-post" dir="ltr" placeholder="https://"></div>
@@ -2002,12 +2074,17 @@ function bindAdmin(){
     const lat=lines.find(x=>/^[A-Za-z][A-Za-z .'-]{2,40}$/.test(x)); if(lat) ne=lat;
     const yrs=(t.match(/(1[89]\d\d|20\d\d)[\s\S]{1,40}?(1[89]\d\d|20\d\d)/)||[]); const years=yrs[1]?`${yrs[1]} – ${yrs[2]}`:'';
     const about=lines.filter((x,i)=>i>hi&&x!==ne&&!/فنان الأسبوع|^الرو[ّ]?اد|أول (كومنت|تعليق)|first comment/i.test(x)).join('\n').replace(/#\S+/g,'').replace(/\s+(See less|عرض أقل)\s*$/,'').trim();
+    const isAow=/فنان الأسبوع|فنانة الأسبوع/.test(t);
+    if(!pio&&!isAow){ // anything else is news: title = first sentence, text = the whole post
+      const first=(lines[0]||'').split(/[،.!؟]/)[0].trim();
+      return {kind:'news',name:first.length>70?first.slice(0,70).replace(/\s+\S*$/,'')+'…':first,ne:'',years:'',about:lines.join('\n').replace(/\s+(See less|عرض أقل)\s*$/,'').trim()};
+    }
     return {kind:pio?'pio':'aow',name,ne,years,about};
   }
   function addPost(p){
     if(!p||!p.photos||!p.photos.length) return;
     const key=p.post||p.photos[0].fbid; if(IP.some(x=>x.key===key)) return;
-    const done=[...(DATA.aow||[]),...(DATA.pioneers||[])].some(a=>!a.partial&&((p.post&&a.post===p.post)||(a.fb&&a.fb===p.photos[0].fbid)));
+    const done=[...(DATA.aow||[]),...(DATA.pioneers||[]),...(DATA.news||[])].some(a=>!a.partial&&((p.post&&a.post===p.post)||(a.fb&&a.fb===p.photos[0].fbid)));
     const d=fbDate(p.date,p.started);
     IP.push({...parsePost(p.text),key,post:p.post||'',link:p.link||'',links:p.links||(p.link?[p.link]:[]),text:p.text||'',photos:p.photos,d,dateText:d?d.toLocaleDateString(LANG==='ar'?'ar-EG':'en-GB',{day:'numeric',month:'long',year:'numeric'}):'',sel:!done,done});
   }
@@ -2019,8 +2096,8 @@ function bindAdmin(){
       <div class="ipost-f">
         <label class="isel"><input type="checkbox" data-f="sel" ${x.sel?'checked':''} ${x.done?'disabled':''}> ${x.done?L('اتضاف قبل كده','Already imported'):L('استورده','Import it')}</label>
         <div class="fgrid">
-          <div class="field"><label>${L('النوع','Type')}</label><select data-f="kind"><option value="aow" ${x.kind==='aow'?'selected':''}>${L('فنان الأسبوع','Artist of the week')}</option><option value="pio" ${x.kind==='pio'?'selected':''}>${L('الرواد','Pioneers')}</option></select></div>
-          <div class="field"><label>${L('الاسم','Name')}</label><input data-f="name" value="${esc(x.name)}"></div>
+          <div class="field"><label>${L('النوع','Type')}</label><select data-f="kind"><option value="aow" ${x.kind==='aow'?'selected':''}>${L('فنان الأسبوع','Artist of the week')}</option><option value="pio" ${x.kind==='pio'?'selected':''}>${L('الرواد','Pioneers')}</option><option value="news" ${x.kind==='news'?'selected':''}>${L('خبر','News')}</option></select></div>
+          <div class="field"><label>${L('الاسم (أو عنوان الخبر)','Name (or news title)')}</label><input data-f="name" value="${esc(x.name)}"></div>
           <div class="field"><label>${L('بالإنجليزي','In English')}</label><input data-f="ne" dir="ltr" value="${esc(x.ne)}"></div>
           <div class="field"><label>${L('التاريخ','Date')}</label><input data-f="dateText" value="${esc(x.dateText||x.date||'')}"></div>
           <div class="field"><label>${L('لينك أعماله','Portfolio link')}</label><input data-f="link" dir="ltr" value="${esc(x.link)}"></div>
@@ -2084,7 +2161,7 @@ function bindAdmin(){
     for(const [n,x] of pick.entries()){
       if(!x.name.trim()){ toast(L('في منشور من غير اسم','A post has no name')); return; }
       $('i-status').textContent=L(`بيجهز «${x.name}» (${A(n+1)} من ${A(pick.length)})…`,`Preparing “${x.name}” (${n+1} of ${pick.length})…`);
-      const arr=x.kind==='pio'?(DATA.pioneers=DATA.pioneers||[]):(DATA.aow=DATA.aow||[]);
+      const arr=x.kind==='pio'?(DATA.pioneers=DATA.pioneers||[]):x.kind==='news'?(DATA.news=DATA.news||[]):(DATA.aow=DATA.aow||[]);
       // resume a post that was cut off half way (only the missing photos are added)
       let entry=arr.find(a=>(x.post&&a.post===x.post)||(a.fb&&a.fb===x.photos[0].fbid));
       if(!entry){
@@ -2103,7 +2180,7 @@ function bindAdmin(){
         for(const ph of ch){ try{ const blob=await fetch(proxied(ph.img)).then(r=>{ if(!r.ok) throw new Error(r.status); return r.blob(); }); const f=await prepImage(blob); if(!f) continue; const id='h'+uid(); files.push({path:`img/${id}.jpg`,b64:f.b64},{path:`img/t/${id}.jpg`,b64:f.tb64}); DATA.feat=DATA.feat||[]; DATA.feat.push({id,wh:f.wh,t:''}); entry.works.push(id); entry.fbs.push(ph.fbid);}catch(_){} }
         if(ci===parts-1) delete entry.partial;
         if(!files.length&&ci<parts-1) continue;
-        if(!await saveData(`${x.kind==='pio'?'Pioneer':'Artist of the week'}: ${x.name}${parts>1?` (${ci+1}/${parts})`:''}`,files)){ Object.keys(DATA).forEach(k=>delete DATA[k]); Object.assign(DATA,JSON.parse(snap)); ok=false; break; }
+        if(!await saveData(`${x.kind==='pio'?'Pioneer':x.kind==='news'?'News':'Artist of the week'}: ${x.name}${parts>1?` (${ci+1}/${parts})`:''}`,files)){ Object.keys(DATA).forEach(k=>delete DATA[k]); Object.assign(DATA,JSON.parse(snap)); ok=false; break; }
       }
       if(!ok){ toast(L('وقف عند: ','Stopped at: ')+x.name+L('. اعمل ريفرش للصفحة وارفع الملف تاني، هيكمّل من مكانه.','. Reload the page and upload the file again; it continues where it stopped.')); break; }
       x.done=true; x.sel=false; renderPosts(); renderFList();
@@ -2156,7 +2233,14 @@ function bindAdmin(){
   let hF=[];
   $('h-files').addEventListener('change',async e=>{hF=await prepAll(e.target.files);pv($('h-prev'),hF);});
   let hEd=null, hW=[]; // editing {k,i} and its current works
-  const hArr=k=>k==='pio'?(DATA.pioneers=DATA.pioneers||[]):(DATA.aow=DATA.aow||[]);
+  const hArr=k=>k==='pio'?(DATA.pioneers=DATA.pioneers||[]):k==='news'?(DATA.news=DATA.news||[]):(DATA.aow=DATA.aow||[]);
+  const hKindN=k=>k==='pio'?L('الرواد','Pioneer'):k==='news'?L('خبر','News'):L('فنان الأسبوع','AOW');
+  const hLabels=()=>{ const n=$('h-kind').value==='news';
+    $('h-name-l').textContent=n?L('عنوان الخبر','News title'):L('اسم الفنان','Artist name');
+    $('h-ne-l').textContent=n?L('العنوان بالإنجليزي (اختياري)','Title in English (optional)'):L('الاسم بالإنجليزي (اختياري)','Name in English (optional)');
+    $('h-about-l').textContent=n?L('نص الخبر','News text'):L('نبذة','About');
+    $('h-name').setAttribute('list',n?'':'artist-list'); };
+  $('h-kind').addEventListener('change',hLabels);
   const hLocal={}; // images saved this session, shown locally until the site redeploys
   const hThumb=id=>hLocal[id]||`img/t/${id}.jpg`;
   function hCur(){
@@ -2166,7 +2250,7 @@ function bindAdmin(){
   }
   $('h-cur').addEventListener('click',e=>{ const x=e.target.closest('[data-hw]'); if(!x) return; const [op,j]=x.dataset.hw.split(':'); const id=hW[+j];
     hW.splice(+j,1); if(op==='top') hW.unshift(id); hCur(); });
-  function hReset(){ hEd=null; hW=[]; hF=[]; $('h-prev').innerHTML=''; $('t3').reset(); $('h-editing').hidden=true; $('h-cancel').hidden=true; $('h-post-f').hidden=true; $('h-go').textContent=L('انشر','Publish'); hCur(); renderFList(); }
+  function hReset(){ hEd=null; hW=[]; hF=[]; $('h-prev').innerHTML=''; $('t3').reset(); $('h-editing').hidden=true; $('h-cancel').hidden=true; $('h-post-f').hidden=true; $('h-go').textContent=L('انشر','Publish'); hLabels(); hCur(); renderFList(); }
   function hEdit(k,i){
     const a=hArr(k)[i]; if(!a) return; hEd={k,i}; hW=[...(a.works||[])]; hF=[]; $('h-prev').innerHTML='';
     $('h-kind').value=k; $('h-name').value=a.name||''; $('h-ne').value=(DATA.names||{})[a.name]||''; $('h-years').value=a.years||'';
@@ -2174,10 +2258,10 @@ function bindAdmin(){
     $('h-about').value=a.about?a.about[0]:''; $('h-about-en').value=a.about&&a.about[1]!==a.about[0]?a.about[1]:''; $('h-post').value=a.post||'';
     $('h-post-f').hidden=false; $('h-cancel').hidden=false; $('h-go').textContent=L('احفظ التعديل','Save changes');
     $('h-editing').hidden=false; $('h-editing').innerHTML=`<b>${L('بتعدّل: ','Editing: ')}</b><span dir="auto">${esc(a.name)}</span>`;
-    hCur(); renderFList(); $('t3').scrollIntoView({behavior:'smooth',block:'start'});
+    hLabels(); hCur(); renderFList(); $('t3').scrollIntoView({behavior:'smooth',block:'start'});
   }
   $('h-cancel').addEventListener('click',hReset);
-  const hCleanup=ids=>{ const used=new Set(DATA.works.map(w=>w.id).concat(...(DATA.aow||[]).map(x=>x.works||[]),...(DATA.pioneers||[]).map(x=>x.works||[])));
+  const hCleanup=ids=>{ const used=new Set(DATA.works.map(w=>w.id).concat(...(DATA.aow||[]).map(x=>x.works||[]),...(DATA.pioneers||[]).map(x=>x.works||[]),...(DATA.news||[]).map(x=>x.works||[])));
     const gone=ids.filter(id=>!used.has(id)&&(DATA.feat||[]).some(f=>f.id===id)); DATA.feat=(DATA.feat||[]).filter(f=>!gone.includes(f.id)); return gone.flatMap(id=>[`img/${id}.jpg`,`img/t/${id}.jpg`]); };
   $('t3').addEventListener('submit',async e=>{
     e.preventDefault(); const name=$('h-name').value.trim(); if(!name){toast(L('اكتب اسم الفنان','Enter the artist name'));return;}
@@ -2195,31 +2279,33 @@ function bindAdmin(){
       if(kind==='pio') entry.years=years||undefined; else delete entry.years;
       if(kind===hEd.k) src[hEd.i]=entry; else { src.splice(hEd.i,1); hArr(kind).unshift(entry); }
       const del=hCleanup((old.works||[]).filter(id=>!ids.includes(id)));
-      if(await saveData(`Edit ${kind==='pio'?'pioneer':'artist of the week'}: ${name}`,files,del)) hReset();
+      if(await saveData(`Edit ${kind==='pio'?'pioneer':kind==='news'?'news':'artist of the week'}: ${name}`,files,del)) hReset();
       else { Object.keys(DATA).forEach(x=>delete DATA[x]); Object.assign(DATA,JSON.parse(snap)); }
       return;
     }
     let ids;
+    if(kind==='news'&&!hF.length){ toast(L('ارفع صور الخبر','Upload the news photos')); return; }
     if(hF.length) ids=up();
     else { ids=DATA.works.filter(w=>w.by===name).slice(0,8).map(w=>w.id); if(!ids.length){toast(L('مفيش رسومات باسمه على الموقع، ارفع صور','No artworks under that name yet; upload some'));return;} }
     const entry={name,date:[d,d],about:ab?[ab,abe||ab]:null,works:ids,link:links[0]||undefined,links:links.length?links:undefined,at:new Date().toISOString()};
     if(kind==='pio'){ entry.years=years||undefined; DATA.pioneers=[entry,...(DATA.pioneers||[])]; }
+    else if(kind==='news'){ const t=new Date(); entry.d=t.toISOString().slice(0,10); if(!d) entry.date=[t.toLocaleDateString('ar-EG',{day:'numeric',month:'long',year:'numeric'}),t.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})]; DATA.news=[entry,...(DATA.news||[])]; }
     else DATA.aow=[entry,...(DATA.aow||[])];
-    if(await saveData(`${kind==='pio'?'Pioneer':'Artist of the week'}: ${name}`,files)) hReset();
+    if(await saveData(`${kind==='pio'?'Pioneer':kind==='news'?'News':'Artist of the week'}: ${name}`,files)) hReset();
   });
   function renderFList(){
     const q=($('h-q').value||'').trim().toLowerCase();
     const row=(a,i,k)=>{ if(q&&!(a.name+' '+((DATA.names||{})[a.name]||'')).toLowerCase().includes(q)) return ''; const on=hEd&&hEd.k===k&&hEd.i===i;
-      return `<div class="frow${on?' on':''}"><img class="fthumb" src="${a.works&&a.works[0]?hThumb(a.works[0]):''}" onerror="this.style.visibility='hidden'" alt=""><span class="fk">${k==='pio'?L('الرواد','Pioneer'):L('فنان الأسبوع','AOW')}</span><b dir="auto">${esc(a.name)}</b><span class="hint">${esc(cx(a.date)||'')} · ${A((a.works||[]).length)} ${L('صورة','images')}</span><button type="button" class="btn btn-mint" data-fed="${k}:${i}">${L('عدّل','Edit')}</button><button type="button" class="btn btn-ghost" data-fdel="${k}:${i}">${L('امسح','Delete')}</button></div>`; };
-    $('h-list').innerHTML=(DATA.pioneers||[]).map((a,i)=>row(a,i,'pio')).join('')+(DATA.aow||[]).map((a,i)=>row(a,i,'aow')).join('');
+      return `<div class="frow${on?' on':''}"><img class="fthumb" src="${a.works&&a.works[0]?hThumb(a.works[0]):''}" onerror="this.style.visibility='hidden'" alt=""><span class="fk">${hKindN(k)}</span><b dir="auto">${esc(a.name)}</b><span class="hint">${esc(cx(a.date)||'')} · ${A((a.works||[]).length)} ${L('صورة','images')}</span><button type="button" class="btn btn-mint" data-fed="${k}:${i}">${L('عدّل','Edit')}</button><button type="button" class="btn btn-ghost" data-fdel="${k}:${i}">${L('امسح','Delete')}</button></div>`; };
+    $('h-list').innerHTML=(DATA.news||[]).map((a,i)=>row(a,i,'news')).join('')+(DATA.pioneers||[]).map((a,i)=>row(a,i,'pio')).join('')+(DATA.aow||[]).map((a,i)=>row(a,i,'aow')).join('');
   }
   $('h-q').addEventListener('input',renderFList);
   renderFList();
   $('h-list').addEventListener('click',async e=>{ const ed=e.target.closest('[data-fed]'); if(ed){ const [k,i]=ed.dataset.fed.split(':'); hEdit(k,+i); return; }
-    const b=e.target.closest('[data-fdel]'); if(!b) return; if(hEd) hReset(); const [k,i]=b.dataset.fdel.split(':'); const arr=k==='pio'?DATA.pioneers:DATA.aow; const a=arr[+i];
+    const b=e.target.closest('[data-fdel]'); if(!b) return; if(hEd) hReset(); const [k,i]=b.dataset.fdel.split(':'); const arr=hArr(k); const a=arr[+i];
     if(!confirm(L('تمسح ','Delete ')+a.name+'?')) return;
     const snap=JSON.stringify(DATA); arr.splice(+i,1);
-    const used=new Set(DATA.works.map(w=>w.id).concat(...(DATA.aow||[]).map(x=>x.works||[]),...(DATA.pioneers||[]).map(x=>x.works||[])));
+    const used=new Set(DATA.works.map(w=>w.id).concat(...(DATA.aow||[]).map(x=>x.works||[]),...(DATA.pioneers||[]).map(x=>x.works||[]),...(DATA.news||[]).map(x=>x.works||[])));
     const gone=(a.works||[]).filter(id=>!used.has(id)&&(DATA.feat||[]).some(f=>f.id===id)); DATA.feat=(DATA.feat||[]).filter(f=>!gone.includes(f.id));
     if(await saveData(`Delete feature: ${a.name}`,[],gone.flatMap(id=>[`img/${id}.jpg`,`img/t/${id}.jpg`]))) renderFList(); else { Object.keys(DATA).forEach(x=>delete DATA[x]); Object.assign(DATA,JSON.parse(snap)); }
   });
